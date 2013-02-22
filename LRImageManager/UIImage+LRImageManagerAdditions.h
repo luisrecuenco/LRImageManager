@@ -1,4 +1,4 @@
-// UIImage+LRImageClientAdditions.h
+// UIImage+LRImageManagerAdditions.h
 //
 // Copyright (c) 2013 Luis Recuenco
 //
@@ -22,7 +22,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIImage (LRImageClientAdditions)
+@interface UIImage (LRImageManagerAdditions)
 
 - (instancetype)croppedImage:(CGRect)bounds;
 
