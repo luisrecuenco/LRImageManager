@@ -1,4 +1,4 @@
-//  UIImage+LRImageClientAdditions.m
+// UIImage+LRImageClientAdditions.m
 //
 // Copyright (c) 2013 Luis Recuenco
 //

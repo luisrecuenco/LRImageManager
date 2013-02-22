@@ -1,4 +1,4 @@
-// UIImage+LRImageClientAdditions.h
+// LRImageCache.h
 //
 // Copyright (c) 2013 Luis Recuenco
 //
@@ -20,14 +20,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
+{
+    LRCacheStorageOptionsNSDictionary = 1 << 0,
+    LRCacheStorageOptionsNSCache = 1 << 1,
+    LRCacheStorageOptionsOnlyMemory = 1 << 2,
+};
 
-@interface UIImage (LRImageClientAdditions)
+@interface LRImageCache : NSObject
 
-- (instancetype)croppedImage:(CGRect)bounds;
+/** Cache time limit. */
+@property (nonatomic, assign) NSTimeInterval maxTimeInCache;
 
-- (instancetype)resizedImageWithContentMode:(UIViewContentMode)contentMode
-                                     bounds:(CGSize)bounds;
-- (instancetype)decompressImage;
+/** Cache size limit */
+@property (nonatomic, assign) unsigned long long maxDirectorySize;
+
++ (LRImageCache *)sharedImageCache;
+
+- (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
+
+- (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size;
+
+/**
+ Async counterpart of diskCachedImageForURL:size:
+ */
+- (void)diskCachedImageForURL:(NSURL *)url
+                         size:(CGSize)size
+              completionBlock:(void (^)(UIImage *image))completionBlock;
+
+- (void)cacheImage:(UIImage *)image
+           withURL:(NSURL *)url
+              size:(CGSize)size
+    storageOptions:(LRCacheStorageOptions)storageOptions;
+
+- (void)clearMemCache;
+
+- (void)clearDiskCache;
+
+- (void)cleanDisk;
 
 @end
+
+NSString *LRCacheKeyForImage(NSURL *url, CGSize size);
+
