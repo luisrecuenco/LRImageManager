@@ -22,6 +22,14 @@
 
 #import "LRImageManager.h"
 
+#if !__has_feature(objc_arc)
+#error "LRImageManager requires ARC support."
+#endif
+
+#ifndef NS_BLOCKS_AVAILABLE
+#error "LRImageManager requires blocks."
+#endif
+
 @interface LRImageManager ()
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;

@@ -24,11 +24,11 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #if DEBUG
-#define LRImageClientLog(s,...) NSLog( @"\n\n------------------------------------- DEBUG -------------------------------------\n\t<%p %@:(%d)>\n\n\t%@\n---------------------------------------------------------------------------------\n\n", self, \
+#define LRImageManagerLog(s,...) NSLog( @"\n\n------------------------------------- DEBUG -------------------------------------\n\t<%p %@:(%d)>\n\n\t%@\n---------------------------------------------------------------------------------\n\n", self, \
 [[NSString stringWithUTF8String:__FUNCTION__] lastPathComponent], __LINE__, \
 [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 #else
-#define LRImageClientLog(s,...)
+#define LRImageManagerLog(s,...)
 #endif
 
 #if OS_OBJECT_USE_OBJC
@@ -191,11 +191,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                          attributes:nil
                                               error:&error])
             {
-                LRImageClientLog(@"Error creating cache directory at path: %@ | error: %@", imageCacheDirectoryPath, [error localizedDescription]);
+                LRImageManagerLog(@"Error creating cache directory at path: %@ | error: %@", imageCacheDirectoryPath, [error localizedDescription]);
             }
             else
             {
-                LRImageClientLog(@"Cache directory successfully created at path: %@", imageCacheDirectoryPath);
+                LRImageManagerLog(@"Cache directory successfully created at path: %@", imageCacheDirectoryPath);
             }
         }
         
@@ -209,11 +209,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                       contents:data
                                     attributes:nil])
             {
-                LRImageClientLog(@"Error caching image at path: %@", filePath);
+                LRImageManagerLog(@"Error caching image at path: %@", filePath);
             }
             else
             {
-                LRImageClientLog(@"Image successfully cached at path: %@", filePath);
+                LRImageManagerLog(@"Image successfully cached at path: %@", filePath);
             }
         }
     });
@@ -240,11 +240,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         
         if (![fileManager removeItemAtPath:directoryPath error:&error])
         {
-            LRImageClientLog(@"Error deleting cache directory at path: %@ | error: %@", directoryPath, [error localizedDescription]);
+            LRImageManagerLog(@"Error deleting cache directory at path: %@ | error: %@", directoryPath, [error localizedDescription]);
         }
         else
         {
-            LRImageClientLog(@"Cache directory removed successfully");
+            LRImageManagerLog(@"Cache directory removed successfully");
         }
     });
 }
@@ -272,11 +272,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                 
                 if (![fileManager removeItemAtPath:filePath error:&error])
                 {
-                    LRImageClientLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
+                    LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
                 }
                 else
                 {
-                    LRImageClientLog(@"File item removed successfully at path: %@", filePath);
+                    LRImageManagerLog(@"File item removed successfully at path: %@", filePath);
                 }
             }
         }
