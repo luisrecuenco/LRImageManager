@@ -23,6 +23,8 @@
 #import "LRImagePresenter.h"
 #import "LRImageManager.h"
 
+static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
+
 @interface LRImagePresenter ()
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -31,6 +33,8 @@
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, assign) LRImageViewAnimationOptions animationOptions;
+
+@property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
 
 @end
 
@@ -99,12 +103,12 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if (!image || error) return;
+                if (!image || error || sself.isCancelled) return;
                 
                 if (self.animationOptions == LRImageViewAnimationOptionFade)
                 {
                     [UIView transitionWithView:sself.imageView
-                                      duration:0.25
+                                      duration:kImageFadeAnimationTime
                                        options:UIViewAnimationOptionTransitionCrossDissolve
                                     animations:^{
                                         sself.imageView.image = image;
@@ -127,6 +131,8 @@
 
 - (void)cancelPresenting
 {
+    self.cancelled = YES;
+    
     [[LRImageManager sharedManager] cancelImageRequestFromURL:self.imageURL
                                                          size:self.imageSize];
 }
