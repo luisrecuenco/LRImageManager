@@ -46,7 +46,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, strong) NSError *error;
 
 // NSURLConnection wise
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, weak) NSURLConnection *connection;
 @property (nonatomic, strong) NSMutableData *downloadedData;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSSet *autoRetryErrorCodes;
