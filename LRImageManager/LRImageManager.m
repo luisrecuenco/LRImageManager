@@ -48,6 +48,7 @@
     if (self)
     {
         _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
     }
     
@@ -67,8 +68,8 @@
     
     // This method is supposed to be called once the memCache check has already been done.
     // Let's check anyway...
-    UIImage *memCachedImage = [[LRImageCache sharedImageCache] memCachedImageForURL:url size:size];
-    
+    UIImage *memCachedImage = [[LRImageCache sharedImageCache] memCachedImageForURL:url
+                                                                               size:size];
     if (memCachedImage)
     {
         completionHandler(memCachedImage, nil);

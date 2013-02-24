@@ -111,7 +111,12 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 {
     @synchronized(self)
     {
-        if (!self.isExecuting && !self.isCancelled)
+        if (self.isCancelled)
+        {
+            self.finished = YES;
+            self.executing = NO;
+        }
+        else if (!self.isExecuting)
         {
             self.executing = YES;
             
