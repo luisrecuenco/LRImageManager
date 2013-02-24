@@ -38,7 +38,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
-@property (nonatomic, assign) LRCacheStorageOptions *storageOptions;
+@property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
 // Outputs
