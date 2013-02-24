@@ -37,12 +37,36 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 
 + (LRImageCache *)sharedImageCache;
 
+- (UIImage *)memCachedImageForKey:(NSString *)key;
+
+- (UIImage *)diskCachedImageForKey:(NSString *)key;
+
+/**
+ Async disk cache image retrieval.
+ */
+- (void)diskCachedImageForKey:(NSString *)key
+              completionBlock:(void (^)(UIImage *image))completionBlock;
+
+- (void)cacheImage:(UIImage *)image
+           withKey:(NSString *)key
+    storageOptinos:(LRCacheStorageOptions)storageOptions;
+
+- (void)clearMemCache;
+
+- (void)clearDiskCache;
+
+- (void)cleanDisk;
+
+@end
+
+@interface LRImageCache (URLAndSize)
+
 - (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
 /**
- Async counterpart of diskCachedImageForURL:size:
+ Async disk cache image retrieval.
  */
 - (void)diskCachedImageForURL:(NSURL *)url
                          size:(CGSize)size
@@ -53,13 +77,6 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
               size:(CGSize)size
     storageOptions:(LRCacheStorageOptions)storageOptions;
 
-- (void)clearMemCache;
-
-- (void)clearDiskCache;
-
-- (void)cleanDisk;
-
 @end
 
 NSString *LRCacheKeyForImage(NSURL *url, CGSize size);
-

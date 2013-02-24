@@ -88,28 +88,34 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 	return self;
 }
 
+- (UIImage *)memCachedImageForKey:(NSString *)key
+{
+    if ([key length] == 0) return nil;
+    
+    __block UIImage *memCachedImage = nil;
+    
+    dispatch_sync(self.syncQueue, ^{
+        memCachedImage = self.imagesDictionary[key] ?:
+                         [self.imagesCache objectForKey:key];
+    });
+    
+    return memCachedImage;
+}
+
 - (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size
 {
     if ([url.absoluteString length] == 0) return nil;
     
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
-    __block UIImage *memCachedImage = nil;
-    
-    dispatch_sync(self.syncQueue, ^{
-        memCachedImage = self.imagesDictionary[imageCacheKey] ?:
-                         [self.imagesCache objectForKey:imageCacheKey];
-    });
-    
-    return memCachedImage;
+    return [self memCachedImageForKey:imageCacheKey];
 }
 
-- (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
+- (UIImage *)diskCachedImageForKey:(NSString *)key
 {
-    if ([url.absoluteString length] == 0) return nil;
+    if ([key length] == 0) return nil;
     
-    NSString *imageCacheKey = LRCacheKeyForImage(url, size);
-    NSString *filePath = LRFilePathForCacheKey(imageCacheKey);
+    NSString *filePath = LRFilePathForCacheKey(key);
     
     UIImage *image = nil;
     
@@ -121,6 +127,30 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     }
     
     return image;
+    
+}
+
+- (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
+{
+    if ([url.absoluteString length] == 0) return nil;
+    
+    NSString *imageCacheKey = LRCacheKeyForImage(url, size);
+    
+    return [self diskCachedImageForKey:imageCacheKey];
+}
+
+- (void)diskCachedImageForKey:(NSString *)key
+              completionBlock:(void (^)(UIImage *image))completionBlock
+{
+    dispatch_async(self.ioQueue, ^{
+        
+        UIImage *diskCachedImage = [self diskCachedImageForKey:key];
+        
+        if (completionBlock)
+        {
+            completionBlock(diskCachedImage);
+        }
+    });
 }
 
 - (void)diskCachedImageForURL:(NSURL *)url
@@ -139,18 +169,25 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 }
 
 - (void)cacheImage:(UIImage *)image
+           withKey:(NSString *)key
+    storageOptinos:(LRCacheStorageOptions)storageOptions
+{
+    [self memCacheImage:image forKey:key storageOptions:storageOptions];
+    
+    if (!(storageOptions & LRCacheStorageOptionsOnlyMemory))
+    {
+        [self diskCache:image withKey:key];
+    }
+}
+
+- (void)cacheImage:(UIImage *)image
            withURL:(NSURL *)url
               size:(CGSize)size
     storageOptions:(LRCacheStorageOptions)storageOptions
 {
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
-    [self memCacheImage:image forKey:imageCacheKey storageOptions:storageOptions];
-    
-    if (!(storageOptions & LRCacheStorageOptionsOnlyMemory))
-    {
-        [self diskCache:image withKey:imageCacheKey];
-    }
+    [self cacheImage:image withKey:imageCacheKey storageOptinos:storageOptions];
 }
 
 - (void)memCacheImage:(UIImage *)image
