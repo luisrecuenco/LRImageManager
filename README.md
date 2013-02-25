@@ -19,7 +19,8 @@ It supports:
   Add the following line to your Podfile:
 
   ```
-  pod 'LRImageManager', :git => 'https://github.com/luisrecuenco/LRImageManager.git'   
+  platform :ios, "5.0"
+  pod 'LRImageManager' 
   ```
 
   Run the following command:
