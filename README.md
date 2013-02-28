@@ -16,7 +16,7 @@ It supports:
 
 1. **Using CocoaPods**
 
-  Add the following line to your Podfile:
+  Add LRImageManager to your Podfile:
 
   ```
   platform :ios, "5.0"
@@ -33,7 +33,7 @@ It supports:
 
   Clone the project or add it as a submodule. Drag the whole LRImageManager folder to your project.
 
-## Use
+## Usage
 
 To download an image, you only have to use the following method from LRImageManager:
 
