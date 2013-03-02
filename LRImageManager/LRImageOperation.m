@@ -23,6 +23,12 @@
 #import "LRImageOperation.h"
 #import "UIImage+LRImageManagerAdditions.h"
 
+#if OS_OBJECT_USE_OBJC
+#define LRDispatchQueuePropertyModifier strong
+#else
+#define LRDispatchQueuePropertyModifier assign
+#endif
+
 NSString *const LRImageOperationErrorDomain = @"LRImageOperationErrorDomain";
 
 static NSTimeInterval const kImageRequestTimeout = 15.0f;
@@ -50,6 +56,8 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, strong) NSMutableData *downloadedData;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSSet *autoRetryErrorCodes;
+
+@property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t queue;
 
 @end
 
@@ -81,11 +89,23 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         _storageOptions = storageOptions;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnection];
+        _queue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
         
         [self addCompletionHandler:completionHandler];
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+#if !OS_OBJECT_USE_OBJC
+    if (_queue != NULL)
+    {
+        dispatch_release(_queue);
+    }
+#endif
+    _queue = NULL;
 }
 
 - (NSURLConnection *)imageURLConnection
@@ -113,8 +133,8 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     {
         if (self.isCancelled)
         {
-            self.finished = YES;
             self.executing = NO;
+            self.finished = YES;
         }
         else if (!self.isExecuting)
         {
@@ -217,13 +237,15 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    if (self.downloadedData == nil)
-    {
-        self.downloadedData = [[NSMutableData alloc] initWithCapacity:
-                               MAX(0, self.response.expectedContentLength)];
-    }
-    
-    [self.downloadedData appendData:data];
+    dispatch_async(self.queue, ^{
+        if (self.downloadedData == nil)
+        {
+            self.downloadedData = [[NSMutableData alloc] initWithCapacity:
+                                   MAX(0, self.response.expectedContentLength)];
+        }
+        
+        [self.downloadedData appendData:data];
+    });
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -262,23 +284,22 @@ completionHandler:(LRImageCompletionHandler)completionHandler
             self.error = [NSError errorWithDomain:LRImageOperationErrorDomain
                                              code:statusCode
                                          userInfo:infoDict];
+            
+            [self finish];
         }
         else
-        {
-            self.image = [UIImage imageWithCGImage:[UIImage imageWithData:self.downloadedData].CGImage
-                                             scale:[[UIScreen mainScreen] scale]
-                                       orientation:UIImageOrientationUp];
+        {   
+            [self postProcessImageDownload];
         }
     };
-    
-    [self postProcessImageWithCompletionBlock:^{
-        [self finish];
-    }];
 }
 
-- (void)postProcessImageWithCompletionBlock:(dispatch_block_t)completion
+- (void)postProcessImageDownload
 {
-    dispatch_async([[self class] lr_sharedImageProcessingQueue], ^{
+    dispatch_async(self.queue, ^{
+        self.image = [UIImage imageWithCGImage:[UIImage imageWithData:self.downloadedData].CGImage
+                                         scale:[[UIScreen mainScreen] scale]
+                                   orientation:UIImageOrientationUp];
         
         if (CGSizeEqualToSize(self.size, CGSizeZero) == NO)
         {
@@ -295,7 +316,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
                                                size:self.size
                                      storageOptions:self.storageOptions];
         
-        completion();
+        [self finish];
     });
 }
 
@@ -318,20 +339,6 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     });
     
     return autoretryErrorCodes;
-}
-
-#pragma mark - Shared Image Processing Queue
-
-+ (dispatch_queue_t)lr_sharedImageProcessingQueue
-{
-    static dispatch_queue_t sImageProcessingConcurrentQueue = NULL;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sImageProcessingConcurrentQueue = dispatch_queue_create("com.LRImageOperation.LRImageProcessingQueue", DISPATCH_QUEUE_CONCURRENT);
-    });
-    
-    return sImageProcessingConcurrentQueue;
 }
 
 #pragma mark - Add completion handler
