@@ -29,7 +29,11 @@ It supports:
   pod install
   ```
 
-2. **Manually**
+2. **Static Library**
+
+    Drag *LRImageManager.xcodeproj* to your project, add it as a target dependency and link libLRImageManager.a. Then, you can simply do #import <LRImageManager/Class.h>.
+	
+3. **Manually**
 
   Clone the project or add it as a submodule. Drag the whole LRImageManager folder to your project.
 

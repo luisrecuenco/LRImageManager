@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 {
     LRCacheStorageOptionsNSDictionary = 1 << 0,
