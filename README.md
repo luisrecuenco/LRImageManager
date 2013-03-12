@@ -31,7 +31,12 @@ It supports:
 
 2. **Static Library**
 
-    Drag *LRImageManager.xcodeproj* to your project, add it as a target dependency and link libLRImageManager.a. Then, you can simply do #import <LRImageManager/Class.h>.
+    Clone the project or add it as a submodule. Drag *LRImageManager.xcodeproj* to your project, add it as a target dependency and link *libLRImageManager.a*. 
+    Then, you can simply do:
+    
+    ```
+    #import <LRImageManager/Class.h>
+    ```
 	
 3. **Manually**
 
@@ -42,9 +47,9 @@ It supports:
 To download an image, you only have to use the following method from LRImageManager:
 
 ```objective-c
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-      storageOptions:(LRCacheStorageOptions)storageOptions
+- (void)imageFromURL:(NSURL *)url 
+                size:(CGSize)size 
+      storageOptions:(LRCacheStorageOptions)storageOptions 
    completionHandler:(LRImageCompletionHandler)completionHandler;
 ```
 
@@ -74,7 +79,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 You can always cancel a specific request or every ongoing request:
 
 ```objective-c
-- (void)cancelImageRequestFromURL:(NSURL *)url
+- (void)cancelImageRequestFromURL:(NSURL *)url 
                              size:(CGSize)size;
 
 - (void)cancelAllRequests;
@@ -87,20 +92,20 @@ Image cache is handled automatically by LRImageManager. In case you still want t
 
 - (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
-- (void)diskCachedImageForKey:(NSString *)key
-              completionBlock:(void (^)(UIImage *image))completionBlock;
+- (void)diskCachedImageForKey:(NSString *)key 
+ 	          completionBlock:(void (^)(UIImage *image))completionBlock;
 
-- (void)diskCachedImageForURL:(NSURL *)url
-                         size:(CGSize)size
-              completionBlock:(void (^)(UIImage *image))completionBlock;
+- (void)diskCachedImageForURL:(NSURL *)url 
+		                 size:(CGSize)size 
+	          completionBlock:(void (^)(UIImage *image))completionBlock;
 
-- (void)cacheImage:(UIImage *)image
-           withKey:(NSString *)key
+- (void)cacheImage:(UIImage *)image 
+	       withKey:(NSString *)key 
     storageOptinos:(LRCacheStorageOptions)storageOptions;
 
-- (void)cacheImage:(UIImage *)image
-           withURL:(NSURL *)url
-              size:(CGSize)size
+- (void)cacheImage:(UIImage *)image 
+           withURL:(NSURL *)url 
+              size:(CGSize)size 
     storageOptions:(LRCacheStorageOptions)storageOptions;
 ```
 
@@ -108,10 +113,10 @@ To easily download an image and assign it to a UIImageView container, there's a 
 Just set the URL, placeholder, size, storageOptions and animationOptions and you are good to go. There's also a method to cancel the current image request for that UIImageView.
 
 ```objective-c
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-         storageOptions:(LRCacheStorageOptions)storageOptions
+- (void)setImageWithURL:(NSURL *)url 
+       placeholderImage:(UIImage *)placeholderImage 
+                   size:(CGSize)size 
+         storageOptions:(LRCacheStorageOptions)storageOptions 
        animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
 - (void)cancelImageOperation;
