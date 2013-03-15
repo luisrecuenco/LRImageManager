@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 #import "LRImageCache.h"
+#import "UIImage+LRImageManagerAdditions.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 #if DEBUG
@@ -148,7 +149,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         
         if (completionBlock)
         {
-            completionBlock(diskCachedImage);
+            completionBlock([diskCachedImage decompressImage]);
         }
     });
 }
@@ -157,15 +158,14 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                          size:(CGSize)size
               completionBlock:(void (^)(UIImage *image))completionBlock
 {
-    dispatch_async(self.ioQueue, ^{
-        
-        UIImage *diskCachedImage = [self diskCachedImageForURL:url size:size];
-        
-        if (completionBlock)
-        {
-            completionBlock(diskCachedImage);
-        }
-    });
+    if ([url.absoluteString length] == 0)
+    {
+        completionBlock(nil);
+        return;
+    };
+    
+    [self diskCachedImageForKey:LRCacheKeyForImage(url, size)
+                completionBlock:completionBlock];
 }
 
 - (void)cacheImage:(UIImage *)image
