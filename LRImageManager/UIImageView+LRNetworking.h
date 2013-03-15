@@ -41,6 +41,10 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 
 - (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
+                   size:(CGSize)size;
+
+- (void)setImageWithURL:(NSURL *)url
+       placeholderImage:(UIImage *)placeholderImage
                    size:(CGSize)size
          storageOptions:(LRCacheStorageOptions)storageOptions;
 

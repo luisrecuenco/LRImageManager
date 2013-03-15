@@ -68,6 +68,16 @@ static char kLRImagePresenterObjectKey;
 - (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
                    size:(CGSize)size
+{
+    [self setImageWithURL:url
+         placeholderImage:placeholderImage
+                     size:size
+           storageOptions:LRCacheStorageOptionsNSCache];
+}
+
+- (void)setImageWithURL:(NSURL *)url
+       placeholderImage:(UIImage *)placeholderImage
+                   size:(CGSize)size
          storageOptions:(LRCacheStorageOptions)storageOptions
 {
     [self setImageWithURL:url
