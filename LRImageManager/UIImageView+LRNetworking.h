@@ -54,6 +54,13 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
          storageOptions:(LRCacheStorageOptions)storageOptions
        animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
+- (void)setImageWithURL:(NSURL *)url
+       placeholderImage:(UIImage *)placeholderImage
+                   size:(CGSize)size
+         storageOptions:(LRCacheStorageOptions)storageOptions
+       animationOptions:(LRImageViewAnimationOptions)animationOptions
+      activityIndicator:(UIActivityIndicatorView*)activityIndicator;
+
 - (void)cancelImageOperation;
 
 @end
