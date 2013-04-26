@@ -100,15 +100,19 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 - (void)startPresenting
 {
-    if ( nil != _activityIndicator ) {
-        [_activityIndicator stopAnimating];
+    if (nil != _activityIndicator)
+    {
+        [_activityIndicator setHidden:NO];
+        [_activityIndicator startAnimating];
     }
     
     if ([self.imageURL.absoluteString length] == 0)
     {
         self.imageView.image = self.placeholderImage;
         
-        if ( nil != _activityIndicator ) {
+        if (nil != _activityIndicator)
+        {
+            [_activityIndicator setHidden:YES];
             [_activityIndicator stopAnimating];
         }
         
@@ -133,7 +137,9 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if ( nil != _activityIndicator ) {
+                if (nil != _activityIndicator)
+                {
+                    [_activityIndicator setHidden:YES];
                     [_activityIndicator stopAnimating];
                 }
                 
@@ -150,7 +156,12 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 }
                 else
                 {
-                    sself.imageView.image = image;
+                    self.imageView.image = image;
+                }
+                
+                if (nil != [self.imageView superview])
+                {
+                    [[self.imageView superview] setNeedsDisplay];
                 }
             });
         };
