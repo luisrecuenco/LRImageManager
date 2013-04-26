@@ -100,7 +100,28 @@ static char kLRImagePresenterObjectKey;
                                                  placeholderImage:placeholderImage
                                                              size:size
                                                    storageOptions:storageOptions
-                                                 animationOptions:animationOptions];
+                                                 animationOptions:animationOptions
+                                                activityIndicator:nil];
+    
+    [self.imagePresenter startPresenting];
+}
+
+- (void)setImageWithURL:(NSURL *)url
+       placeholderImage:(UIImage *)placeholderImage
+                   size:(CGSize)size
+         storageOptions:(LRCacheStorageOptions)storageOptions
+       animationOptions:(LRImageViewAnimationOptions)animationOptions
+      activityIndicator:(UIActivityIndicatorView*)activityIndicator
+{
+    [self cancelImageOperation];
+    
+    self.imagePresenter = [LRImagePresenter presenterForImageView:self
+                                                          withURL:url
+                                                 placeholderImage:placeholderImage
+                                                             size:size
+                                                   storageOptions:storageOptions
+                                                 animationOptions:animationOptions
+                                                activityIndicator:activityIndicator];
     
     [self.imagePresenter startPresenting];
 }

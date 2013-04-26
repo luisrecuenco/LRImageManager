@@ -31,6 +31,14 @@
                        storageOptions:(LRCacheStorageOptions)storageOptions
                      animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
++ (instancetype)presenterForImageView:(UIImageView *)imageView
+                              withURL:(NSURL *)url
+                     placeholderImage:(UIImage *)placeholderImage
+                                 size:(CGSize)size
+                       storageOptions:(LRCacheStorageOptions)storageOptions
+                     animationOptions:(LRImageViewAnimationOptions)animationOptions
+                    activityIndicator:(UIActivityIndicatorView*)activityIndicator;
+
 - (void)startPresenting;
 - (void)cancelPresenting;
 

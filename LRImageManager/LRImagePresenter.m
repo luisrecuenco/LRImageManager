@@ -33,6 +33,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, assign) LRImageViewAnimationOptions animationOptions;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
 
@@ -52,7 +53,25 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                           placeholderImage:placeholderImage
                                       size:size
                             storageOptions:storageOptions
-                          animationOptions:animationOptions];
+                          animationOptions:animationOptions
+                         activityIndicator:nil];
+}
+
++ (instancetype)presenterForImageView:(UIImageView *)imageView
+                              withURL:(NSURL *)url
+                     placeholderImage:(UIImage *)placeholderImage
+                                 size:(CGSize)size
+                       storageOptions:(LRCacheStorageOptions)storageOptions
+                     animationOptions:(LRImageViewAnimationOptions)animationOptions
+                    activityIndicator:(UIActivityIndicatorView*)activityIndicator
+{
+    return [[self alloc] initWithImageView:imageView
+                                   withURL:url
+                          placeholderImage:placeholderImage
+                                      size:size
+                            storageOptions:storageOptions
+                          animationOptions:animationOptions
+                         activityIndicator:activityIndicator];
 }
 
 - (id)initWithImageView:(UIImageView *)imageView
@@ -61,6 +80,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                    size:(CGSize)size
          storageOptions:(LRCacheStorageOptions)storageOptions
        animationOptions:(LRImageViewAnimationOptions)animationOptions
+      activityIndicator:(UIActivityIndicatorView*)activityIndicator
 {
     self = [super init];
     
@@ -72,6 +92,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         _placeholderImage = placeholderImage;
         _storageOptions = storageOptions;
         _animationOptions = animationOptions;
+        _activityIndicator = activityIndicator;
     }
     
     return self;
@@ -79,9 +100,22 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 - (void)startPresenting
 {
+    if (nil != _activityIndicator)
+    {
+        [_activityIndicator setHidden:NO];
+        [_activityIndicator startAnimating];
+    }
+    
     if ([self.imageURL.absoluteString length] == 0)
     {
         self.imageView.image = self.placeholderImage;
+        
+        if (nil != _activityIndicator)
+        {
+            [_activityIndicator setHidden:YES];
+            [_activityIndicator stopAnimating];
+        }
+        
         return;
     }
     
@@ -103,6 +137,12 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
+                if (nil != _activityIndicator)
+                {
+                    [_activityIndicator setHidden:YES];
+                    [_activityIndicator stopAnimating];
+                }
+                
                 if (!image || error || sself.isCancelled) return;
                 
                 if (self.animationOptions == LRImageViewAnimationOptionFade)
@@ -116,7 +156,12 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 }
                 else
                 {
-                    sself.imageView.image = image;
+                    self.imageView.image = image;
+                }
+                
+                if (nil != [self.imageView superview])
+                {
+                    [[self.imageView superview] setNeedsDisplay];
                 }
             });
         };
