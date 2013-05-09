@@ -56,6 +56,14 @@ static char kLRImagePresenterObjectKey;
 }
 
 - (void)setImageWithURL:(NSURL *)url
+         storageOptions:(LRCacheStorageOptions)storageOptions
+{
+    [self setImageWithURL:url
+         placeholderImage:nil
+           storageOptions:storageOptions];
+}
+
+- (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
          storageOptions:(LRCacheStorageOptions)storageOptions
 {
