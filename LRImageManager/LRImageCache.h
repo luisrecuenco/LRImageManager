@@ -38,6 +38,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 /** Cache size limit */
 @property (nonatomic, assign) unsigned long long maxDirectorySize;
 
+/** Default cache storage option */
+@property (nonatomic, assign) LRCacheStorageOptions defaultCacheStorageOption;
+
 + (LRImageCache *)sharedImageCache;
 
 - (UIImage *)memCachedImageForKey:(NSString *)key;

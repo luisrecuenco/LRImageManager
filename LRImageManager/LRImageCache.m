@@ -40,6 +40,7 @@
 
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
+static const LRCacheStorageOptions kDefaultCacheStorageOption = LRCacheStorageOptionsNSCache;
 
 static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
@@ -387,6 +388,11 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
 - (unsigned long long)maxDirectorySize
 {
     return _maxDirectorySize ?: kDefaultMaxCacheDirectorySize;
+}
+
+- (LRCacheStorageOptions)defaultCacheStorageOption
+{
+    return _defaultCacheStorageOption ?: kDefaultCacheStorageOption;
 }
 
 - (void)dealloc

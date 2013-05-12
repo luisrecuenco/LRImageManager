@@ -52,7 +52,7 @@ static char kLRImagePresenterObjectKey;
 {
     [self setImageWithURL:url
          placeholderImage:placeholderImage
-           storageOptions:LRCacheStorageOptionsNSCache];
+           storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
 }
 
 - (void)setImageWithURL:(NSURL *)url
@@ -80,7 +80,7 @@ static char kLRImagePresenterObjectKey;
     [self setImageWithURL:url
          placeholderImage:placeholderImage
                      size:size
-           storageOptions:LRCacheStorageOptionsNSCache];
+           storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
 }
 
 - (void)setImageWithURL:(NSURL *)url
