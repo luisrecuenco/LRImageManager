@@ -171,11 +171,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (void)cacheImage:(UIImage *)image
            withKey:(NSString *)key
+         diskCache:(BOOL)diskCache
     storageOptinos:(LRCacheStorageOptions)storageOptions
 {
     [self memCacheImage:image forKey:key storageOptions:storageOptions];
     
-    if (!(storageOptions & LRCacheStorageOptionsOnlyMemory))
+    if (diskCache)
     {
         [self diskCache:image withKey:key];
     }
@@ -184,11 +185,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 - (void)cacheImage:(UIImage *)image
            withURL:(NSURL *)url
               size:(CGSize)size
+         diskCache:(BOOL)diskCache
     storageOptions:(LRCacheStorageOptions)storageOptions
 {
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
-    [self cacheImage:image withKey:imageCacheKey storageOptinos:storageOptions];
+    [self cacheImage:image withKey:imageCacheKey diskCache:diskCache storageOptinos:storageOptions];
 }
 
 - (void)memCacheImage:(UIImage *)image

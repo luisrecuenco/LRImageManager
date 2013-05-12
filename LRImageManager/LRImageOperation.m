@@ -44,6 +44,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
+@property (nonatomic, assign) BOOL diskCache;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
@@ -65,11 +66,13 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 + (instancetype)imageOperationWithURL:(NSURL *)url
                                  size:(CGSize)size
+                            diskCache:(BOOL)diskCache
                        storageOptions:(LRCacheStorageOptions)storageOptions
                     completionHandler:(LRImageCompletionHandler)completionHandler
 {
     return [[self alloc] initWithURL:url
                                 size:size
+                           diskCache:diskCache
                       storageOptions:storageOptions
                    completionHandler:completionHandler];
 }
@@ -77,6 +80,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 - (id)initWithURL:(NSURL *)url
              size:(CGSize)size
+        diskCache:(BOOL)diskCache
    storageOptions:(LRCacheStorageOptions)storageOptions
 completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -86,6 +90,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     {
         _url = url;
         _size = size;
+        _diskCache = diskCache;
         _storageOptions = storageOptions;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnection];
@@ -149,6 +154,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
                 [[LRImageCache sharedImageCache] cacheImage:self.image
                                                     withURL:self.url
                                                        size:self.size
+                                                  diskCache:self.diskCache
                                              storageOptions:self.storageOptions];
                 
                 [self finish];
@@ -314,6 +320,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         [[LRImageCache sharedImageCache] cacheImage:self.image
                                             withURL:self.url
                                                size:self.size
+                                          diskCache:self.diskCache
                                      storageOptions:self.storageOptions];
         
         [self finish];

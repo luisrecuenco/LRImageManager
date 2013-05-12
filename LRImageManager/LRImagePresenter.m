@@ -31,6 +31,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, assign) BOOL diskCache;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, assign) LRImageViewAnimationOptions animationOptions;
 
@@ -44,6 +45,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                               withURL:(NSURL *)url
                      placeholderImage:(UIImage *)placeholderImage
                                  size:(CGSize)size
+                            diskCache:(BOOL)diskCache
                        storageOptions:(LRCacheStorageOptions)storageOptions
                      animationOptions:(LRImageViewAnimationOptions)animationOptions
 {
@@ -51,6 +53,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                                    withURL:url
                           placeholderImage:placeholderImage
                                       size:size
+                                 diskCache:diskCache
                             storageOptions:storageOptions
                           animationOptions:animationOptions];
 }
@@ -59,6 +62,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 withURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
                    size:(CGSize)size
+              diskCache:(BOOL)diskCache
          storageOptions:(LRCacheStorageOptions)storageOptions
        animationOptions:(LRImageViewAnimationOptions)animationOptions
 {
@@ -70,6 +74,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         _imageURL = url;
         _imageSize = size;
         _placeholderImage = placeholderImage;
+        _diskCache = diskCache;
         _storageOptions = storageOptions;
         _animationOptions = animationOptions;
     }
@@ -123,6 +128,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         
         [[LRImageManager sharedManager] imageFromURL:self.imageURL
                                                 size:self.imageSize
+                                           diskCache:self.diskCache
                                       storageOptions:self.storageOptions
                                    completionHandler:completionHandler];
     }

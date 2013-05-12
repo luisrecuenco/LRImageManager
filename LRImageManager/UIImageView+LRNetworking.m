@@ -91,6 +91,7 @@ static char kLRImagePresenterObjectKey;
     [self setImageWithURL:url
          placeholderImage:placeholderImage
                      size:size
+                diskCache:![LRImageCache sharedImageCache].skipDiskCache
            storageOptions:storageOptions
          animationOptions:LRImageViewAnimationOptionFade];
 }
@@ -98,6 +99,7 @@ static char kLRImagePresenterObjectKey;
 - (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
                    size:(CGSize)size
+              diskCache:(BOOL)diskCache
          storageOptions:(LRCacheStorageOptions)storageOptions
        animationOptions:(LRImageViewAnimationOptions)animationOptions
 {
@@ -107,6 +109,7 @@ static char kLRImagePresenterObjectKey;
                                                           withURL:url
                                                  placeholderImage:placeholderImage
                                                              size:size
+                                                        diskCache:diskCache
                                                    storageOptions:storageOptions
                                                  animationOptions:animationOptions];
     

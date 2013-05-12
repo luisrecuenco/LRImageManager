@@ -65,6 +65,7 @@
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
+           diskCache:(BOOL)diskCache
       storageOptions:(LRCacheStorageOptions)storageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -98,6 +99,7 @@
         {
             LRImageOperation *imageOperation = [LRImageOperation imageOperationWithURL:url
                                                                                   size:size
+                                                                             diskCache:diskCache
                                                                         storageOptions:storageOptions
                                                                      completionHandler:completionHandler];
             

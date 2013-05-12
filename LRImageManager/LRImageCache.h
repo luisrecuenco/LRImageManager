@@ -27,7 +27,6 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 {
     LRCacheStorageOptionsNSDictionary = 1 << 0,
     LRCacheStorageOptionsNSCache = 1 << 1,
-    LRCacheStorageOptionsOnlyMemory = 1 << 2,
 };
 
 @interface LRImageCache : NSObject
@@ -40,6 +39,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 
 /** Default cache storage option */
 @property (nonatomic, assign) LRCacheStorageOptions defaultCacheStorageOption;
+
+/** Avoids disk caching */
+@property (nonatomic, assign) BOOL skipDiskCache;
 
 + (LRImageCache *)sharedImageCache;
 
@@ -55,6 +57,7 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 
 - (void)cacheImage:(UIImage *)image
            withKey:(NSString *)key
+         diskCache:(BOOL)diskCache
     storageOptinos:(LRCacheStorageOptions)storageOptions;
 
 - (void)clearMemCache;
@@ -81,6 +84,7 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 - (void)cacheImage:(UIImage *)image
            withURL:(NSURL *)url
               size:(CGSize)size
+         diskCache:(BOOL)diskCache
     storageOptions:(LRCacheStorageOptions)storageOptions;
 
 @end

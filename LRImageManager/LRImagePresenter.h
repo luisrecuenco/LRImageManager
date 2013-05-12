@@ -28,6 +28,7 @@
                               withURL:(NSURL *)url
                      placeholderImage:(UIImage *)placeholderImage
                                  size:(CGSize)size
+                            diskCache:(BOOL)diskCache
                        storageOptions:(LRCacheStorageOptions)storageOptions
                      animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
