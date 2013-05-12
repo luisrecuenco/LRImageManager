@@ -65,13 +65,51 @@
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+             diskCache:![LRImageCache sharedImageCache].skipDiskCache
+        storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+           diskCache:(BOOL)diskCache
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+             diskCache:diskCache
+        storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+      storageOptions:(LRCacheStorageOptions)storageOptions
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+             diskCache:![LRImageCache sharedImageCache].skipDiskCache
+        storageOptions:storageOptions
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
            diskCache:(BOOL)diskCache
       storageOptions:(LRCacheStorageOptions)storageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     if ([url.absoluteString length] == 0)
     {
-        completionHandler(nil, nil);
+        if (completionHandler)
+        {
+            completionHandler(nil, nil);
+        }
         return;
     }
     
@@ -81,7 +119,10 @@
                                                                                size:size];
     if (memCachedImage)
     {
-        completionHandler(memCachedImage, nil);
+        if (completionHandler)
+        {
+            completionHandler(memCachedImage, nil);
+        }
         return;
     };
     
