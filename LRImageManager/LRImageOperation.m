@@ -307,7 +307,10 @@ completionHandler:(LRImageCompletionHandler)completionHandler
                                          scale:[[UIScreen mainScreen] scale]
                                    orientation:UIImageOrientationUp];
         
-        if (CGSizeEqualToSize(self.size, CGSizeZero) == NO)
+        BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
+                            !CGSizeEqualToSize(self.size, CGSizeZero);
+        
+        if (shouldResize)
         {
             self.image = [self.image resizedImageWithContentMode:UIViewContentModeScaleAspectFill
                                                           bounds:self.size];
