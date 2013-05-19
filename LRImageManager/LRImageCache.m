@@ -379,7 +379,14 @@ NS_INLINE unsigned long long LRCacheDirectorySize()
 
 NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
 {
-    return LRMD5([url.absoluteString stringByAppendingString:NSStringFromCGSize(size)]);
+    NSString *cacheKey = nil;
+    
+    if (url)
+    {
+        cacheKey = LRMD5([url.absoluteString stringByAppendingString:NSStringFromCGSize(size)]);
+    }
+    
+    return cacheKey;
 }
 
 - (NSTimeInterval)maxTimeInCache
