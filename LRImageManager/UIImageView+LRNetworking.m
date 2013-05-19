@@ -133,4 +133,23 @@ static char kLRImagePresenterObjectKey;
   objc_setAssociatedObject(self, &kLRImagePresenterObjectKey, imagePresenter, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+#pragma mark - Automatic cancellation
+
++ (void)load
+{
+    Class originalClass = [UIImageView class];
+    SEL originalSel = NSSelectorFromString(@"dealloc"); /* @selector(dealloc) */
+    SEL newSel = @selector(lr_dealloc);
+    
+    Method originalMethod = class_getInstanceMethod(originalClass, originalSel);
+    Method newMethod = class_getInstanceMethod(originalClass, newSel);
+    method_exchangeImplementations(originalMethod, newMethod);
+}
+
+- (void)lr_dealloc
+{
+    [self cancelImageOperation];
+    [self lr_dealloc];
+}
+
 @end
