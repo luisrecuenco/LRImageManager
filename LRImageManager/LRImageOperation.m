@@ -22,6 +22,7 @@
 
 #import "LRImageOperation.h"
 #import "UIImage+LRImageManagerAdditions.h"
+#import "Reachability.h"
 
 #if OS_OBJECT_USE_OBJC
 #define LRDispatchQueuePropertyModifier strong
@@ -31,7 +32,8 @@
 
 NSString *const LRImageOperationErrorDomain = @"LRImageOperationErrorDomain";
 
-static NSTimeInterval const kImageRequestTimeout = 15.0f;
+static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 15.0f;
+static NSTimeInterval const kImageRequestDefaultWWANTimeout = 60.0f;
 static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 @interface LRImageOperation ()
@@ -117,7 +119,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:kImageRequestTimeout];
+                                                       timeoutInterval:[self imageRequestTimeout]];
     request.HTTPShouldHandleCookies = NO;
     request.HTTPShouldUsePipelining = YES;
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
@@ -361,6 +363,22 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         {
             [_completionHandlers addObject:[completionHandler copy]];
         }
+    }
+}
+
+#pragma mark - Image Request Timeout
+
+- (NSTimeInterval)imageRequestTimeout
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    
+    if ([reachability isReachableViaWiFi])
+    {
+        return kImageRequestDefaultWiFiTimeout;
+    }
+    else
+    {
+        return kImageRequestDefaultWWANTimeout;
     }
 }
 
