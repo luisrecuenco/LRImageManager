@@ -110,7 +110,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 
                 if (!image || error || sself.isCancelled) return;
                 
-                if (self.animationOptions == LRImageViewAnimationOptionFade)
+                if (sself.animationOptions == LRImageViewAnimationOptionFade)
                 {
                     [UIView transitionWithView:sself.imageView
                                       duration:kImageFadeAnimationTime
@@ -137,10 +137,15 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 - (void)cancelPresenting
 {
-    self.cancelled = YES;
+    _cancelled = YES;
     
-    [[LRImageManager sharedManager] cancelImageRequestFromURL:self.imageURL
-                                                         size:self.imageSize];
+    [[LRImageManager sharedManager] cancelImageRequestFromURL:_imageURL
+                                                         size:_imageSize];
+}
+
+- (void)dealloc
+{
+    [self cancelPresenting];
 }
 
 @end
