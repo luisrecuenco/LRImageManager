@@ -34,6 +34,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, assign) BOOL diskCache;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, assign) LRImageViewAnimationOptions animationOptions;
+@property (nonatomic, copy) LRNetImageBlock completionBlock;
 
 @property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
 
@@ -82,11 +83,16 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     return self;
 }
 
-- (void)startPresenting
+- (void)startPresentingWithCompletionBlock:(LRNetImageBlock)completionBlock
 {
+    self.completionBlock = completionBlock;
+    
     if ([self.imageURL.absoluteString length] == 0)
     {
         self.imageView.image = self.placeholderImage;
+        
+        if (self.completionBlock) self.completionBlock(nil);
+        
         return;
     }
     
@@ -95,6 +101,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     if (memCachedImage)
     {
         self.imageView.image = memCachedImage;
+
+        if (self.completionBlock) self.completionBlock(memCachedImage);
     }
     else
     {
@@ -104,11 +112,16 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         
         LRImageCompletionHandler completionHandler = ^(UIImage *image, NSError *error) {
             
+            if (![wself isCancelled])
+            {
+                if (wself.completionBlock) wself.completionBlock(image);
+            }
+
             __strong LRImagePresenter *sself = wself;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if (!image || error || sself.isCancelled) return;
+                if (!image || error || [sself isCancelled]) return;
                 
                 if (sself.animationOptions == LRImageViewAnimationOptionFade)
                 {
@@ -132,7 +145,11 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                                       storageOptions:self.storageOptions
                                    completionHandler:completionHandler];
     }
-    
+}
+
+- (void)startPresenting
+{
+    [self startPresentingWithCompletionBlock:NULL];
 }
 
 - (void)cancelPresenting

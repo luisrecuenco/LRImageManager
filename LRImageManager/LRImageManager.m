@@ -132,7 +132,7 @@
     {
         LRImageOperation *ongoingOperation = self.ongoingOperations[key];
 
-        if (ongoingOperation && !ongoingOperation.isCancelled)
+        if (ongoingOperation && ![ongoingOperation isCancelled])
         {
             [ongoingOperation addCompletionHandler:completionHandler];
         }

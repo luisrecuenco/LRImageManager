@@ -26,17 +26,21 @@
 
 static CGFloat const kImageViewFadeAnimationTime = 0.25f;
 
-static char kLRImagePresenterObjectKey;
+static const void * kLRImagePresenterObjectKey;
+static const void * kLRCompletionBlockObjectKey;
 
 @interface UIImageView (LRImageViewAdditons)
 
 @property (nonatomic, strong) LRImagePresenter *imagePresenter;
+
+@property (nonatomic, copy) LRNetImageBlock completionBlock;
 
 @end
 
 @implementation UIImageView (LRImageViewAdditons)
 
 @dynamic imagePresenter;
+@dynamic completionBlock;
 
 @end
 
@@ -56,11 +60,15 @@ static char kLRImagePresenterObjectKey;
 }
 
 - (void)setImageWithURL:(NSURL *)url
+                   size:(CGSize)size
+{
+    [self setImageWithURL:url placeholderImage:nil size:size];
+}
+
+- (void)setImageWithURL:(NSURL *)url
          storageOptions:(LRCacheStorageOptions)storageOptions
 {
-    [self setImageWithURL:url
-         placeholderImage:nil
-           storageOptions:storageOptions];
+    [self setImageWithURL:url placeholderImage:nil storageOptions:storageOptions];
 }
 
 - (void)setImageWithURL:(NSURL *)url
@@ -113,12 +121,24 @@ static char kLRImagePresenterObjectKey;
                                                    storageOptions:storageOptions
                                                  animationOptions:animationOptions];
     
-    [self.imagePresenter startPresenting];
+    [self.imagePresenter startPresentingWithCompletionBlock:self.completionBlock];
 }
 
 - (void)cancelImageOperation;
 {
     [self.imagePresenter cancelPresenting];
+}
+
+#pragma mark - Completion Block
+
+- (void)setCompletionBlock:(LRNetImageBlock)completionBlock
+{
+    objc_setAssociatedObject(self, &kLRCompletionBlockObjectKey, completionBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (LRNetImageBlock)completionBlock
+{
+    return (LRNetImageBlock)objc_getAssociatedObject(self, &kLRCompletionBlockObjectKey);
 }
 
 #pragma mark - UIImageView presenter

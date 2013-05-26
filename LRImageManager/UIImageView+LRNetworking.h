@@ -22,6 +22,8 @@
 
 #import "LRImageCache.h"
 
+typedef void (^LRNetImageBlock)(UIImage *image);
+
 typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 {
     LRImageViewAnimationOptionFade = 1 << 0,
@@ -34,6 +36,9 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 
 - (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage;
+
+- (void)setImageWithURL:(NSURL *)url
+                   size:(CGSize)size;
 
 - (void)setImageWithURL:(NSURL *)url
          storageOptions:(LRCacheStorageOptions)storageOptions;
@@ -57,6 +62,8 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
               diskCache:(BOOL)diskCache
          storageOptions:(LRCacheStorageOptions)storageOptions
        animationOptions:(LRImageViewAnimationOptions)animationOptions;
+
+- (void)setCompletionBlock:(LRNetImageBlock)completionBlock;
 
 - (void)cancelImageOperation;
 

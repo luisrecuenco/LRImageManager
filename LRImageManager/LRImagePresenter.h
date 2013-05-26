@@ -33,6 +33,9 @@
                      animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
 - (void)startPresenting;
+
+- (void)startPresentingWithCompletionBlock:(LRNetImageBlock)completionBlock;
+
 - (void)cancelPresenting;
 
 @end

@@ -138,12 +138,12 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 {
     @synchronized(self)
     {
-        if (self.isCancelled)
+        if ([self isCancelled])
         {
             self.executing = NO;
             self.finished = YES;
         }
-        else if (!self.isExecuting)
+        else if (![self isExecuting])
         {
             self.executing = YES;
             
@@ -171,7 +171,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 
 - (void)startConnection
 {
-    if (self.isCancelled) return;
+    if ([self isCancelled]) return;
     
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [self.connection start];
@@ -181,7 +181,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 {
     @synchronized(self)
     {
-        if (!self.isCancelled && !self.isFinished)
+        if (![self isCancelled] && ![self isFinished])
         {
             self.cancelled = YES;
             [self.connection cancel];
@@ -199,12 +199,12 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 {
     @synchronized(self)
     {
-        if (self.isExecuting && !self.isFinished)
+        if ([self isExecuting] && ![self isFinished])
         {
             self.executing = NO;
             self.finished = YES;
             
-            if (!self.isCancelled)
+            if (![self isCancelled])
             {
                 @synchronized(self.completionHandlers)
                 {
