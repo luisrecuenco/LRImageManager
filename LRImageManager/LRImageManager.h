@@ -50,8 +50,19 @@
       storageOptions:(LRCacheStorageOptions)storageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+           diskCache:(BOOL)diskCache
+      storageOptions:(LRCacheStorageOptions)storageOptions
+             context:(void *)context
+   completionHandler:(LRImageCompletionHandler)completionHandler;
+
 - (void)cancelImageRequestFromURL:(NSURL *)url
                              size:(CGSize)size;
+
+- (void)cancelImageRequestFromURL:(NSURL *)url
+                             size:(CGSize)size
+                          context:(void *)context;
 
 - (void)cancelAllRequests;
 

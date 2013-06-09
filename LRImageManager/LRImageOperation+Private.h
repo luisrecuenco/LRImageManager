@@ -21,4 +21,10 @@
 @property (nonatomic, strong, readonly) UIImage *image;
 @property (nonatomic, strong, readonly) NSError *error;
 
+// Contexts
+@property (nonatomic) NSUInteger numberOfContexts;
+
+- (void)addContext:(void *)context;
+- (void)removeContext:(void *)context;
+
 @end

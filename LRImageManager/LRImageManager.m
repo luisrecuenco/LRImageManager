@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 #import "LRImageManager.h"
+#import "LRImageOperation+Private.h"
 
 #if !__has_feature(objc_arc)
 #error "LRImageManager requires ARC support."
@@ -104,6 +105,21 @@
       storageOptions:(LRCacheStorageOptions)storageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
+    [self imageFromURL:url
+                  size:size
+             diskCache:diskCache
+        storageOptions:storageOptions
+               context:NULL
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+           diskCache:(BOOL)diskCache
+      storageOptions:(LRCacheStorageOptions)storageOptions
+             context:(void *)context
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
     if ([url.absoluteString length] == 0)
     {
         if (completionHandler)
@@ -135,6 +151,7 @@
         if (ongoingOperation && ![ongoingOperation isCancelled])
         {
             [ongoingOperation addCompletionHandler:completionHandler];
+            [ongoingOperation addContext:context];
         }
         else
         {
@@ -144,6 +161,8 @@
                                                                         storageOptions:storageOptions
                                                                      completionHandler:completionHandler];
             
+            [imageOperation addContext:context];
+
             imageOperation.autoRetry = self.autoRetry;
             
             [imageOperation setCompletionBlock:^{
@@ -171,13 +190,26 @@
 - (void)cancelImageRequestFromURL:(NSURL *)url
                              size:(CGSize)size
 {
+    [self cancelImageRequestFromURL:url size:size context:NULL];
+}
+
+- (void)cancelImageRequestFromURL:(NSURL *)url
+                             size:(CGSize)size
+                          context:(void *)context
+{
     if ([url.absoluteString length] == 0) return;
     
     NSString *key = LRCacheKeyForImage(url, size);
     
     @synchronized(self.ongoingOperations)
     {
-        [self.ongoingOperations[key] cancel];
+        LRImageOperation *imageOperation = self.ongoingOperations[key];
+        [imageOperation removeContext:context];
+        
+        if ([imageOperation numberOfContexts] == 0)
+        {
+            [imageOperation cancel];
+        }
     }
 }
 

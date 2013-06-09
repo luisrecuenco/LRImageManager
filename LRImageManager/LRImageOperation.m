@@ -60,6 +60,8 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSSet *autoRetryErrorCodes;
 
+@property (nonatomic, strong) NSMutableSet *contexts;
+
 @property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t queue;
 
 @end
@@ -364,6 +366,36 @@ completionHandler:(LRImageCompletionHandler)completionHandler
             [_completionHandlers addObject:[completionHandler copy]];
         }
     }
+}
+
+#pragma mark - Contexts management
+
+- (NSUInteger)numberOfContexts
+{
+    return [self.contexts count];
+}
+
+- (void)addContext:(void *)context
+{
+    NSString *contextString = [NSString stringWithFormat:@"%p", context];
+    
+    [self.contexts addObject:contextString];
+}
+
+- (void)removeContext:(void *)context
+{
+    NSString *contextString = [NSString stringWithFormat:@"%p", context];
+    
+    [self.contexts removeObject:contextString];
+}
+
+- (NSMutableSet *)contexts
+{
+    if (!_contexts)
+    {
+        _contexts = [NSMutableSet set];
+    }
+    return _contexts;
 }
 
 #pragma mark - Image Request Timeout
