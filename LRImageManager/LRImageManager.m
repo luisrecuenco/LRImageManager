@@ -204,9 +204,17 @@
     @synchronized(self.ongoingOperations)
     {
         LRImageOperation *imageOperation = self.ongoingOperations[key];
-        [imageOperation removeContext:context];
         
-        if ([imageOperation numberOfContexts] == 0)
+        if (context != NULL)
+        {
+            [imageOperation removeContext:context];
+            
+            if ([imageOperation numberOfContexts] == 0)
+            {
+                [imageOperation cancel];
+            }
+        }
+        else
         {
             [imageOperation cancel];
         }

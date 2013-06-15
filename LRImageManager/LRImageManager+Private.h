@@ -1,4 +1,4 @@
-// LRImageManager.h
+// LRImageManager+Private.h
 //
 // Copyright (c) 2013 Luis Recuenco
 //
@@ -20,39 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "LRImageOperation.h"
+#import "LRImageManager.h"
 
-@interface LRImageManager : NSObject
-
-@property (nonatomic, assign) BOOL showNetworkActivityIndicator;
-
-@property (nonatomic, assign) BOOL autoRetry;
-
-+ (instancetype)sharedManager;
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-           diskCache:(BOOL)diskCache
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-      storageOptions:(LRCacheStorageOptions)storageOptions
-   completionHandler:(LRImageCompletionHandler)completionHandler;
+@interface LRImageManager (Private)
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
       storageOptions:(LRCacheStorageOptions)storageOptions
+             context:(void *)context
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageRequestFromURL:(NSURL *)url
-                             size:(CGSize)size;
-
-- (void)cancelAllRequests;
-
+                             size:(CGSize)size
+                          context:(void *)context;
 @end

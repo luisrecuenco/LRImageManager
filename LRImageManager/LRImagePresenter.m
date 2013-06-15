@@ -22,6 +22,7 @@
 
 #import "LRImagePresenter.h"
 #import "LRImageManager.h"
+#import "LRImageManager+Private.h"
 
 static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
