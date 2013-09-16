@@ -123,7 +123,9 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
     {
-        image = [UIImage imageWithCGImage:[UIImage imageWithContentsOfFile:filePath].CGImage
+        __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
+        
+        image = [UIImage imageWithCGImage:imageFromFile.CGImage
                                     scale:[[UIScreen mainScreen] scale]
                               orientation:UIImageOrientationUp];
     }

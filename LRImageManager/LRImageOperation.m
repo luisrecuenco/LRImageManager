@@ -307,9 +307,15 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 - (void)postProcessImageDownload
 {
     dispatch_async(self.queue, ^{
-        self.image = [UIImage imageWithCGImage:[UIImage imageWithData:self.downloadedData].CGImage
-                                         scale:[[UIScreen mainScreen] scale]
-                                   orientation:UIImageOrientationUp];
+        
+        __attribute__((objc_precise_lifetime)) UIImage *imageFromData = [UIImage imageWithData:self.downloadedData];
+        
+        if (imageFromData)
+        {
+            self.image = [UIImage imageWithCGImage:imageFromData.CGImage
+                                             scale:[[UIScreen mainScreen] scale]
+                                       orientation:UIImageOrientationUp];
+        }
         
         BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
                             !CGSizeEqualToSize(self.size, CGSizeZero);
