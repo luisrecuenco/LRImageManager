@@ -14,6 +14,8 @@
 		330315E416EFE1FB0008B6BD /* UIImage+LRImageManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 330315DD16EFE1FB0008B6BD /* UIImage+LRImageManagerAdditions.m */; };
 		330315E516EFE1FB0008B6BD /* UIImageView+LRNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 330315DF16EFE1FB0008B6BD /* UIImageView+LRNetworking.m */; };
 		330315E716EFE2D70008B6BD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330315E616EFE2D70008B6BD /* UIKit.framework */; };
+		3371ED0F18021A3100DAF464 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 3371ED0D18021A3100DAF464 /* Reachability.h */; };
+		3371ED1018021A3100DAF464 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3371ED0E18021A3100DAF464 /* Reachability.m */; };
 		33C1D11D16EFE13000EA015E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33C1D11C16EFE13000EA015E /* Foundation.framework */; };
 		33D98BC016EFEB6D00F85B10 /* LRImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 330315D416EFE1FB0008B6BD /* LRImageCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		33D98BC116EFEB6D00F85B10 /* LRImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 330315D616EFE1FB0008B6BD /* LRImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -37,6 +39,8 @@
 		330315DE16EFE1FB0008B6BD /* UIImageView+LRNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+LRNetworking.h"; sourceTree = "<group>"; };
 		330315DF16EFE1FB0008B6BD /* UIImageView+LRNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+LRNetworking.m"; sourceTree = "<group>"; };
 		330315E616EFE2D70008B6BD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3371ED0D18021A3100DAF464 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = "<group>"; };
+		3371ED0E18021A3100DAF464 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = "<group>"; };
 		33C1D11916EFE13000EA015E /* libLRImageManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLRImageManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		33C1D11C16EFE13000EA015E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -54,6 +58,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3371ECD3180219EE00DAF464 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				3371ED0D18021A3100DAF464 /* Reachability.h */,
+				3371ED0E18021A3100DAF464 /* Reachability.m */,
+			);
+			path = Vendor;
+			sourceTree = SOURCE_ROOT;
+		};
 		33C1D11016EFE13000EA015E = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +96,7 @@
 		33C1D11E16EFE13000EA015E /* LRImageManager */ = {
 			isa = PBXGroup;
 			children = (
+				3371ECD3180219EE00DAF464 /* Vendor */,
 				330315D416EFE1FB0008B6BD /* LRImageCache.h */,
 				330315D516EFE1FB0008B6BD /* LRImageCache.m */,
 				330315D616EFE1FB0008B6BD /* LRImageManager.h */,
@@ -112,6 +126,7 @@
 				33D98BC316EFEB6D00F85B10 /* LRImagePresenter.h in Headers */,
 				33D98BC416EFEB6D00F85B10 /* UIImage+LRImageManagerAdditions.h in Headers */,
 				33D98BC516EFEB6D00F85B10 /* UIImageView+LRNetworking.h in Headers */,
+				3371ED0F18021A3100DAF464 /* Reachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +187,7 @@
 				330315E316EFE1FB0008B6BD /* LRImagePresenter.m in Sources */,
 				330315E416EFE1FB0008B6BD /* UIImage+LRImageManagerAdditions.m in Sources */,
 				330315E516EFE1FB0008B6BD /* UIImageView+LRNetworking.m in Sources */,
+				3371ED1018021A3100DAF464 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
