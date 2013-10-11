@@ -315,7 +315,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     }
     else
     {
-      LRImageManagerLog(@"Cache file removed successfully");
+      LRImageManagerLog(@"Cache file removed successfully at path: %@", filePath);
     }
   });
 }
