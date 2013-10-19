@@ -144,7 +144,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                                                 size:self.imageSize
                                            diskCache:self.diskCache
                                       storageOptions:self.storageOptions
-                                             context:(__bridge void *)(self.imageView)
+                                             context:self.imageView
                                    completionHandler:completionHandler];
     }
 }
@@ -160,7 +160,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     
     [[LRImageManager sharedManager] cancelImageRequestFromURL:_imageURL
                                                          size:_imageSize
-                                                      context:(__bridge void *)(self.imageView)];
+                                                      context:self.imageView];
 }
 
 - (void)dealloc

@@ -38,7 +38,7 @@
 // Contexts
 @property (nonatomic) NSUInteger numberOfContexts;
 
-- (void)addContext:(void *)context;
-- (void)removeContext:(void *)context;
+- (void)addContext:(id)context;
+- (void)removeContext:(id)context;
 
 @end

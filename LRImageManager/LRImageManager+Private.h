@@ -28,10 +28,10 @@
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
       storageOptions:(LRCacheStorageOptions)storageOptions
-             context:(void *)context
+             context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageRequestFromURL:(NSURL *)url
                              size:(CGSize)size
-                          context:(void *)context;
+                          context:(id)context;
 @end
