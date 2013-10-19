@@ -117,7 +117,7 @@
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
       storageOptions:(LRCacheStorageOptions)storageOptions
-             context:(void *)context
+             context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     if ([url.absoluteString length] == 0)
@@ -195,7 +195,7 @@
 
 - (void)cancelImageRequestFromURL:(NSURL *)url
                              size:(CGSize)size
-                          context:(void *)context
+                          context:(id)context
 {
     if ([url.absoluteString length] == 0) return;
     
@@ -205,16 +205,9 @@
     {
         LRImageOperation *imageOperation = self.ongoingOperations[key];
         
-        if (context != NULL)
-        {
-            [imageOperation removeContext:context];
-            
-            if ([imageOperation numberOfContexts] == 0)
-            {
-                [imageOperation cancel];
-            }
-        }
-        else
+        [imageOperation removeContext:context];
+        
+        if ([imageOperation numberOfContexts] == 0)
         {
             [imageOperation cancel];
         }

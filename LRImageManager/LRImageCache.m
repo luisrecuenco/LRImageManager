@@ -271,7 +271,8 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     [self.imagesCache removeAllObjects];
 }
 
-- (void)clearMemCacheForKey:(NSString*)key {
+- (void)clearMemCacheForKey:(NSString *)key
+{
     dispatch_sync(self.syncQueue, ^{
         [self.imagesDictionary removeObjectForKey:key];
     });
@@ -300,24 +301,24 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     });
 }
 
-- (void)clearDiskCacheForKey:(NSString*)key
+- (void)clearDiskCacheForKey:(NSString *)key
 {
-  dispatch_async(self.ioQueue, ^{
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *filePath = LRFilePathForCacheKey(key);
-    
-    NSError *error = nil;
-    
-    if (![fileManager removeItemAtPath:filePath error:&error])
-    {
-      LRImageManagerLog(@"Error deleting cache file at path: %@ | error: %@", filePath, [error localizedDescription]);
-    }
-    else
-    {
-      LRImageManagerLog(@"Cache file removed successfully at path: %@", filePath);
-    }
-  });
+    dispatch_async(self.ioQueue, ^{
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *filePath = LRFilePathForCacheKey(key);
+        
+        NSError *error = nil;
+        
+        if (![fileManager removeItemAtPath:filePath error:&error])
+        {
+            LRImageManagerLog(@"Error deleting cache file at path: %@ | error: %@", filePath, [error localizedDescription]);
+        }
+        else
+        {
+            LRImageManagerLog(@"Cache file removed successfully at path: %@", filePath);
+        }
+    });
 }
 
 - (void)cleanDisk

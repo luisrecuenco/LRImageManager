@@ -60,7 +60,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSSet *autoRetryErrorCodes;
 
-@property (nonatomic, strong) NSMutableSet *contexts;
+@property (nonatomic, strong) NSHashTable *contexts;
 
 @property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t queue;
 
@@ -381,25 +381,21 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     return [self.contexts count];
 }
 
-- (void)addContext:(void *)context
+- (void)addContext:(id)context
 {
-    NSString *contextString = [NSString stringWithFormat:@"%p", context];
-    
-    [self.contexts addObject:contextString];
+    [self.contexts addObject:context];
 }
 
-- (void)removeContext:(void *)context
+- (void)removeContext:(id)context
 {
-    NSString *contextString = [NSString stringWithFormat:@"%p", context];
-    
-    [self.contexts removeObject:contextString];
+    [self.contexts removeObject:context];
 }
 
-- (NSMutableSet *)contexts
+- (NSHashTable *)contexts
 {
     if (!_contexts)
     {
-        _contexts = [NSMutableSet set];
+        _contexts = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     }
     return _contexts;
 }
