@@ -96,7 +96,9 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     
     __block UIImage *memCachedImage = nil;
     
+	__weak typeof(self) _weak_self = self;
     dispatch_sync(self.syncQueue, ^{
+		__strong typeof(_weak_self) self = _weak_self;
         memCachedImage = self.imagesDictionary[key] ?:
                          [self.imagesCache objectForKey:key];
     });
@@ -146,8 +148,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 - (void)diskCachedImageForKey:(NSString *)key
               completionBlock:(void (^)(UIImage *image))completionBlock
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.ioQueue, ^{
-        
+		__strong typeof(_weak_self) self = _weak_self;
+		
         UIImage *diskCachedImage = [self diskCachedImageForKey:key];
         
         if (completionBlock)
@@ -218,9 +222,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 - (void)diskCache:(UIImage *)image withKey:(NSString *)key
 {
     if (!image || !key) return;
-    
+	
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.ioQueue, ^{
-        
+		__strong typeof(_weak_self) self = _weak_self;
+    
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *imageCacheDirectoryPath = LRPathToImageCacheDirectory();
         
@@ -273,7 +279,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (void)clearMemCacheForKey:(NSString *)key
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_sync(self.syncQueue, ^{
+		__strong typeof(_weak_self) self = _weak_self;
+		
         [self.imagesDictionary removeObjectForKey:key];
     });
     
@@ -283,8 +292,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (void)clearDiskCache
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.ioQueue, ^{
-        
+		__strong typeof(_weak_self) self = _weak_self;
+
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *directoryPath = LRPathToImageCacheDirectory();
         
@@ -303,8 +314,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (void)clearDiskCacheForKey:(NSString *)key
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.ioQueue, ^{
-        
+		__strong typeof(_weak_self) self = _weak_self;
+		
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *filePath = LRFilePathForCacheKey(key);
         
@@ -325,8 +338,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     if (LRCacheDirectorySize() <= self.maxDirectorySize) return;
     
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.ioQueue, ^{
-        
+		__strong typeof(_weak_self) self = _weak_self;
+		
         NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:LRPathToImageCacheDirectory()];
         
         NSFileManager *fileManager = [NSFileManager defaultManager];

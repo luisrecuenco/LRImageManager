@@ -247,7 +247,9 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.queue, ^{
+		__strong typeof(_weak_self) self = _weak_self;
         if (self.downloadedData == nil)
         {
             self.downloadedData = [[NSMutableData alloc] initWithCapacity:
@@ -306,7 +308,9 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 
 - (void)postProcessImageDownload
 {
+	__weak typeof(self) _weak_self = self;
     dispatch_async(self.queue, ^{
+		__strong typeof(_weak_self) self = _weak_self;
         
         __attribute__((objc_precise_lifetime)) UIImage *imageFromData = [UIImage imageWithData:self.downloadedData];
         

@@ -165,7 +165,9 @@
 
             imageOperation.autoRetry = self.autoRetry;
             
+			__weak typeof(self) _weak_self = self;
             [imageOperation setCompletionBlock:^{
+				__strong typeof(_weak_self) self = _weak_self;
                 
                 [self.ongoingOperations removeObjectForKey:key];
                 
