@@ -32,36 +32,36 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 
 @interface UIImageView (LRNetworking)
 
-- (void)setImageWithURL:(NSURL *)url;
+- (void)lr_setImageWithURL:(NSURL *)url;
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage;
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage;
 
-- (void)setImageWithURL:(NSURL *)url
-                   size:(CGSize)size;
+- (void)lr_setImageWithURL:(NSURL *)url
+                      size:(CGSize)size;
 
-- (void)setImageWithURL:(NSURL *)url
-         storageOptions:(LRCacheStorageOptions)storageOptions;
+- (void)lr_setImageWithURL:(NSURL *)url
+            storageOptions:(LRCacheStorageOptions)storageOptions;
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-         storageOptions:(LRCacheStorageOptions)storageOptions;
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+            storageOptions:(LRCacheStorageOptions)storageOptions;
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size;
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size;
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-         storageOptions:(LRCacheStorageOptions)storageOptions;
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size
+            storageOptions:(LRCacheStorageOptions)storageOptions;
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-              diskCache:(BOOL)diskCache
-         storageOptions:(LRCacheStorageOptions)storageOptions
-       animationOptions:(LRImageViewAnimationOptions)animationOptions;
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size
+                 diskCache:(BOOL)diskCache
+            storageOptions:(LRCacheStorageOptions)storageOptions
+          animationOptions:(LRImageViewAnimationOptions)animationOptions;
 
 - (void)setCompletionBlock:(LRNetImageBlock)completionBlock;
 

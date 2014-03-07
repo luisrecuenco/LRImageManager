@@ -46,70 +46,70 @@ static const void * kLRCompletionBlockObjectKey;
 
 @implementation UIImageView (LRNetworking)
 
-- (void)setImageWithURL:(NSURL *)url
+- (void)lr_setImageWithURL:(NSURL *)url
 {
-    [self setImageWithURL:url placeholderImage:nil];
+    [self lr_setImageWithURL:url placeholderImage:nil];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
 {
-    [self setImageWithURL:url
-         placeholderImage:placeholderImage
-           storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
+    [self lr_setImageWithURL:url
+            placeholderImage:placeholderImage
+              storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-                   size:(CGSize)size
+- (void)lr_setImageWithURL:(NSURL *)url
+                      size:(CGSize)size
 {
-    [self setImageWithURL:url placeholderImage:nil size:size];
+    [self lr_setImageWithURL:url placeholderImage:nil size:size];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-         storageOptions:(LRCacheStorageOptions)storageOptions
+- (void)lr_setImageWithURL:(NSURL *)url
+            storageOptions:(LRCacheStorageOptions)storageOptions
 {
-    [self setImageWithURL:url placeholderImage:nil storageOptions:storageOptions];
+    [self lr_setImageWithURL:url placeholderImage:nil storageOptions:storageOptions];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-         storageOptions:(LRCacheStorageOptions)storageOptions
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+            storageOptions:(LRCacheStorageOptions)storageOptions
 {
-    [self setImageWithURL:url
-         placeholderImage:placeholderImage
-                     size:self.frame.size
-           storageOptions:storageOptions];
+    [self lr_setImageWithURL:url
+            placeholderImage:placeholderImage
+                        size:self.frame.size
+              storageOptions:storageOptions];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size
 {
-    [self setImageWithURL:url
-         placeholderImage:placeholderImage
-                     size:size
-           storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
+    [self lr_setImageWithURL:url
+            placeholderImage:placeholderImage
+                        size:size
+              storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-         storageOptions:(LRCacheStorageOptions)storageOptions
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size
+            storageOptions:(LRCacheStorageOptions)storageOptions
 {
-    [self setImageWithURL:url
-         placeholderImage:placeholderImage
-                     size:size
-                diskCache:![LRImageCache sharedImageCache].skipDiskCache
-           storageOptions:storageOptions
-         animationOptions:LRImageViewAnimationOptionFade];
+    [self lr_setImageWithURL:url
+            placeholderImage:placeholderImage
+                        size:size
+                   diskCache:![LRImageCache sharedImageCache].skipDiskCache
+              storageOptions:storageOptions
+            animationOptions:LRImageViewAnimationOptionFade];
 }
 
-- (void)setImageWithURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-              diskCache:(BOOL)diskCache
-         storageOptions:(LRCacheStorageOptions)storageOptions
-       animationOptions:(LRImageViewAnimationOptions)animationOptions
+- (void)lr_setImageWithURL:(NSURL *)url
+          placeholderImage:(UIImage *)placeholderImage
+                      size:(CGSize)size
+                 diskCache:(BOOL)diskCache
+            storageOptions:(LRCacheStorageOptions)storageOptions
+          animationOptions:(LRImageViewAnimationOptions)animationOptions
 {
     [self cancelImageOperation];
     
@@ -150,7 +150,7 @@ static const void * kLRCompletionBlockObjectKey;
 
 - (void)setImagePresenter:(LRImagePresenter *)imagePresenter
 {
-  objc_setAssociatedObject(self, &kLRImagePresenterObjectKey, imagePresenter, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &kLRImagePresenterObjectKey, imagePresenter, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
