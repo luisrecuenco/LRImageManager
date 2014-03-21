@@ -287,8 +287,8 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         if (statusCode >= 400)
         {
             NSString *message = [NSString stringWithFormat:
-                                 @"Error code %d when downloading image with URL: %@ and size: %@",
-                                 statusCode, self.url, NSStringFromCGSize(self.size)];
+                                 @"Error code %lu when downloading image with URL: %@ and size: %@",
+                                 (long)statusCode, self.url, NSStringFromCGSize(self.size)];
             
             NSDictionary *infoDict = @{NSLocalizedDescriptionKey : message};
             self.error = [NSError errorWithDomain:LRImageOperationErrorDomain

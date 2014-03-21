@@ -24,8 +24,6 @@
 #import "LRImagePresenter.h"
 #import <objc/runtime.h>
 
-static CGFloat const kImageViewFadeAnimationTime = 0.25f;
-
 static const void * kLRImagePresenterObjectKey;
 static const void * kLRCompletionBlockObjectKey;
 
