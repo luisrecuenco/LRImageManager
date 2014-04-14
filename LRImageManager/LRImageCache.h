@@ -37,6 +37,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 /** Cache size limit */
 @property (nonatomic, assign) unsigned long long maxDirectorySize;
 
+/** Disk Cache size  */
+@property (nonatomic, assign) unsigned long long diskSize;
+
 /** Default cache storage option */
 @property (nonatomic, assign) LRCacheStorageOptions defaultCacheStorageOption;
 
@@ -64,11 +67,11 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 
 - (void)clearMemCacheForKey:(NSString *)key;
 
-- (void)clearDiskCache;
+- (void)clearDiskCacheCompledBlock:(void (^)(void))compledBlock;
 
 - (void)clearDiskCacheForKey:(NSString *)key;
 
-- (void)cleanDisk;
+- (void)cleanDiskCompledBlock:(void (^)(void))compledBlock;
 
 @end
 

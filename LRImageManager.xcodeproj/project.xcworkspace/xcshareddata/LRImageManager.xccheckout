@@ -5,36 +5,48 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>DED17A2F-6A40-46E0-A791-5BF89A29F87E</string>
+	<string>8F909DBB-F299-4F61-8BA2-7BD8D34891B3</string>
 	<key>IDESourceControlProjectName</key>
 	<string>LRImageManager</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>23F03C7B-4E4F-4F56-A54B-B60FE94A40DA</key>
-		<string>https://github.com/luisrecuenco/LRImageManager.git</string>
+		<key>687F74C8-CF62-48F2-88FA-8BE7BC279018</key>
+		<string>https://github.com/tonymillion/Reachability.git</string>
+		<key>6A465187-5AF3-485F-B39F-4E80EA62B562</key>
+		<string>https://github.com/xhzengAIB/LRImageManager.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>LRImageManager.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>23F03C7B-4E4F-4F56-A54B-B60FE94A40DA</key>
+		<key>687F74C8-CF62-48F2-88FA-8BE7BC279018</key>
+		<string>../../Vendor/Reachability</string>
+		<key>6A465187-5AF3-485F-B39F-4E80EA62B562</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/luisrecuenco/LRImageManager.git</string>
+	<string>https://github.com/xhzengAIB/LRImageManager.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>23F03C7B-4E4F-4F56-A54B-B60FE94A40DA</string>
+	<string>6A465187-5AF3-485F-B39F-4E80EA62B562</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>23F03C7B-4E4F-4F56-A54B-B60FE94A40DA</string>
+			<string>6A465187-5AF3-485F-B39F-4E80EA62B562</string>
 			<key>IDESourceControlWCCName</key>
 			<string>LRImageManager</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>687F74C8-CF62-48F2-88FA-8BE7BC279018</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Reachability</string>
 		</dict>
 	</array>
 </dict>

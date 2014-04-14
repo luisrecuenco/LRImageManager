@@ -82,7 +82,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                                    object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cleanDisk)
+                                                 selector:@selector(cleanDiskCompledBlock:)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
 	}
@@ -281,7 +281,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     [self.imagesCache removeObjectForKey:key];
 }
 
-- (void)clearDiskCache
+- (void)clearDiskCacheCompledBlock:(void (^)(void))compledBlock
 {
     dispatch_async(self.ioQueue, ^{
         
@@ -321,7 +321,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     });
 }
 
-- (void)cleanDisk
+- (void)cleanDiskCompledBlock:(void (^)(void))compledBlock
 {
     if (LRCacheDirectorySize() <= self.maxDirectorySize) return;
     
@@ -356,7 +356,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         // Still bigger? let's clear it all (TODO: LRU or similar, not so harsh)
         if (LRCacheDirectorySize() > self.maxDirectorySize)
         {
-            [self clearDiskCache];
+            [self clearDiskCacheCompledBlock:compledBlock];
         }
     });
 }
@@ -429,6 +429,27 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
 - (unsigned long long)maxDirectorySize
 {
     return _maxDirectorySize ?: kDefaultMaxCacheDirectorySize;
+}
+
+- (unsigned long long)diskSize {
+    _diskSize = 0;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:LRPathToImageCacheDirectory() error:&error];
+    if (!contents)
+    {
+        NSLog(@"Failed to list directory with error %@", error);
+        return _diskSize;
+    }
+    for (NSString *pathComponent in contents)
+    {
+        NSString *path = [LRPathToImageCacheDirectory() stringByAppendingPathComponent:pathComponent];
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:path error:&error];
+        if (!attributes) continue;
+        
+        _diskSize += attributes.fileSize;
+    }
+    return _diskSize;
 }
 
 - (LRCacheStorageOptions)defaultCacheStorageOption
