@@ -40,6 +40,7 @@
 
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
+static const unsigned long long kDefaultMaxMemSize = 20; // 20 tatol
 static const LRCacheStorageOptions kDefaultCacheStorageOption = LRCacheStorageOptionsNSCache;
 
 static NSString *const kImageCacheDirectoryName = @"LRImageCache";
@@ -90,6 +91,20 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 	return self;
 }
 
+- (void)checkMemCacheSize {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(self.syncQueue, ^{
+        NSArray *tatolMemCaches = [weakSelf.imagesDictionary allKeys];
+        if (tatolMemCaches.count) {
+            NSString * key = [tatolMemCaches firstObject];
+            if ([tatolMemCaches count] > weakSelf.maxMemSize) {
+                [weakSelf.imagesDictionary removeObjectForKey:key];
+                [weakSelf.imagesCache removeObjectForKey:key];
+            }
+        }
+    });
+}
+
 - (UIImage *)memCachedImageForKey:(NSString *)key
 {
     if ([key length] == 0) return nil;
@@ -99,6 +114,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     dispatch_sync(self.syncQueue, ^{
         memCachedImage = self.imagesDictionary[key] ?:
                          [self.imagesCache objectForKey:key];
+        [self checkMemCacheSize];
     });
     
     return memCachedImage;
@@ -205,6 +221,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     {   
         dispatch_sync(self.syncQueue, ^{
             self.imagesDictionary[key] = image;
+            [self checkMemCacheSize];
         });
     }
     else if (storageOptions & LRCacheStorageOptionsNSCache)
@@ -212,6 +229,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         [self.imagesCache setObject:image
                              forKey:key
                                cost:image.size.width * image.size.height * image.scale];
+        [self checkMemCacheSize];
     }
 }
 
@@ -450,6 +468,10 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
         _diskSize += attributes.fileSize;
     }
     return _diskSize;
+}
+
+- (unsigned long long)maxMemSize {
+    return _maxMemSize ?: kDefaultMaxMemSize;
 }
 
 - (LRCacheStorageOptions)defaultCacheStorageOption

@@ -23,7 +23,41 @@
 		33D98BC316EFEB6D00F85B10 /* LRImagePresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 330315DA16EFE1FB0008B6BD /* LRImagePresenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		33D98BC416EFEB6D00F85B10 /* UIImage+LRImageManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 330315DC16EFE1FB0008B6BD /* UIImage+LRImageManagerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		33D98BC516EFEB6D00F85B10 /* UIImageView+LRNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 330315DE16EFE1FB0008B6BD /* UIImageView+LRNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7438CFB518FBAB840048F1F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33C1D11C16EFE13000EA015E /* Foundation.framework */; };
+		7438CFB718FBAB840048F1F3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7438CFB618FBAB840048F1F3 /* CoreGraphics.framework */; };
+		7438CFB818FBAB840048F1F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330315E616EFE2D70008B6BD /* UIKit.framework */; };
+		7438CFBE18FBAB840048F1F3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7438CFBC18FBAB840048F1F3 /* InfoPlist.strings */; };
+		7438CFC018FBAB840048F1F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7438CFBF18FBAB840048F1F3 /* main.m */; };
+		7438CFC418FBAB840048F1F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7438CFC318FBAB840048F1F3 /* AppDelegate.m */; };
+		7438CFC718FBAB840048F1F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7438CFC518FBAB840048F1F3 /* Main.storyboard */; };
+		7438CFCA18FBAB840048F1F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7438CFC918FBAB840048F1F3 /* ViewController.m */; };
+		7438CFCC18FBAB840048F1F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7438CFCB18FBAB840048F1F3 /* Images.xcassets */; };
+		7438CFD318FBAB840048F1F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7438CFD218FBAB840048F1F3 /* XCTest.framework */; };
+		7438CFD418FBAB840048F1F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33C1D11C16EFE13000EA015E /* Foundation.framework */; };
+		7438CFD518FBAB850048F1F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330315E616EFE2D70008B6BD /* UIKit.framework */; };
+		7438CFDD18FBAB850048F1F3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7438CFDB18FBAB850048F1F3 /* InfoPlist.strings */; };
+		7438CFDF18FBAB850048F1F3 /* LRImageManagerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7438CFDE18FBAB850048F1F3 /* LRImageManagerDemoTests.m */; };
+		7438CFE918FBAECA0048F1F3 /* libLRImageManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33C1D11916EFE13000EA015E /* libLRImageManager.a */; };
+		7438CFEB18FBAEDE0048F1F3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7438CFEA18FBAEDE0048F1F3 /* CFNetwork.framework */; };
+		7438CFED18FBAEE90048F1F3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7438CFEC18FBAEE90048F1F3 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7438CFD618FBAB850048F1F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33C1D11116EFE13000EA015E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7438CFB318FBAB840048F1F3;
+			remoteInfo = LRImageManagerDemo;
+		};
+		7438CFE618FBAB940048F1F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33C1D11116EFE13000EA015E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 33C1D11816EFE13000EA015E;
+			remoteInfo = LRImageManager;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		330315D416EFE1FB0008B6BD /* LRImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRImageCache.h; sourceTree = "<group>"; };
@@ -43,6 +77,25 @@
 		3371ED0E18021A3100DAF464 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = "<group>"; };
 		33C1D11916EFE13000EA015E /* libLRImageManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLRImageManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		33C1D11C16EFE13000EA015E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7438CFB418FBAB840048F1F3 /* LRImageManagerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LRImageManagerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7438CFB618FBAB840048F1F3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		7438CFBB18FBAB840048F1F3 /* LRImageManagerDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LRImageManagerDemo-Info.plist"; sourceTree = "<group>"; };
+		7438CFBD18FBAB840048F1F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7438CFBF18FBAB840048F1F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7438CFC118FBAB840048F1F3 /* LRImageManagerDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LRImageManagerDemo-Prefix.pch"; sourceTree = "<group>"; };
+		7438CFC218FBAB840048F1F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		7438CFC318FBAB840048F1F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		7438CFC618FBAB840048F1F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7438CFC818FBAB840048F1F3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		7438CFC918FBAB840048F1F3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		7438CFCB18FBAB840048F1F3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7438CFD118FBAB840048F1F3 /* LRImageManagerDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LRImageManagerDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7438CFD218FBAB840048F1F3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		7438CFDA18FBAB850048F1F3 /* LRImageManagerDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LRImageManagerDemoTests-Info.plist"; sourceTree = "<group>"; };
+		7438CFDC18FBAB850048F1F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7438CFDE18FBAB850048F1F3 /* LRImageManagerDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LRImageManagerDemoTests.m; sourceTree = "<group>"; };
+		7438CFEA18FBAEDE0048F1F3 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		7438CFEC18FBAEE90048F1F3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +105,29 @@
 			files = (
 				330315E716EFE2D70008B6BD /* UIKit.framework in Frameworks */,
 				33C1D11D16EFE13000EA015E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7438CFB118FBAB840048F1F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFED18FBAEE90048F1F3 /* SystemConfiguration.framework in Frameworks */,
+				7438CFEB18FBAEDE0048F1F3 /* CFNetwork.framework in Frameworks */,
+				7438CFE918FBAECA0048F1F3 /* libLRImageManager.a in Frameworks */,
+				7438CFB718FBAB840048F1F3 /* CoreGraphics.framework in Frameworks */,
+				7438CFB818FBAB840048F1F3 /* UIKit.framework in Frameworks */,
+				7438CFB518FBAB840048F1F3 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7438CFCE18FBAB840048F1F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFD318FBAB840048F1F3 /* XCTest.framework in Frameworks */,
+				7438CFD518FBAB850048F1F3 /* UIKit.framework in Frameworks */,
+				7438CFD418FBAB840048F1F3 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +147,8 @@
 			isa = PBXGroup;
 			children = (
 				33C1D11E16EFE13000EA015E /* LRImageManager */,
+				7438CFB918FBAB840048F1F3 /* LRImageManagerDemo */,
+				7438CFD818FBAB850048F1F3 /* LRImageManagerDemoTests */,
 				33C1D11B16EFE13000EA015E /* Frameworks */,
 				33C1D11A16EFE13000EA015E /* Products */,
 			);
@@ -80,6 +158,8 @@
 			isa = PBXGroup;
 			children = (
 				33C1D11916EFE13000EA015E /* libLRImageManager.a */,
+				7438CFB418FBAB840048F1F3 /* LRImageManagerDemo.app */,
+				7438CFD118FBAB840048F1F3 /* LRImageManagerDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,8 +167,12 @@
 		33C1D11B16EFE13000EA015E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7438CFEC18FBAEE90048F1F3 /* SystemConfiguration.framework */,
+				7438CFEA18FBAEDE0048F1F3 /* CFNetwork.framework */,
 				330315E616EFE2D70008B6BD /* UIKit.framework */,
 				33C1D11C16EFE13000EA015E /* Foundation.framework */,
+				7438CFB618FBAB840048F1F3 /* CoreGraphics.framework */,
+				7438CFD218FBAB840048F1F3 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,6 +195,49 @@
 				330315DF16EFE1FB0008B6BD /* UIImageView+LRNetworking.m */,
 			);
 			path = LRImageManager;
+			sourceTree = "<group>";
+		};
+		7438CFB918FBAB840048F1F3 /* LRImageManagerDemo */ = {
+			isa = PBXGroup;
+			children = (
+				7438CFC218FBAB840048F1F3 /* AppDelegate.h */,
+				7438CFC318FBAB840048F1F3 /* AppDelegate.m */,
+				7438CFC518FBAB840048F1F3 /* Main.storyboard */,
+				7438CFC818FBAB840048F1F3 /* ViewController.h */,
+				7438CFC918FBAB840048F1F3 /* ViewController.m */,
+				7438CFCB18FBAB840048F1F3 /* Images.xcassets */,
+				7438CFBA18FBAB840048F1F3 /* Supporting Files */,
+			);
+			path = LRImageManagerDemo;
+			sourceTree = "<group>";
+		};
+		7438CFBA18FBAB840048F1F3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7438CFBB18FBAB840048F1F3 /* LRImageManagerDemo-Info.plist */,
+				7438CFBC18FBAB840048F1F3 /* InfoPlist.strings */,
+				7438CFBF18FBAB840048F1F3 /* main.m */,
+				7438CFC118FBAB840048F1F3 /* LRImageManagerDemo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7438CFD818FBAB850048F1F3 /* LRImageManagerDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				7438CFDE18FBAB850048F1F3 /* LRImageManagerDemoTests.m */,
+				7438CFD918FBAB850048F1F3 /* Supporting Files */,
+			);
+			path = LRImageManagerDemoTests;
+			sourceTree = "<group>";
+		};
+		7438CFD918FBAB850048F1F3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7438CFDA18FBAB850048F1F3 /* LRImageManagerDemoTests-Info.plist */,
+				7438CFDB18FBAB850048F1F3 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +277,42 @@
 			productReference = 33C1D11916EFE13000EA015E /* libLRImageManager.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		7438CFB318FBAB840048F1F3 /* LRImageManagerDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7438CFE418FBAB850048F1F3 /* Build configuration list for PBXNativeTarget "LRImageManagerDemo" */;
+			buildPhases = (
+				7438CFB018FBAB840048F1F3 /* Sources */,
+				7438CFB118FBAB840048F1F3 /* Frameworks */,
+				7438CFB218FBAB840048F1F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7438CFE718FBAB940048F1F3 /* PBXTargetDependency */,
+			);
+			name = LRImageManagerDemo;
+			productName = LRImageManagerDemo;
+			productReference = 7438CFB418FBAB840048F1F3 /* LRImageManagerDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7438CFD018FBAB840048F1F3 /* LRImageManagerDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7438CFE518FBAB850048F1F3 /* Build configuration list for PBXNativeTarget "LRImageManagerDemoTests" */;
+			buildPhases = (
+				7438CFCD18FBAB840048F1F3 /* Sources */,
+				7438CFCE18FBAB840048F1F3 /* Frameworks */,
+				7438CFCF18FBAB840048F1F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7438CFD718FBAB850048F1F3 /* PBXTargetDependency */,
+			);
+			name = LRImageManagerDemoTests;
+			productName = LRImageManagerDemoTests;
+			productReference = 7438CFD118FBAB840048F1F3 /* LRImageManagerDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -158,6 +321,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Luis Recuenco";
+				TargetAttributes = {
+					7438CFD018FBAB840048F1F3 = {
+						TestTargetID = 7438CFB318FBAB840048F1F3;
+					};
+				};
 			};
 			buildConfigurationList = 33C1D11416EFE13000EA015E /* Build configuration list for PBXProject "LRImageManager" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -165,6 +333,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 33C1D11016EFE13000EA015E;
 			productRefGroup = 33C1D11A16EFE13000EA015E /* Products */;
@@ -172,9 +341,32 @@
 			projectRoot = "";
 			targets = (
 				33C1D11816EFE13000EA015E /* LRImageManager */,
+				7438CFB318FBAB840048F1F3 /* LRImageManagerDemo */,
+				7438CFD018FBAB840048F1F3 /* LRImageManagerDemoTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7438CFB218FBAB840048F1F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFCC18FBAB840048F1F3 /* Images.xcassets in Resources */,
+				7438CFBE18FBAB840048F1F3 /* InfoPlist.strings in Resources */,
+				7438CFC718FBAB840048F1F3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7438CFCF18FBAB840048F1F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFDD18FBAB850048F1F3 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		33C1D11516EFE13000EA015E /* Sources */ = {
@@ -191,7 +383,65 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7438CFB018FBAB840048F1F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFCA18FBAB840048F1F3 /* ViewController.m in Sources */,
+				7438CFC418FBAB840048F1F3 /* AppDelegate.m in Sources */,
+				7438CFC018FBAB840048F1F3 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7438CFCD18FBAB840048F1F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7438CFDF18FBAB850048F1F3 /* LRImageManagerDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7438CFD718FBAB850048F1F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7438CFB318FBAB840048F1F3 /* LRImageManagerDemo */;
+			targetProxy = 7438CFD618FBAB850048F1F3 /* PBXContainerItemProxy */;
+		};
+		7438CFE718FBAB940048F1F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 33C1D11816EFE13000EA015E /* LRImageManager */;
+			targetProxy = 7438CFE618FBAB940048F1F3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7438CFBC18FBAB840048F1F3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7438CFBD18FBAB840048F1F3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7438CFC518FBAB840048F1F3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7438CFC618FBAB840048F1F3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7438CFDB18FBAB850048F1F3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7438CFDC18FBAB850048F1F3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		33C1D12516EFE13000EA015E /* Debug */ = {
@@ -273,6 +523,122 @@
 			};
 			name = Release;
 		};
+		7438CFE018FBAB850048F1F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LRImageManagerDemo/LRImageManagerDemo-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "LRImageManagerDemo/LRImageManagerDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7438CFE118FBAB850048F1F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LRImageManagerDemo/LRImageManagerDemo-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "LRImageManagerDemo/LRImageManagerDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		7438CFE218FBAB850048F1F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LRImageManagerDemo.app/LRImageManagerDemo";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LRImageManagerDemo/LRImageManagerDemo-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "LRImageManagerDemoTests/LRImageManagerDemoTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		7438CFE318FBAB850048F1F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LRImageManagerDemo.app/LRImageManagerDemo";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LRImageManagerDemo/LRImageManagerDemo-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "LRImageManagerDemoTests/LRImageManagerDemoTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -293,6 +659,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7438CFE418FBAB850048F1F3 /* Build configuration list for PBXNativeTarget "LRImageManagerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7438CFE018FBAB850048F1F3 /* Debug */,
+				7438CFE118FBAB850048F1F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7438CFE518FBAB850048F1F3 /* Build configuration list for PBXNativeTarget "LRImageManagerDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7438CFE218FBAB850048F1F3 /* Debug */,
+				7438CFE318FBAB850048F1F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

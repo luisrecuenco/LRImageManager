@@ -37,6 +37,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 /** Cache size limit */
 @property (nonatomic, assign) unsigned long long maxDirectorySize;
 
+/** Max Mem Cache size */
+@property (nonatomic, assign) unsigned long long maxMemSize;
+
 /** Disk Cache size  */
 @property (nonatomic, assign) unsigned long long diskSize;
 
