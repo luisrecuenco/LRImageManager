@@ -70,11 +70,11 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 
 - (void)clearMemCacheForKey:(NSString *)key;
 
-- (void)clearDiskCacheCompledBlock:(void (^)(void))compledBlock;
+- (void)clearDiskCache;
 
 - (void)clearDiskCacheForKey:(NSString *)key;
 
-- (void)cleanDiskCompledBlock:(void (^)(void))compledBlock;
+- (void)cleanDisk;
 
 @end
 

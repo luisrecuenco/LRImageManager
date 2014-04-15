@@ -83,7 +83,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                                    object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cleanDiskCompledBlock:)
+                                                 selector:@selector(cleanDisk)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
 	}
@@ -299,7 +299,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     [self.imagesCache removeObjectForKey:key];
 }
 
-- (void)clearDiskCacheCompledBlock:(void (^)(void))compledBlock
+- (void)clearDiskCache
 {
     dispatch_async(self.ioQueue, ^{
         
@@ -339,7 +339,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     });
 }
 
-- (void)cleanDiskCompledBlock:(void (^)(void))compledBlock
+- (void)cleanDisk
 {
     if (LRCacheDirectorySize() <= self.maxDirectorySize) return;
     
@@ -374,7 +374,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         // Still bigger? let's clear it all (TODO: LRU or similar, not so harsh)
         if (LRCacheDirectorySize() > self.maxDirectorySize)
         {
-            [self clearDiskCacheCompledBlock:compledBlock];
+            [self clearDiskCache];
         }
     });
 }
