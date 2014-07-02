@@ -38,6 +38,11 @@
 #define LRDispatchQueuePropertyModifier assign
 #endif
 
+
+NSString * LRImageCacheDidStartLoadingImageNotification = @"LRImageCacheDidStartLoadingImageNotification";
+NSString * LRImageCacheDidStopLoadingImageNotification  = @"LRImageCacheDidStopLoadingImageNotification";
+
+
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
 static const LRCacheStorageOptions kDefaultCacheStorageOption = LRCacheStorageOptionsNSCache;

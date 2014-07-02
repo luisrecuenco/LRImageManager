@@ -23,6 +23,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+
+extern NSString * LRImageCacheDidStartLoadingImageNotification;
+extern NSString * LRImageCacheDidStopLoadingImageNotification;
+
+
 typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 {
     LRCacheStorageOptionsNSDictionary = 1 << 0,
