@@ -222,6 +222,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
 
 #pragma mark - NSOperation flags
 
+@synthesize executing = _executing;
 - (void)setExecuting:(BOOL)executing
 {
     [self willChangeValueForKey:@"isExecuting"];
@@ -229,6 +230,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     [self didChangeValueForKey:@"isExecuting"];
 }
 
+@synthesize finished = _finished;
 - (void)setFinished:(BOOL)finished
 {
     [self willChangeValueForKey:@"isFinished"];
@@ -236,6 +238,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     [self didChangeValueForKey:@"isFinished"];
 }
 
+@synthesize cancelled = _cancelled;
 - (void)setCancelled:(BOOL)cancelled
 {
     [self willChangeValueForKey:@"isCancelled"];

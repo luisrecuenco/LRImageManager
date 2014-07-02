@@ -154,6 +154,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     [self startPresentingWithCompletionBlock:NULL];
 }
 
+@synthesize cancelled = _cancelled;
+
 - (void)cancelPresenting
 {
     _cancelled = YES;
