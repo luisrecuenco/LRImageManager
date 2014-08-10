@@ -206,14 +206,11 @@ completionHandler:(LRImageCompletionHandler)completionHandler
             self.executing = NO;
             self.finished = YES;
             
-            if (![self isCancelled])
+            @synchronized(self.completionHandlers)
             {
-                @synchronized(self.completionHandlers)
+                for (LRImageCompletionHandler completionHandler in self.completionHandlers)
                 {
-                    for (LRImageCompletionHandler completionHandler in self.completionHandlers)
-                    {
-                        completionHandler(self.image, self.error);
-                    }
+                    completionHandler(self.image, self.error);
                 }
             }
         }

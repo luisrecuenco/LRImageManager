@@ -22,7 +22,7 @@
 
 #import "LRImageCache.h"
 
-typedef void (^LRNetImageBlock)(UIImage *image);
+typedef void (^LRNetImageBlock)(UIImage *image, BOOL cancelled);
 
 typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 {

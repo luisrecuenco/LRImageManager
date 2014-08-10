@@ -92,7 +92,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     {
         self.imageView.image = self.placeholderImage;
         
-        if (self.completionBlock) self.completionBlock(nil);
+        if (self.completionBlock) self.completionBlock(nil, [self isCancelled]);
         
         return;
     }
@@ -103,7 +103,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     {
         self.imageView.image = memCachedImage;
 
-        if (self.completionBlock) self.completionBlock(memCachedImage);
+        if (self.completionBlock) self.completionBlock(memCachedImage, [self isCancelled]);
     }
     else
     {
@@ -113,11 +113,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         
         LRImageCompletionHandler completionHandler = ^(UIImage *image, NSError *error) {
             
-            if (![wself isCancelled])
-            {
-                if (wself.completionBlock) wself.completionBlock(image);
-            }
-
+            if (wself.completionBlock) wself.completionBlock(image, [wself isCancelled]);
+            
             __strong LRImagePresenter *sself = wself;
             
             dispatch_async(dispatch_get_main_queue(), ^{
