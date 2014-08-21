@@ -43,6 +43,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 @implementation LRImagePresenter
 
+@synthesize cancelled = _cancelled;
+
 + (instancetype)presenterForImageView:(UIImageView *)imageView
                               withURL:(NSURL *)url
                      placeholderImage:(UIImage *)placeholderImage
