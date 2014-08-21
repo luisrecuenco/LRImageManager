@@ -68,6 +68,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 @implementation LRImageOperation
 
+@synthesize executing = _executing;
+@synthesize finished = _finished;
+@synthesize cancelled = _cancelled;
+
 + (instancetype)imageOperationWithURL:(NSURL *)url
                                  size:(CGSize)size
                             diskCache:(BOOL)diskCache
