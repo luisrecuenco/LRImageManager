@@ -183,6 +183,8 @@ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
          diskCache:(BOOL)diskCache
 memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
+    if (!image || !url) return;
+    
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
     [self cacheImage:image withKey:imageCacheKey diskCache:diskCache memCacheStorageType:memCacheStorageType];
