@@ -24,6 +24,8 @@
 
 @interface LRImageManager : NSObject
 
+@property (nonatomic, copy) LRImageOperationURLModifierBlock imageURLModifier;
+
 @property (nonatomic, assign) BOOL showNetworkActivityIndicator;
 
 @property (nonatomic, assign) BOOL autoRetry;

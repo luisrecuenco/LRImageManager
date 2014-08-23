@@ -40,6 +40,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
+@property (nonatomic, copy) LRImageOperationURLModifierBlock imageURLModifier;
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) BOOL diskCache;
 @property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
@@ -69,6 +70,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
+           imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
                   diskCache:(BOOL)diskCache
         memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
@@ -80,11 +82,12 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
     {
         _url = url;
         _size = size;
+        _imageURLModifier = [imageURLModifier copy];
         _imageCache = imageCache;
         _diskCache = diskCache;
         _memCacheStorageType = memCacheStorageType;
         _completionHandlers = [NSMutableArray array];
-        _connection = [self imageURLConnection];
+        _connection = [self imageURLConnectionWithURL:_url size:_size];
         _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
         
         [self addCompletionHandler:completionHandler];
@@ -93,9 +96,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
     return self;
 }
 
-- (NSURLConnection *)imageURLConnection
+- (NSURLConnection *)imageURLConnectionWithURL:(NSURL *)url size:(CGSize)size
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url
+    NSURL *imageURL = self.imageURLModifier ? self.imageURLModifier(url, size) : url;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:[self imageRequestTimeout]];
     request.HTTPShouldHandleCookies = NO;
@@ -241,7 +245,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
     
     if (self.autoRetry && [self.autoRetryErrorCodes containsObject:@(error.code)])
     {
-        self.connection = [self imageURLConnection];
+        self.connection = [self imageURLConnectionWithURL:self.url size:self.size];
         [self performSelector:@selector(startConnection) withObject:nil afterDelay:kImageRetryDelay];
     }
     else

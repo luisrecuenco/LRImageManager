@@ -27,6 +27,7 @@
 // Inputs
 @property (nonatomic, strong, readonly) NSURL *url;
 @property (nonatomic, assign, readonly) CGSize size;
+@property (nonatomic, copy, readonly) LRImageOperationURLModifierBlock imageURLModifier;
 @property (nonatomic, strong, readonly) LRImageCache *imageCache;
 @property (nonatomic, assign, readonly) BOOL diskCache;
 @property (nonatomic, assign, readonly) LRMemCacheStorageType memCacheStorageType;

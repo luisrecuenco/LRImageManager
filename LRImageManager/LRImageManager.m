@@ -144,10 +144,10 @@
         return;
     };
     
-    NSString *key = LRCacheKeyForImage(url, size);
-    
     @synchronized(self.ongoingOperations)
     {
+        NSString *key = LRCacheKeyForImage(url, size);
+        
         LRImageOperation *ongoingOperation = self.ongoingOperations[key];
         
         if (ongoingOperation && ![ongoingOperation isCancelled])
@@ -159,6 +159,7 @@
         {
             LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
                                                                                 size:size
+                                                                    imageURLModifier:self.imageURLModifier
                                                                           imageCache:self.imageCache
                                                                            diskCache:diskCache
                                                                  memCacheStorageType:memCacheStorageType

@@ -25,6 +25,7 @@
 extern NSString *const LRImageOperationErrorDomain;
 
 typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
+typedef NSURL * (^LRImageOperationURLModifierBlock)(NSURL *url, CGSize size);
 
 @interface LRImageOperation : NSOperation
 
@@ -32,6 +33,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
+           imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
                   diskCache:(BOOL)diskCache
         memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
