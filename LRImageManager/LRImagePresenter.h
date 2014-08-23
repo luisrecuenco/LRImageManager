@@ -24,13 +24,13 @@
 
 @interface LRImagePresenter : NSOperation
 
-+ (instancetype)presenterForImageView:(UIImageView *)imageView
-                              withURL:(NSURL *)url
-                     placeholderImage:(UIImage *)placeholderImage
-                                 size:(CGSize)size
-                            diskCache:(BOOL)diskCache
-                       storageOptions:(LRCacheStorageOptions)storageOptions
-                     animationOptions:(LRImageViewAnimationOptions)animationOptions;
+- (instancetype)initWithImageView:(UIImageView *)imageView
+                         imageURL:(NSURL *)imageURL
+                 placeholderImage:(UIImage *)placeholderImage
+                             size:(CGSize)size
+                        diskCache:(BOOL)diskCache
+              memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+                    animationType:(LRImageViewAnimationType)animationType;
 
 - (void)startPresenting;
 

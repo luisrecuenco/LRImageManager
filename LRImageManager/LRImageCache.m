@@ -40,7 +40,7 @@
 
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
-static const LRCacheStorageOptions kDefaultCacheStorageOption = LRCacheStorageOptionsNSCache;
+static const LRMemCacheStorageType kDefaultMemCacheStorageType = LRMemCacheStorageTypeNSCache;
 
 static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
@@ -69,7 +69,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     self = [super init];
     
-	if (self)
+    if (self)
     {
         _imagesDictionary = [NSMutableDictionary dictionary];
         _imagesCache = [[NSCache alloc] init];
@@ -85,9 +85,9 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                                  selector:@selector(cleanDisk)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
-	}
+    }
     
-	return self;
+    return self;
 }
 
 - (UIImage *)memCachedImageForKey:(NSString *)key
@@ -97,8 +97,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     __block UIImage *memCachedImage = nil;
     
     dispatch_sync(self.syncQueue, ^{
-        memCachedImage = self.imagesDictionary[key] ?:
-                         [self.imagesCache objectForKey:key];
+        memCachedImage = self.imagesDictionary[key] ?: [self.imagesCache objectForKey:key];
     });
     
     return memCachedImage;
@@ -174,9 +173,9 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 - (void)cacheImage:(UIImage *)image
            withKey:(NSString *)key
          diskCache:(BOOL)diskCache
-    storageOptinos:(LRCacheStorageOptions)storageOptions
+memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
-    [self memCacheImage:image forKey:key storageOptions:storageOptions];
+    [self memCacheImage:image forKey:key memCacheStorageType:memCacheStorageType];
     
     if (diskCache)
     {
@@ -188,26 +187,26 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
            withURL:(NSURL *)url
               size:(CGSize)size
          diskCache:(BOOL)diskCache
-    storageOptions:(LRCacheStorageOptions)storageOptions
+memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
-    [self cacheImage:image withKey:imageCacheKey diskCache:diskCache storageOptinos:storageOptions];
+    [self cacheImage:image withKey:imageCacheKey diskCache:diskCache memCacheStorageType:memCacheStorageType];
 }
 
 - (void)memCacheImage:(UIImage *)image
                forKey:(id<NSCopying>)key
-       storageOptions:(LRCacheStorageOptions)storageOptions
+  memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
     if (!image || !key) return;
     
-    if (storageOptions & LRCacheStorageOptionsNSDictionary)
-    {   
+    if (memCacheStorageType == LRMemCacheStorageTypeNSDictionary)
+    {
         dispatch_sync(self.syncQueue, ^{
             self.imagesDictionary[key] = image;
         });
     }
-    else if (storageOptions & LRCacheStorageOptionsNSCache)
+    else if (memCacheStorageType == LRMemCacheStorageTypeNSCache)
     {
         [self.imagesCache setObject:image
                              forKey:key
@@ -364,19 +363,18 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 NS_INLINE NSString *LRPathToImageCacheDirectory(void)
 {
     static NSString *pathToImageCache = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSArray *cachesDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-		pathToImageCache = [cachesDirectories[0]
-                            stringByAppendingPathComponent:kImageCacheDirectoryName];
-	});
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSArray *cachesDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        pathToImageCache = [[cachesDirectories firstObject] stringByAppendingPathComponent:kImageCacheDirectoryName];
+    });
     
-	return pathToImageCache;
+    return pathToImageCache;
 }
 
 NS_INLINE NSString *LRFilePathForCacheKey(NSString *cacheKey)
 {
-	return [LRPathToImageCacheDirectory() stringByAppendingPathComponent:cacheKey];
+    return [LRPathToImageCacheDirectory() stringByAppendingPathComponent:cacheKey];
 }
 
 NS_INLINE NSString *LRMD5(NSString *str)
@@ -431,9 +429,9 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
     return _maxDirectorySize ?: kDefaultMaxCacheDirectorySize;
 }
 
-- (LRCacheStorageOptions)defaultCacheStorageOption
+- (LRMemCacheStorageType)memCacheStorageType
 {
-    return _defaultCacheStorageOption ?: kDefaultCacheStorageOption;
+    return _memCacheStorageType ?: kDefaultMemCacheStorageType;
 }
 
 - (void)dealloc

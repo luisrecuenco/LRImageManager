@@ -24,10 +24,10 @@
 
 typedef void (^LRNetImageBlock)(UIImage *image, BOOL cancelled);
 
-typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
+typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 {
-    LRImageViewAnimationOptionFade = 1 << 0,
-    LRImageViewAnimationOptionNone = 1 << 1,
+    LRImageViewAnimationTypeNone,
+    LRImageViewAnimationTypeFade,
 };
 
 @interface UIImageView (LRNetworking)
@@ -41,11 +41,11 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
                       size:(CGSize)size;
 
 - (void)lr_setImageWithURL:(NSURL *)url
-            storageOptions:(LRCacheStorageOptions)storageOptions;
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
-            storageOptions:(LRCacheStorageOptions)storageOptions;
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
@@ -54,14 +54,14 @@ typedef NS_OPTIONS(NSUInteger, LRImageViewAnimationOptions)
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-            storageOptions:(LRCacheStorageOptions)storageOptions;
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
                  diskCache:(BOOL)diskCache
-            storageOptions:(LRCacheStorageOptions)storageOptions
-          animationOptions:(LRImageViewAnimationOptions)animationOptions;
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+             animationType:(LRImageViewAnimationType)animationType;
 
 - (void)setCompletionBlock:(LRNetImageBlock)completionBlock;
 

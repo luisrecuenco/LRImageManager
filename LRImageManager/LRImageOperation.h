@@ -34,7 +34,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
                        size:(CGSize)size
                  imageCache:(LRImageCache *)imageCache
                   diskCache:(BOOL)diskCache
-             storageOptions:(LRCacheStorageOptions)storageOptions
+        memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
           completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)addCompletionHandler:(LRImageCompletionHandler)completionHandler;

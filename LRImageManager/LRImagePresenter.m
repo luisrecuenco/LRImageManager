@@ -33,8 +33,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, assign) BOOL diskCache;
-@property (nonatomic, assign) LRCacheStorageOptions storageOptions;
-@property (nonatomic, assign) LRImageViewAnimationOptions animationOptions;
+@property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
+@property (nonatomic, assign) LRImageViewAnimationType animationType;
 @property (nonatomic, copy) LRNetImageBlock completionBlock;
 
 @property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
@@ -45,42 +45,25 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 @synthesize cancelled = _cancelled;
 
-+ (instancetype)presenterForImageView:(UIImageView *)imageView
-                              withURL:(NSURL *)url
-                     placeholderImage:(UIImage *)placeholderImage
-                                 size:(CGSize)size
-                            diskCache:(BOOL)diskCache
-                       storageOptions:(LRCacheStorageOptions)storageOptions
-                     animationOptions:(LRImageViewAnimationOptions)animationOptions
-{
-    return [[self alloc] initWithImageView:imageView
-                                   withURL:url
-                          placeholderImage:placeholderImage
-                                      size:size
-                                 diskCache:diskCache
-                            storageOptions:storageOptions
-                          animationOptions:animationOptions];
-}
-
-- (id)initWithImageView:(UIImageView *)imageView
-                withURL:(NSURL *)url
-       placeholderImage:(UIImage *)placeholderImage
-                   size:(CGSize)size
-              diskCache:(BOOL)diskCache
-         storageOptions:(LRCacheStorageOptions)storageOptions
-       animationOptions:(LRImageViewAnimationOptions)animationOptions
+- (instancetype)initWithImageView:(UIImageView *)imageView
+                         imageURL:(NSURL *)imageURL
+                 placeholderImage:(UIImage *)placeholderImage
+                             size:(CGSize)size
+                        diskCache:(BOOL)diskCache
+              memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+                    animationType:(LRImageViewAnimationType)animationType;
 {
     self = [super init];
     
     if (self)
     {
         _imageView = imageView;
-        _imageURL = url;
+        _imageURL = imageURL;
         _imageSize = size;
         _placeholderImage = placeholderImage;
         _diskCache = diskCache;
-        _storageOptions = storageOptions;
-        _animationOptions = animationOptions;
+        _memCacheStorageType = memCacheStorageType;
+        _animationType = animationType;
     }
     
     return self;
@@ -104,7 +87,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     if (memCachedImage)
     {
         self.imageView.image = memCachedImage;
-
+        
         if (self.completionBlock) self.completionBlock(memCachedImage, [self isCancelled]);
     }
     else
@@ -123,7 +106,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 
                 if (!image || error || [sself isCancelled]) return;
                 
-                if (sself.animationOptions == LRImageViewAnimationOptionFade)
+                if (sself.animationType == LRImageViewAnimationTypeFade)
                 {
                     [UIView transitionWithView:sself.imageView
                                       duration:kImageFadeAnimationTime
@@ -142,7 +125,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         [[LRImageManager sharedManager] imageFromURL:self.imageURL
                                                 size:self.imageSize
                                            diskCache:self.diskCache
-                                      storageOptions:self.storageOptions
+                                 memCacheStorageType:self.memCacheStorageType
                                              context:self.imageView
                                    completionHandler:completionHandler];
     }
@@ -159,7 +142,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     
     [[LRImageManager sharedManager] cancelImageRequestFromURL:_imageURL
                                                          size:_imageSize
-                                                      context:self.imageView];
+                                                      context:_imageView];
 }
 
 - (void)dealloc

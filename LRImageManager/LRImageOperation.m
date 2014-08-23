@@ -48,7 +48,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, assign) CGSize size;
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) BOOL diskCache;
-@property (nonatomic, assign) LRCacheStorageOptions storageOptions;
+@property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
 // Outputs
@@ -77,7 +77,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
                        size:(CGSize)size
                  imageCache:(LRImageCache *)imageCache
                   diskCache:(BOOL)diskCache
-             storageOptions:(LRCacheStorageOptions)storageOptions
+        memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
           completionHandler:(LRImageCompletionHandler)completionHandler
 {
     self = [super init];
@@ -88,7 +88,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         _size = size;
         _imageCache = imageCache;
         _diskCache = diskCache;
-        _storageOptions = storageOptions;
+        _memCacheStorageType = memCacheStorageType;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnection];
         _queue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
@@ -151,7 +151,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
                                     withURL:self.url
                                        size:self.size
                                   diskCache:self.diskCache
-                             storageOptions:self.storageOptions];
+                        memCacheStorageType:self.memCacheStorageType];
                 
                 [self finish];
             }
@@ -287,7 +287,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
             [self finish];
         }
         else
-        {   
+        {
             [self postProcessImageDownload];
         }
     };
@@ -307,7 +307,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         }
         
         BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
-                            !CGSizeEqualToSize(self.size, CGSizeZero);
+        !CGSizeEqualToSize(self.size, CGSizeZero);
         
         if (shouldResize)
         {
@@ -323,7 +323,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
                             withURL:self.url
                                size:self.size
                           diskCache:self.diskCache
-                     storageOptions:self.storageOptions];
+                memCacheStorageType:self.memCacheStorageType];
         
         [self finish];
     });

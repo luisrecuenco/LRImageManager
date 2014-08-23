@@ -24,6 +24,8 @@
 #import "LRImagePresenter.h"
 #import <objc/runtime.h>
 
+static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
+
 static const void * kLRImagePresenterObjectKey;
 static const void * kLRCompletionBlockObjectKey;
 
@@ -54,7 +56,7 @@ static const void * kLRCompletionBlockObjectKey;
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
-              storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
+         memCacheStorageType:[LRImageCache sharedImageCache].memCacheStorageType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
@@ -64,19 +66,19 @@ static const void * kLRCompletionBlockObjectKey;
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
-            storageOptions:(LRCacheStorageOptions)storageOptions
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
-    [self lr_setImageWithURL:url placeholderImage:nil storageOptions:storageOptions];
+    [self lr_setImageWithURL:url placeholderImage:nil memCacheStorageType:memCacheStorageType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
-            storageOptions:(LRCacheStorageOptions)storageOptions
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:self.frame.size
-              storageOptions:storageOptions];
+         memCacheStorageType:memCacheStorageType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
@@ -86,38 +88,38 @@ static const void * kLRCompletionBlockObjectKey;
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:size
-              storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption];
+         memCacheStorageType:[LRImageCache sharedImageCache].memCacheStorageType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-            storageOptions:(LRCacheStorageOptions)storageOptions
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:size
                    diskCache:![LRImageCache sharedImageCache].skipDiskCache
-              storageOptions:storageOptions
-            animationOptions:LRImageViewAnimationOptionFade];
+         memCacheStorageType:memCacheStorageType
+               animationType:kDefaultImageViewAnimationType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
                  diskCache:(BOOL)diskCache
-            storageOptions:(LRCacheStorageOptions)storageOptions
-          animationOptions:(LRImageViewAnimationOptions)animationOptions
+       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+             animationType:(LRImageViewAnimationType)animationType
 {
     [self cancelImageOperation];
     
-    self.imagePresenter = [LRImagePresenter presenterForImageView:self
-                                                          withURL:url
-                                                 placeholderImage:placeholderImage
-                                                             size:size
-                                                        diskCache:diskCache
-                                                   storageOptions:storageOptions
-                                                 animationOptions:animationOptions];
+    self.imagePresenter = [[LRImagePresenter alloc] initWithImageView:self
+                                                             imageURL:url
+                                                     placeholderImage:placeholderImage
+                                                                 size:size
+                                                            diskCache:diskCache
+                                                  memCacheStorageType:memCacheStorageType
+                                                        animationType:animationType];
     
     [self.imagePresenter startPresentingWithCompletionBlock:self.completionBlock];
 }

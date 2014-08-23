@@ -41,13 +41,13 @@
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-      storageOptions:(LRCacheStorageOptions)storageOptions
+ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
-      storageOptions:(LRCacheStorageOptions)storageOptions
+ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageRequestFromURL:(NSURL *)url

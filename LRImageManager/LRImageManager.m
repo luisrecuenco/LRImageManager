@@ -73,7 +73,7 @@
     [self imageFromURL:url
                   size:size
              diskCache:!self.imageCache.skipDiskCache
-        storageOptions:self.imageCache.defaultCacheStorageOption
+   memCacheStorageType:self.imageCache.memCacheStorageType
      completionHandler:completionHandler];
 }
 
@@ -85,32 +85,32 @@
     [self imageFromURL:url
                   size:size
              diskCache:diskCache
-        storageOptions:self.imageCache.defaultCacheStorageOption
+   memCacheStorageType:self.imageCache.memCacheStorageType
      completionHandler:completionHandler];
 }
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-      storageOptions:(LRCacheStorageOptions)storageOptions
+ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     [self imageFromURL:url
                   size:size
              diskCache:!self.imageCache.skipDiskCache
-        storageOptions:storageOptions
+   memCacheStorageType:memCacheStorageType
      completionHandler:completionHandler];
 }
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
-      storageOptions:(LRCacheStorageOptions)storageOptions
+ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     [self imageFromURL:url
                   size:size
              diskCache:diskCache
-        storageOptions:storageOptions
+   memCacheStorageType:memCacheStorageType
                context:NULL
      completionHandler:completionHandler];
 }
@@ -118,7 +118,7 @@
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
            diskCache:(BOOL)diskCache
-      storageOptions:(LRCacheStorageOptions)storageOptions
+ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -149,7 +149,7 @@
     @synchronized(self.ongoingOperations)
     {
         LRImageOperation *ongoingOperation = self.ongoingOperations[key];
-
+        
         if (ongoingOperation && ![ongoingOperation isCancelled])
         {
             [ongoingOperation addCompletionHandler:completionHandler];
@@ -161,11 +161,11 @@
                                                                                 size:size
                                                                           imageCache:self.imageCache
                                                                            diskCache:diskCache
-                                                                      storageOptions:storageOptions
+                                                                 memCacheStorageType:memCacheStorageType
                                                                    completionHandler:completionHandler];
             
             [imageOperation addContext:context];
-
+            
             imageOperation.autoRetry = self.autoRetry;
             
             [imageOperation setCompletionBlock:^{
@@ -179,7 +179,7 @@
             }];
             
             self.ongoingOperations[key] = imageOperation;
-                        
+            
             [self.operationQueue addOperation:imageOperation];
             
             if (self.showNetworkActivityIndicator)
