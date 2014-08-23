@@ -32,12 +32,6 @@
 #define LRImageManagerLog(s,...)
 #endif
 
-#if OS_OBJECT_USE_OBJC
-#define LRDispatchQueuePropertyModifier strong
-#else
-#define LRDispatchQueuePropertyModifier assign
-#endif
-
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
 static const LRMemCacheStorageType kDefaultMemCacheStorageType = LRMemCacheStorageTypeNSCache;
@@ -48,8 +42,8 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 @property (nonatomic, strong) NSMutableDictionary *imagesDictionary;
 @property (nonatomic, strong) NSCache *imagesCache;
-@property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t ioQueue;
-@property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t syncQueue;
+@property (nonatomic, strong) dispatch_queue_t ioQueue;
+@property (nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -437,20 +431,6 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-#if !OS_OBJECT_USE_OBJC
-    if (_syncQueue != NULL)
-    {
-        dispatch_release(_syncQueue);
-    }
-    
-    if (_ioQueue != NULL)
-    {
-        dispatch_release(_ioQueue);
-    }
-#endif
-    _syncQueue = NULL;
-    _ioQueue = NULL;
 }
 
 @end

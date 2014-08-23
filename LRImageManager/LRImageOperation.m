@@ -24,12 +24,6 @@
 #import "UIImage+LRImageManagerAdditions.h"
 #import "Reachability.h"
 
-#if OS_OBJECT_USE_OBJC
-#define LRDispatchQueuePropertyModifier strong
-#else
-#define LRDispatchQueuePropertyModifier assign
-#endif
-
 NSString *const LRImageOperationErrorDomain = @"LRImageOperationErrorDomain";
 
 static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 15.0f;
@@ -63,7 +57,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 @property (nonatomic, strong) NSHashTable *contexts;
 
-@property (nonatomic, LRDispatchQueuePropertyModifier) dispatch_queue_t queue;
+@property (nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -91,23 +85,12 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         _memCacheStorageType = memCacheStorageType;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnection];
-        _queue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
+        _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
         
         [self addCompletionHandler:completionHandler];
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-#if !OS_OBJECT_USE_OBJC
-    if (_queue != NULL)
-    {
-        dispatch_release(_queue);
-    }
-#endif
-    _queue = NULL;
 }
 
 - (NSURLConnection *)imageURLConnection
@@ -236,7 +219,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    dispatch_async(self.queue, ^{
+    dispatch_async(self.syncQueue, ^{
         if (self.downloadedData == nil)
         {
             self.downloadedData = [[NSMutableData alloc] initWithCapacity:
@@ -295,7 +278,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 - (void)postProcessImageDownload
 {
-    dispatch_async(self.queue, ^{
+    dispatch_async(self.syncQueue, ^{
         
         __attribute__((objc_precise_lifetime)) UIImage *imageFromData = [UIImage imageWithData:self.downloadedData];
         
