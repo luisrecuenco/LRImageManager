@@ -41,11 +41,11 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
                       size:(CGSize)size;
 
 - (void)lr_setImageWithURL:(NSURL *)url
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
+       cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
+       cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
@@ -54,13 +54,12 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
+       cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType;
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-                 diskCache:(BOOL)diskCache
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+       cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType
              animationType:(LRImageViewAnimationType)animationType;
 
 - (void)setCompletionBlock:(LRNetImageBlock)completionBlock;

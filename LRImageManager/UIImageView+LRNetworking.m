@@ -51,34 +51,31 @@ static const void * kLRCompletionBlockObjectKey;
     [self lr_setImageWithURL:url placeholderImage:nil];
 }
 
-- (void)lr_setImageWithURL:(NSURL *)url
-          placeholderImage:(UIImage *)placeholderImage
+- (void)lr_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholderImage
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
-         memCacheStorageType:[LRImageCache sharedImageCache].memCacheStorageType];
+         cacheStorageOptions:[LRImageCache sharedImageCache].cacheStorageOptions];
 }
 
-- (void)lr_setImageWithURL:(NSURL *)url
-                      size:(CGSize)size
+- (void)lr_setImageWithURL:(NSURL *)url size:(CGSize)size
 {
     [self lr_setImageWithURL:url placeholderImage:nil size:size];
 }
 
-- (void)lr_setImageWithURL:(NSURL *)url
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+- (void)lr_setImageWithURL:(NSURL *)url cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
-    [self lr_setImageWithURL:url placeholderImage:nil memCacheStorageType:memCacheStorageType];
+    [self lr_setImageWithURL:url placeholderImage:nil cacheStorageOptions:cacheStorageOptions];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+       cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:self.frame.size
-         memCacheStorageType:memCacheStorageType];
+         cacheStorageOptions:cacheStorageOptions];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
@@ -88,27 +85,25 @@ static const void * kLRCompletionBlockObjectKey;
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:size
-         memCacheStorageType:[LRImageCache sharedImageCache].memCacheStorageType];
+         cacheStorageOptions:[LRImageCache sharedImageCache].cacheStorageOptions];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+       cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:size
-                   diskCache:![LRImageCache sharedImageCache].skipDiskCache
-         memCacheStorageType:memCacheStorageType
+         cacheStorageOptions:cacheStorageOptions
                animationType:kDefaultImageViewAnimationType];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
-                 diskCache:(BOOL)diskCache
-       memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+       cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
              animationType:(LRImageViewAnimationType)animationType
 {
     [self cancelImageOperation];
@@ -117,8 +112,7 @@ static const void * kLRCompletionBlockObjectKey;
                                                              imageURL:url
                                                      placeholderImage:placeholderImage
                                                                  size:size
-                                                            diskCache:diskCache
-                                                  memCacheStorageType:memCacheStorageType
+                                                  cacheStorageOptions:cacheStorageOptions
                                                         animationType:animationType];
     
     [self.imagePresenter startPresentingWithCompletionBlock:self.completionBlock];

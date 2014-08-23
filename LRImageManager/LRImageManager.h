@@ -38,22 +38,10 @@
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-           diskCache:(BOOL)diskCache
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-           diskCache:(BOOL)diskCache
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
-- (void)cancelImageRequestFromURL:(NSURL *)url
-                             size:(CGSize)size;
+- (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size;
 
 - (void)cancelAllRequests;
 

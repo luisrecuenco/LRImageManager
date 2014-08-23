@@ -26,8 +26,7 @@
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-           diskCache:(BOOL)diskCache
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler;
 

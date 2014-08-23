@@ -35,8 +35,7 @@ typedef NSURL * (^LRImageOperationURLModifierBlock)(NSURL *url, CGSize size);
                        size:(CGSize)size
            imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
-                  diskCache:(BOOL)diskCache
-        memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+        cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
           completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)addCompletionHandler:(LRImageCompletionHandler)completionHandler;

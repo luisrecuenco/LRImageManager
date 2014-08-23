@@ -34,7 +34,7 @@
 
 static const NSTimeInterval kDefaultMaxTimeInCache = 60 * 60 * 24 * 7; // 1 week
 static const unsigned long long kDefaultMaxCacheDirectorySize = 100 * 1024 * 1024; // 100 MB
-static const LRMemCacheStorageType kDefaultMemCacheStorageType = LRMemCacheStorageTypeNSCache;
+static const LRCacheStorageOptions kDefaultCacheStorageOptions = LRCacheStorageOptionsNSDictionary | LRCacheStorageOptionsDiskCache;
 
 static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
@@ -166,12 +166,11 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (void)cacheImage:(UIImage *)image
            withKey:(NSString *)key
-         diskCache:(BOOL)diskCache
-memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
-    [self memCacheImage:image forKey:key memCacheStorageType:memCacheStorageType];
+    [self memCacheImage:image forKey:key cacheStorageOptions:cacheStorageOptions];
     
-    if (diskCache)
+    if (cacheStorageOptions & LRCacheStorageOptionsDiskCache)
     {
         [self diskCache:image withKey:key];
     }
@@ -180,29 +179,36 @@ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
 - (void)cacheImage:(UIImage *)image
            withURL:(NSURL *)url
               size:(CGSize)size
-         diskCache:(BOOL)diskCache
-memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     if (!image || !url) return;
     
     NSString *imageCacheKey = LRCacheKeyForImage(url, size);
     
-    [self cacheImage:image withKey:imageCacheKey diskCache:diskCache memCacheStorageType:memCacheStorageType];
+    [self cacheImage:image withKey:imageCacheKey cacheStorageOptions:cacheStorageOptions];
 }
 
 - (void)memCacheImage:(UIImage *)image
                forKey:(id<NSCopying>)key
-  memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     if (!image || !key) return;
     
-    if (memCacheStorageType == LRMemCacheStorageTypeNSDictionary)
+    BOOL shouldSaveInNSDictionary = cacheStorageOptions & LRCacheStorageOptionsNSDictionary;
+    BOOL shouldSaveInNSCache = cacheStorageOptions & LRCacheStorageOptionsNSCache;
+    
+    if (shouldSaveInNSDictionary && shouldSaveInNSCache)
+    {
+        NSAssert(NO, @"You probably don't want to save in both mem caches.");
+    }
+    
+    if (shouldSaveInNSDictionary)
     {
         dispatch_sync(self.syncQueue, ^{
             self.imagesDictionary[key] = image;
         });
     }
-    else if (memCacheStorageType == LRMemCacheStorageTypeNSCache)
+    else if (shouldSaveInNSCache)
     {
         [self.imagesCache setObject:image
                              forKey:key
@@ -417,17 +423,17 @@ NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
 
 - (NSTimeInterval)maxTimeInCache
 {
-    return _maxTimeInCache ?: kDefaultMaxTimeInCache;
+    return _maxTimeInCache ?: (_maxTimeInCache = kDefaultMaxTimeInCache);
 }
 
 - (unsigned long long)maxDirectorySize
 {
-    return _maxDirectorySize ?: kDefaultMaxCacheDirectorySize;
+    return _maxDirectorySize ?: (_maxDirectorySize = kDefaultMaxCacheDirectorySize);
 }
 
-- (LRMemCacheStorageType)memCacheStorageType
+- (LRCacheStorageOptions)cacheStorageOptions
 {
-    return _memCacheStorageType ?: kDefaultMemCacheStorageType;
+    return _cacheStorageOptions ?: (_cacheStorageOptions = kDefaultCacheStorageOptions);
 }
 
 - (void)dealloc

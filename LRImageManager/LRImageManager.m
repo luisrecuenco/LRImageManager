@@ -72,53 +72,25 @@
 {
     [self imageFromURL:url
                   size:size
-             diskCache:!self.imageCache.skipDiskCache
-   memCacheStorageType:self.imageCache.memCacheStorageType
+   cacheStorageOptions:self.imageCache.cacheStorageOptions
      completionHandler:completionHandler];
 }
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-           diskCache:(BOOL)diskCache
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     [self imageFromURL:url
                   size:size
-             diskCache:diskCache
-   memCacheStorageType:self.imageCache.memCacheStorageType
-     completionHandler:completionHandler];
-}
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
-   completionHandler:(LRImageCompletionHandler)completionHandler
-{
-    [self imageFromURL:url
-                  size:size
-             diskCache:!self.imageCache.skipDiskCache
-   memCacheStorageType:memCacheStorageType
-     completionHandler:completionHandler];
-}
-
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
-           diskCache:(BOOL)diskCache
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
-   completionHandler:(LRImageCompletionHandler)completionHandler
-{
-    [self imageFromURL:url
-                  size:size
-             diskCache:diskCache
-   memCacheStorageType:memCacheStorageType
+   cacheStorageOptions:cacheStorageOptions
                context:NULL
      completionHandler:completionHandler];
 }
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
-           diskCache:(BOOL)diskCache
- memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -161,8 +133,7 @@
                                                                                 size:size
                                                                     imageURLModifier:self.imageURLModifier
                                                                           imageCache:self.imageCache
-                                                                           diskCache:diskCache
-                                                                 memCacheStorageType:memCacheStorageType
+                                                                 cacheStorageOptions:cacheStorageOptions
                                                                    completionHandler:completionHandler];
             
             [imageOperation addContext:context];

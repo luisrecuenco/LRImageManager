@@ -42,8 +42,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, assign) CGSize size;
 @property (nonatomic, copy) LRImageOperationURLModifierBlock imageURLModifier;
 @property (nonatomic, strong) LRImageCache *imageCache;
-@property (nonatomic, assign) BOOL diskCache;
-@property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
+@property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
 // Outputs
@@ -72,8 +71,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
                        size:(CGSize)size
            imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
-                  diskCache:(BOOL)diskCache
-        memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+        cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
           completionHandler:(LRImageCompletionHandler)completionHandler
 {
     self = [super init];
@@ -84,8 +82,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         _size = size;
         _imageURLModifier = [imageURLModifier copy];
         _imageCache = imageCache;
-        _diskCache = diskCache;
-        _memCacheStorageType = memCacheStorageType;
+        _cacheStorageOptions = cacheStorageOptions;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnectionWithURL:_url size:_size];
         _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
@@ -130,6 +127,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
             self.executing = YES;
             
             UIImage *diskCachedImage = [self.imageCache diskCachedImageForURL:self.url size:self.size];
+            
             if (diskCachedImage)
             {
                 self.image = [diskCachedImage decompressImage];
@@ -137,8 +135,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
                 [self.imageCache cacheImage:self.image
                                     withURL:self.url
                                        size:self.size
-                                  diskCache:self.diskCache
-                        memCacheStorageType:self.memCacheStorageType];
+                        cacheStorageOptions:self.cacheStorageOptions];
                 
                 [self finish];
             }
@@ -294,7 +291,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         }
         
         BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
-        !CGSizeEqualToSize(self.size, CGSizeZero);
+                            !CGSizeEqualToSize(self.size, CGSizeZero);
         
         if (shouldResize)
         {
@@ -309,8 +306,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         [self.imageCache cacheImage:self.image
                             withURL:self.url
                                size:self.size
-                          diskCache:self.diskCache
-                memCacheStorageType:self.memCacheStorageType];
+                cacheStorageOptions:self.cacheStorageOptions];
         
         [self finish];
     });

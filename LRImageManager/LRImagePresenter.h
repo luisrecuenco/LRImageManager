@@ -28,8 +28,7 @@
                          imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
                              size:(CGSize)size
-                        diskCache:(BOOL)diskCache
-              memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 
 - (void)startPresenting;

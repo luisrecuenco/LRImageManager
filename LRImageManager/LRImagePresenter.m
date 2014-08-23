@@ -32,8 +32,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, assign) CGSize imageSize;
-@property (nonatomic, assign) BOOL diskCache;
-@property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
+@property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign) LRImageViewAnimationType animationType;
 @property (nonatomic, copy) LRNetImageBlock completionBlock;
 
@@ -49,8 +48,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                          imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
                              size:(CGSize)size
-                        diskCache:(BOOL)diskCache
-              memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 {
     self = [super init];
@@ -61,8 +59,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         _imageURL = imageURL;
         _imageSize = size;
         _placeholderImage = placeholderImage;
-        _diskCache = diskCache;
-        _memCacheStorageType = memCacheStorageType;
+        _cacheStorageOptions = cacheStorageOptions;
         _animationType = animationType;
     }
     
@@ -124,8 +121,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         
         [[LRImageManager sharedManager] imageFromURL:self.imageURL
                                                 size:self.imageSize
-                                           diskCache:self.diskCache
-                                 memCacheStorageType:self.memCacheStorageType
+                                 cacheStorageOptions:self.cacheStorageOptions
                                              context:self.imageView
                                    completionHandler:completionHandler];
     }

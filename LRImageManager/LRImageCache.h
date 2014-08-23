@@ -21,13 +21,13 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, LRMemCacheStorageType)
+typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 {
-    LRMemCacheStorageTypeNone,
-    LRMemCacheStorageTypeNSDictionary,
-    LRMemCacheStorageTypeNSCache,
+    LRCacheStorageOptionsNone         = 0,
+    LRCacheStorageOptionsNSDictionary = 1 << 0,
+    LRCacheStorageOptionsNSCache      = 1 << 1,
+    LRCacheStorageOptionsDiskCache    = 1 << 2,
 };
 
 @interface LRImageCache : NSObject
@@ -38,11 +38,8 @@ typedef NS_ENUM(NSUInteger, LRMemCacheStorageType)
 /** Cache size limit */
 @property (nonatomic, assign) unsigned long long maxDirectorySize;
 
-/** Default cache storage option */
-@property (nonatomic, assign) LRMemCacheStorageType memCacheStorageType;
-
-/** Avoids disk caching */
-@property (nonatomic, assign) BOOL skipDiskCache;
+/** Default cache storage options */
+@property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 
 + (LRImageCache *)sharedImageCache;
 
@@ -58,8 +55,7 @@ typedef NS_ENUM(NSUInteger, LRMemCacheStorageType)
 
 - (void)cacheImage:(UIImage *)image
            withKey:(NSString *)key
-         diskCache:(BOOL)diskCache
-memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
+cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 - (void)clearMemCache;
 
@@ -89,8 +85,7 @@ memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
 - (void)cacheImage:(UIImage *)image
            withURL:(NSURL *)url
               size:(CGSize)size
-         diskCache:(BOOL)diskCache
-memCacheStorageType:(LRMemCacheStorageType)memCacheStorageType;
+cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 @end
 
