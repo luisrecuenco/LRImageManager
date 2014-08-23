@@ -181,6 +181,8 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [self.connection start];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LRImageCacheDidStartLoadingImageNotification object:self];
 }
 
 - (void)cancel
@@ -277,6 +279,8 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     {
         [self finish];
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LRImageCacheDidStopLoadingImageNotification object:self];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -303,6 +307,8 @@ completionHandler:(LRImageCompletionHandler)completionHandler
             [self postProcessImageDownload];
         }
     };
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LRImageCacheDidStopLoadingImageNotification object:self];
 }
 
 - (void)postProcessImageDownload
