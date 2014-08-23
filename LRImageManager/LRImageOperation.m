@@ -46,6 +46,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
+@property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) BOOL diskCache;
 @property (nonatomic, assign) LRCacheStorageOptions storageOptions;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
@@ -72,25 +73,12 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @synthesize finished = _finished;
 @synthesize cancelled = _cancelled;
 
-+ (instancetype)imageOperationWithURL:(NSURL *)url
-                                 size:(CGSize)size
-                            diskCache:(BOOL)diskCache
-                       storageOptions:(LRCacheStorageOptions)storageOptions
-                    completionHandler:(LRImageCompletionHandler)completionHandler
-{
-    return [[self alloc] initWithURL:url
-                                size:size
-                           diskCache:diskCache
-                      storageOptions:storageOptions
-                   completionHandler:completionHandler];
-}
-
-
-- (id)initWithURL:(NSURL *)url
-             size:(CGSize)size
-        diskCache:(BOOL)diskCache
-   storageOptions:(LRCacheStorageOptions)storageOptions
-completionHandler:(LRImageCompletionHandler)completionHandler
+- (instancetype)initWithURL:(NSURL *)url
+                       size:(CGSize)size
+                 imageCache:(LRImageCache *)imageCache
+                  diskCache:(BOOL)diskCache
+             storageOptions:(LRCacheStorageOptions)storageOptions
+          completionHandler:(LRImageCompletionHandler)completionHandler
 {
     self = [super init];
     
@@ -98,6 +86,7 @@ completionHandler:(LRImageCompletionHandler)completionHandler
     {
         _url = url;
         _size = size;
+        _imageCache = imageCache;
         _diskCache = diskCache;
         _storageOptions = storageOptions;
         _completionHandlers = [NSMutableArray array];
@@ -153,17 +142,16 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         {
             self.executing = YES;
             
-            UIImage *diskCachedImage = [[LRImageCache sharedImageCache] diskCachedImageForURL:self.url
-                                                                                         size:self.size];
+            UIImage *diskCachedImage = [self.imageCache diskCachedImageForURL:self.url size:self.size];
             if (diskCachedImage)
             {
                 self.image = [diskCachedImage decompressImage];
                 
-                [[LRImageCache sharedImageCache] cacheImage:self.image
-                                                    withURL:self.url
-                                                       size:self.size
-                                                  diskCache:self.diskCache
-                                             storageOptions:self.storageOptions];
+                [self.imageCache cacheImage:self.image
+                                    withURL:self.url
+                                       size:self.size
+                                  diskCache:self.diskCache
+                             storageOptions:self.storageOptions];
                 
                 [self finish];
             }
@@ -331,11 +319,11 @@ completionHandler:(LRImageCompletionHandler)completionHandler
         
         self.image = [self.image decompressImage];
         
-        [[LRImageCache sharedImageCache] cacheImage:self.image
-                                            withURL:self.url
-                                               size:self.size
-                                          diskCache:self.diskCache
-                                     storageOptions:self.storageOptions];
+        [self.imageCache cacheImage:self.image
+                            withURL:self.url
+                               size:self.size
+                          diskCache:self.diskCache
+                     storageOptions:self.storageOptions];
         
         [self finish];
     });

@@ -33,6 +33,7 @@
 
 @interface LRImageManager ()
 
+@property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *ongoingOperations;
 
@@ -56,6 +57,7 @@
     
     if (self)
     {
+        _imageCache = [LRImageCache sharedImageCache];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
@@ -70,8 +72,8 @@
 {
     [self imageFromURL:url
                   size:size
-             diskCache:![LRImageCache sharedImageCache].skipDiskCache
-        storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption
+             diskCache:!self.imageCache.skipDiskCache
+        storageOptions:self.imageCache.defaultCacheStorageOption
      completionHandler:completionHandler];
 }
 
@@ -83,7 +85,7 @@
     [self imageFromURL:url
                   size:size
              diskCache:diskCache
-        storageOptions:[LRImageCache sharedImageCache].defaultCacheStorageOption
+        storageOptions:self.imageCache.defaultCacheStorageOption
      completionHandler:completionHandler];
 }
 
@@ -94,7 +96,7 @@
 {
     [self imageFromURL:url
                   size:size
-             diskCache:![LRImageCache sharedImageCache].skipDiskCache
+             diskCache:!self.imageCache.skipDiskCache
         storageOptions:storageOptions
      completionHandler:completionHandler];
 }
@@ -131,8 +133,8 @@
     
     // This method is supposed to be called once the memCache check has already been done.
     // Let's check anyway...
-    UIImage *memCachedImage = [[LRImageCache sharedImageCache] memCachedImageForURL:url
-                                                                               size:size];
+    UIImage *memCachedImage = [self.imageCache memCachedImageForURL:url size:size];
+    
     if (memCachedImage)
     {
         if (completionHandler)
@@ -155,11 +157,12 @@
         }
         else
         {
-            LRImageOperation *imageOperation = [LRImageOperation imageOperationWithURL:url
-                                                                                  size:size
-                                                                             diskCache:diskCache
-                                                                        storageOptions:storageOptions
-                                                                     completionHandler:completionHandler];
+            LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
+                                                                                size:size
+                                                                          imageCache:self.imageCache
+                                                                           diskCache:diskCache
+                                                                      storageOptions:storageOptions
+                                                                   completionHandler:completionHandler];
             
             [imageOperation addContext:context];
 

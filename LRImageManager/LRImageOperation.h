@@ -30,11 +30,12 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 @property (nonatomic, assign) BOOL autoRetry;
 
-+ (instancetype)imageOperationWithURL:(NSURL *)url
-                                 size:(CGSize)size
-                            diskCache:(BOOL)diskCache
-                       storageOptions:(LRCacheStorageOptions)storageOptions
-                    completionHandler:(LRImageCompletionHandler)completionHandler;
+- (instancetype)initWithURL:(NSURL *)url
+                       size:(CGSize)size
+                 imageCache:(LRImageCache *)imageCache
+                  diskCache:(BOOL)diskCache
+             storageOptions:(LRCacheStorageOptions)storageOptions
+          completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)addCompletionHandler:(LRImageCompletionHandler)completionHandler;
 
