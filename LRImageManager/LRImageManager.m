@@ -118,7 +118,7 @@
     
     @synchronized(self.ongoingOperations)
     {
-        NSString *key = LRCacheKeyForImage(url, size);
+        NSString *key = LROngoingOperationKey(url, size);
         
         LRImageOperation *ongoingOperation = self.ongoingOperations[key];
         
@@ -174,7 +174,7 @@
 {
     if ([url.absoluteString length] == 0) return;
     
-    NSString *key = LRCacheKeyForImage(url, size);
+    NSString *key = LROngoingOperationKey(url, size);
     
     @synchronized(self.ongoingOperations)
     {
@@ -196,6 +196,18 @@
         NSArray *ongoingOperations = [[self.ongoingOperations allValues] copy];
         [ongoingOperations makeObjectsPerformSelector:@selector(cancel)];
     }
+}
+
+NSString *LROngoingOperationKey(NSURL *url, CGSize size)
+{
+    NSString *ongoingOperationKey = nil;
+    
+    if (url)
+    {
+        ongoingOperationKey = [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
+    }
+    
+    return ongoingOperationKey;
 }
 
 @end

@@ -54,7 +54,8 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
               completionBlock:(void (^)(UIImage *image))completionBlock;
 
 - (void)cacheImage:(UIImage *)image
-           withKey:(NSString *)key
+       memCacheKey:(NSString *)memCacheKey
+      diskCacheKey:(NSString *)diskCacheKey
 cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 - (void)clearMemCache;
@@ -88,5 +89,3 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 @end
-
-NSString *LRCacheKeyForImage(NSURL *url, CGSize size);

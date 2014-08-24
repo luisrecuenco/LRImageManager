@@ -44,6 +44,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 @property (nonatomic, strong) NSCache *imagesCache;
 @property (nonatomic, strong) dispatch_queue_t ioQueue;
 @property (nonatomic, strong) dispatch_queue_t syncQueue;
+@property (nonatomic, strong) NSMutableDictionary *diskCacheKeysDictionary;
 
 @end
 
@@ -69,6 +70,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         _imagesCache = [[NSCache alloc] init];
         _ioQueue = dispatch_queue_create("com.LRImageClient.LRImageCacheIOQueue", NULL);
         _syncQueue = dispatch_queue_create("com.LRImageClient.LRImageCacheSyncQueue", NULL);
+        _diskCacheKeysDictionary = [NSMutableDictionary dictionary];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(clearMemCache)
@@ -101,7 +103,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     if ([url.absoluteString length] == 0) return nil;
     
-    NSString *imageCacheKey = LRCacheKeyForImage(url, size);
+    NSString *imageCacheKey = LRMemCacheKey(url, size);
     
     return [self memCachedImageForKey:imageCacheKey];
 }
@@ -131,7 +133,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     if ([url.absoluteString length] == 0) return nil;
     
-    NSString *imageCacheKey = LRCacheKeyForImage(url, size);
+    NSString *imageCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
     
     return [self diskCachedImageForKey:imageCacheKey];
 }
@@ -160,19 +162,20 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         return;
     };
     
-    [self diskCachedImageForKey:LRCacheKeyForImage(url, size)
+    [self diskCachedImageForKey:LRDiskCacheKey(url, size, self.diskCacheKeysDictionary)
                 completionBlock:completionBlock];
 }
 
 - (void)cacheImage:(UIImage *)image
-           withKey:(NSString *)key
+       memCacheKey:(NSString *)memCacheKey
+      diskCacheKey:(NSString *)diskCacheKey
 cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
-    [self memCacheImage:image forKey:key cacheStorageOptions:cacheStorageOptions];
+    [self memCacheImage:image key:memCacheKey cacheStorageOptions:cacheStorageOptions];
     
     if (cacheStorageOptions & LRCacheStorageOptionsDiskCache)
     {
-        [self diskCache:image withKey:key];
+        [self diskCache:image key:diskCacheKey];
     }
 }
 
@@ -183,13 +186,14 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     if (!image || !url) return;
     
-    NSString *imageCacheKey = LRCacheKeyForImage(url, size);
-    
-    [self cacheImage:image withKey:imageCacheKey cacheStorageOptions:cacheStorageOptions];
+    [self cacheImage:image
+         memCacheKey:LRMemCacheKey(url, size)
+        diskCacheKey:LRDiskCacheKey(url, size, self.diskCacheKeysDictionary)
+ cacheStorageOptions:cacheStorageOptions];
 }
 
 - (void)memCacheImage:(UIImage *)image
-               forKey:(id<NSCopying>)key
+                  key:(NSString *)key
   cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     if (!image || !key) return;
@@ -216,7 +220,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     }
 }
 
-- (void)diskCache:(UIImage *)image withKey:(NSString *)key
+- (void)diskCache:(UIImage *)image key:(NSString *)key
 {
     if (!image || !key) return;
     
@@ -409,13 +413,23 @@ NS_INLINE unsigned long long LRCacheDirectorySize()
     return size;
 }
 
-NSString *LRCacheKeyForImage(NSURL *url, CGSize size)
+NSString *LRMemCacheKey(NSURL *url, CGSize size)
 {
-    NSString *cacheKey = nil;
+    if (!url) return nil;
     
-    if (url)
+    return [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
+}
+
+NSString *LRDiskCacheKey(NSURL *url, CGSize size, NSMutableDictionary *cacheKeysMap)
+{
+    if (!url) return nil;
+    
+    NSString *memCacheKey = LRMemCacheKey(url, size);
+    NSString *cacheKey = cacheKeysMap[memCacheKey];
+    
+    if (!cacheKey)
     {
-        cacheKey = LRMD5([url.absoluteString stringByAppendingString:NSStringFromCGSize(size)]);
+        cacheKeysMap[memCacheKey] = cacheKey = LRMD5([[url absoluteString] stringByAppendingString:NSStringFromCGSize(size)]);
     }
     
     return cacheKey;
