@@ -25,17 +25,17 @@
 
 static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
 
-static const void * kLRCompletionBlockObjectKey;
+static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectKey;
 
 @interface UIImageView (LRImageViewAdditons)
 
-@property (nonatomic, copy) LRNetImageBlock completionBlock;
+@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
 
 @end
 
 @implementation UIImageView (LRImageViewAdditons)
 
-@dynamic completionBlock;
+@dynamic completionHandler;
 
 @end
 
@@ -107,7 +107,7 @@ static const void * kLRCompletionBlockObjectKey;
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
                                                 animationType:animationType
-                                              completionBlock:self.completionBlock];
+                                            completionHandler:self.completionHandler];
 }
 
 - (void)cancelImageOperation;
@@ -117,14 +117,14 @@ static const void * kLRCompletionBlockObjectKey;
 
 #pragma mark - Completion Block
 
-- (void)setCompletionBlock:(LRNetImageBlock)completionBlock
+- (void)setCompletionHandler:(LRImageCompletionHandler)completionHandler
 {
-    objc_setAssociatedObject(self, &kLRCompletionBlockObjectKey, completionBlock, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, kLRCompletionHandlerObjectKey, completionHandler, OBJC_ASSOCIATION_COPY);
 }
 
-- (LRNetImageBlock)completionBlock
+- (LRImageCompletionHandler)completionHandler
 {
-    return (LRNetImageBlock)objc_getAssociatedObject(self, &kLRCompletionBlockObjectKey);
+    return (LRImageCompletionHandler)objc_getAssociatedObject(self, kLRCompletionHandlerObjectKey);
 }
 
 @end

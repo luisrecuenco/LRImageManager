@@ -54,7 +54,7 @@
        cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType
              animationType:(LRImageViewAnimationType)animationType;
 
-- (void)setCompletionBlock:(LRNetImageBlock)completionBlock;
+- (void)setCompletionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageOperation;
 

@@ -222,7 +222,7 @@ NSString *LROngoingOperationKey(NSURL *url, CGSize size)
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType
-                  completionBlock:(LRNetImageBlock)completionBlock
+                completionHandler:(LRImageCompletionHandler)completionHandler
 {
     LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithImageView:imageView
                                                                      imageURL:imageURL
@@ -237,7 +237,7 @@ NSString *LROngoingOperationKey(NSURL *url, CGSize size)
     // Previous presenter for this imageView will deallocate and cancel itself
     [self.presentersMap setObject:presenter forKey:imageView];
 
-    [presenter startPresentingWithCompletionBlock:completionBlock];
+    [presenter startPresentingWithCompletionHandler:completionHandler];
 }
 
 @end

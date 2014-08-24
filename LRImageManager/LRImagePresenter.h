@@ -39,7 +39,7 @@
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 
-- (void)startPresentingWithCompletionBlock:(LRNetImageBlock)completionBlock;
+- (void)startPresentingWithCompletionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelPresenting;
 

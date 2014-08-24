@@ -34,9 +34,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign) LRImageViewAnimationType animationType;
-@property (nonatomic, copy) LRNetImageBlock completionBlock;
-
-@property (nonatomic, assign, getter = isCancelled) BOOL cancelled;
+@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
 
 @end
 
@@ -66,15 +64,15 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     return self;
 }
 
-- (void)startPresentingWithCompletionBlock:(LRNetImageBlock)completionBlock
+- (void)startPresentingWithCompletionHandler:(LRImageCompletionHandler)completionHandler
 {
-    self.completionBlock = completionBlock;
+    self.completionHandler = completionHandler;
     
     if ([[self.imageURL absoluteString] length] == 0)
     {
         self.imageView.image = self.placeholderImage;
         
-        if (self.completionBlock) self.completionBlock(nil, [self isCancelled]);
+        if (self.completionHandler) self.completionHandler(nil, nil);
         
         return;
     }
@@ -85,7 +83,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     {
         self.imageView.image = memCachedImage;
         
-        if (self.completionBlock) self.completionBlock(memCachedImage, [self isCancelled]);
+        if (self.completionHandler) self.completionHandler(memCachedImage, nil);
     }
     else
     {
@@ -95,13 +93,13 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         
         LRImageCompletionHandler completionHandler = ^(UIImage *image, NSError *error) {
             
-            if (wself.completionBlock) wself.completionBlock(image, [wself isCancelled]);
+            if (wself.completionHandler) wself.completionHandler(image, error);
             
             __strong LRImagePresenter *sself = wself;
-            
+                        
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if (!image || error || [sself isCancelled]) return;
+                if (!image || error) return;
                 
                 if (sself.animationType == LRImageViewAnimationTypeFade)
                 {
@@ -129,8 +127,6 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 
 - (void)cancelPresenting
 {
-    _cancelled = YES;
-    
     [self.imageManager cancelImageRequestFromURL:_imageURL
                                             size:_imageSize
                                          context:_imageView];
