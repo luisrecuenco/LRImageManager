@@ -102,9 +102,16 @@
                                                  colorSpace,
                                                  bitmapInfo);
     
+    CGColorSpaceRelease(colorSpace);
+    
     if (!context) return self;
     
-    CGContextDrawImage(context, imageRect, imageRef);
+    UIGraphicsPushContext(context);
+    CGContextTranslateCTM(context, 0, imageSize.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    [self drawInRect:imageRect];
+    UIGraphicsPopContext();
+    
     CGImageRef decompressedImageRef = CGBitmapContextCreateImage(context);
     CGContextRelease(context);
     
