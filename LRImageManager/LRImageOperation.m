@@ -96,16 +96,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 - (NSURLConnection *)imageURLConnectionWithURL:(NSURL *)url size:(CGSize)size
 {
     NSURL *imageURL = self.imageURLModifier ? self.imageURLModifier(url, size) : url;
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:[self imageRequestTimeout]];
-    request.HTTPShouldHandleCookies = NO;
-    request.HTTPShouldUsePipelining = YES;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL];
+    request.timeoutInterval = [self imageRequestTimeout];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
-    return [[NSURLConnection alloc] initWithRequest:request
-                                           delegate:self
-                                   startImmediately:NO];
+    return [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 }
 
 - (BOOL)isConcurrent
