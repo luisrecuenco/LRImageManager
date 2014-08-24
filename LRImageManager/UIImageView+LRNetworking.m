@@ -50,7 +50,7 @@ static const void * kLRCompletionBlockObjectKey;
 {
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
-         cacheStorageOptions:[LRImageCache sharedImageCache].cacheStorageOptions];
+         cacheStorageOptions:[LRImageManager sharedManager].imageCache.cacheStorageOptions];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url size:(CGSize)size
@@ -80,7 +80,7 @@ static const void * kLRCompletionBlockObjectKey;
     [self lr_setImageWithURL:url
             placeholderImage:placeholderImage
                         size:size
-         cacheStorageOptions:[LRImageCache sharedImageCache].cacheStorageOptions];
+         cacheStorageOptions:[LRImageManager sharedManager].imageCache.cacheStorageOptions];
 }
 
 - (void)lr_setImageWithURL:(NSURL *)url

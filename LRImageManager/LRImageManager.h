@@ -34,6 +34,8 @@ typedef void (^LRNetImageBlock)(UIImage *image, BOOL cancelled);
 
 @interface LRImageManager : NSObject
 
+@property (nonatomic, strong, readonly) LRImageCache *imageCache;
+
 @property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 
 @property (nonatomic, assign) BOOL showNetworkActivityIndicator;

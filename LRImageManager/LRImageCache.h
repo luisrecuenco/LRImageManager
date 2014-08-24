@@ -41,7 +41,7 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 /** Default cache storage options */
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 
-+ (LRImageCache *)sharedImageCache;
+- (instancetype)initWithName:(NSString *)name;
 
 - (UIImage *)memCachedImageForKey:(NSString *)key;
 

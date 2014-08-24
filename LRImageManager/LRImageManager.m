@@ -59,7 +59,7 @@
     
     if (self)
     {
-        _imageCache = [LRImageCache sharedImageCache];
+        _imageCache = [[LRImageCache alloc] init];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
