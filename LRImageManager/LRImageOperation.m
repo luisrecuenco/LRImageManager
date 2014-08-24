@@ -288,13 +288,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         
         if (shouldResize)
         {
-            self.image = [self.image resizedImageWithContentMode:UIViewContentModeScaleAspectFill
-                                                          bounds:self.size];
-            
-            self.image = [self.image croppedImage:(CGRect){.origin = CGPointZero, .size = self.size}];
+            self.image = [self.image lr_resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:self.size];
+            self.image = [self.image lr_croppedImage:(CGRect){.origin = CGPointZero, .size = self.size}];
         }
         
-        self.image = [self.image decompressImage];
+        self.image = [self.image lr_decompressImage];
         
         [self.imageCache cacheImage:self.image
                             withURL:self.url

@@ -24,7 +24,7 @@
 
 @implementation UIImage (LRImageManagerAdditions)
 
-- (instancetype)croppedImage:(CGRect)bounds
+- (instancetype)lr_croppedImage:(CGRect)bounds
 {
     CGRect croppingRect = CGRectIntegral(CGRectMake(bounds.origin.x * self.scale,
                                                     bounds.origin.y * self.scale,
@@ -41,8 +41,7 @@
     return croppedImage;
 }
 
-- (instancetype)resizedImageWithContentMode:(UIViewContentMode)contentMode
-                                     bounds:(CGSize)bounds
+- (instancetype)lr_resizedImageWithContentMode:(UIViewContentMode)contentMode bounds:(CGSize)bounds
 {
     CGFloat horizontalRatio = bounds.width / self.size.width;
     CGFloat verticalRatio = bounds.height / self.size.height;
@@ -63,20 +62,20 @@
     
     CGSize newSize = {self.size.width * ratio, self.size.height * ratio};
     
-    return [self resizedImage:newSize];
+    return [self lr_resizedImage:newSize];
 }
 
-- (instancetype)resizedImage:(CGSize)newSize
+- (instancetype)lr_resizedImage:(CGSize)newSize
 {
     CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
-    UIGraphicsBeginImageContextWithOptions(newRect.size, NO, 0.0f);
+    UIGraphicsBeginImageContextWithOptions(newRect.size, ![self lr_hasAlpha], 0.0f);
     [self drawInRect:newRect];
     UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return resizedImage;
 }
 
-- (instancetype)decompressImage
+- (instancetype)lr_decompressImage
 {
     CGImageRef imageRef = self.CGImage;
     CGSize imageSize = CGSizeMake(CGImageGetWidth(imageRef), CGImageGetHeight(imageRef));
@@ -121,6 +120,15 @@
     CGImageRelease(decompressedImageRef);
     
     return decompressedImage;
+}
+
+- (BOOL)lr_hasAlpha
+{
+    CGImageAlphaInfo alpha = CGImageGetAlphaInfo(self.CGImage);
+    return (alpha == kCGImageAlphaFirst ||
+            alpha == kCGImageAlphaLast ||
+            alpha == kCGImageAlphaPremultipliedFirst ||
+            alpha == kCGImageAlphaPremultipliedLast);
 }
 
 @end

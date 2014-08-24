@@ -117,7 +117,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     {
         __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
         
-        image = [imageFromFile decompressImage];
+        image = [imageFromFile lr_decompressImage];
     }
     
     return image;
@@ -242,11 +242,9 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         
         if (![fileManager fileExistsAtPath:filePath])
         {
-            NSData *data = UIImageJPEGRepresentation(image, 1.0f);
+            NSData *data = [image lr_hasAlpha] ? UIImagePNGRepresentation(image) : UIImageJPEGRepresentation(image, 1.0f);
             
-            if (![fileManager createFileAtPath:filePath
-                                      contents:data
-                                    attributes:nil])
+            if (![fileManager createFileAtPath:filePath contents:data attributes:nil])
             {
                 LRImageManagerLog(@"Error caching image at path: %@", filePath);
             }
