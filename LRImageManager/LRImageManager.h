@@ -22,6 +22,11 @@
 
 #import "LRImageCache.h"
 
+extern NSString * LRImageManagerDidStartLoadingImageNotification;
+extern NSString * LRImageManagerDidStopLoadingImageNotification;
+extern NSString * LRImageManagerURLUserInfoKey;
+extern NSString * LRImageManagerSizeUserInfoKey;
+
 typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 {
     LRImageViewAnimationTypeNone,

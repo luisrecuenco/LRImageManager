@@ -24,6 +24,11 @@
 #import "LRImageOperation+Private.h"
 #import "LRImagePresenter.h"
 
+NSString * LRImageManagerDidStartLoadingImageNotification = @"LRImageManagerDidStartLoadingImageNotification";
+NSString * LRImageManagerDidStopLoadingImageNotification = @"LRImageManagerDidStopLoadingImageNotification";
+NSString * LRImageManagerURLUserInfoKey = @"LRImageManagerURLUserInfoKey";
+NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
+
 #if !__has_feature(objc_arc)
 #error "LRImageManager requires ARC support."
 #endif
@@ -63,7 +68,8 @@
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
-        _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsStrongMemory];
+        _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory
+                                               valueOptions:NSPointerFunctionsStrongMemory];
     }
     
     return self;
@@ -141,8 +147,14 @@
             
             imageOperation.autoRetry = self.autoRetry;
             
+            NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
+            
             [imageOperation setCompletionBlock:^{
                 
+                [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
+                                                                    object:self
+                                                                  userInfo:userInfo];
+
                 [self.ongoingOperations removeObjectForKey:key];
                 
                 if (self.showNetworkActivityIndicator && [self.ongoingOperations count] == 0)
@@ -155,12 +167,23 @@
             
             [self.operationQueue addOperation:imageOperation];
             
+            [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStartLoadingImageNotification
+                                                                object:self
+                                                              userInfo:userInfo];
+            
             if (self.showNetworkActivityIndicator)
             {
                 [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
             }
         }
     }
+}
+
+- (NSDictionary *)userInfoDictionaryForURL:(NSURL *)url size:(CGSize)size
+{
+    return @{ LRImageManagerURLUserInfoKey : url,
+              LRImageManagerSizeUserInfoKey : [NSValue valueWithCGSize:size]
+            };
 }
 
 - (void)cancelImageRequestFromURL:(NSURL *)url
