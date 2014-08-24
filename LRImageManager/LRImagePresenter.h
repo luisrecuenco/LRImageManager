@@ -22,7 +22,7 @@
 
 #import "UIImageView+LRNetworking.h"
 
-@interface LRImagePresenter : NSOperation
+@interface LRImagePresenter : NSObject
 
 - (instancetype)initWithImageView:(UIImageView *)imageView
                          imageURL:(NSURL *)imageURL
