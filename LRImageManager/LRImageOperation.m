@@ -121,12 +121,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         {
             self.executing = YES;
             
-            UIImage *diskCachedImage = [self.imageCache diskCachedImageForURL:self.url size:self.size];
+            self.image = [self.imageCache diskCachedImageForURL:self.url size:self.size];
             
-            if (diskCachedImage)
+            if (self.image)
             {
-                self.image = [diskCachedImage decompressImage];
-                
                 [self.imageCache cacheImage:self.image
                                     withURL:self.url
                                        size:self.size

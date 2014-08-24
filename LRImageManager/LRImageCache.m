@@ -117,13 +117,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     {
         __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
         
-        image = [UIImage imageWithCGImage:imageFromFile.CGImage
-                                    scale:[[UIScreen mainScreen] scale]
-                              orientation:UIImageOrientationUp];
+        image = [imageFromFile decompressImage];
     }
     
     return image;
-    
 }
 
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
@@ -140,11 +137,9 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     dispatch_async(self.ioQueue, ^{
         
-        UIImage *diskCachedImage = [self diskCachedImageForKey:key];
-        
         if (completionBlock)
         {
-            completionBlock([diskCachedImage decompressImage]);
+            completionBlock([self diskCachedImageForKey:key]);
         }
     });
 }
