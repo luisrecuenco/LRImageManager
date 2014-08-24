@@ -22,6 +22,7 @@
 
 #import "LRImageManager.h"
 #import "LRImageOperation+Private.h"
+#import "LRImagePresenter.h"
 
 #if !__has_feature(objc_arc)
 #error "LRImageManager requires ARC support."
@@ -36,6 +37,7 @@
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *ongoingOperations;
+@property (nonatomic, strong) NSMapTable *presentersMap;
 
 @end
 
@@ -51,7 +53,7 @@
     return sharedManager;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     
@@ -61,6 +63,7 @@
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
+        _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsStrongMemory];
     }
     
     return self;
@@ -94,7 +97,7 @@
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
-    if ([url.absoluteString length] == 0)
+    if ([[url absoluteString] length] == 0)
     {
         if (completionHandler)
         {
@@ -103,8 +106,6 @@
         return;
     }
     
-    // This method is supposed to be called once the memCache check has already been done.
-    // Let's check anyway...
     UIImage *memCachedImage = [self.imageCache memCachedImageForURL:url size:size];
     
     if (memCachedImage)
@@ -172,7 +173,7 @@
                              size:(CGSize)size
                           context:(id)context
 {
-    if ([url.absoluteString length] == 0) return;
+    if ([[url absoluteString] length] == 0) return;
     
     NSString *key = LROngoingOperationKey(url, size);
     
@@ -208,6 +209,35 @@ NSString *LROngoingOperationKey(NSURL *url, CGSize size)
     }
     
     return ongoingOperationKey;
+}
+
+- (void)cancelDownloadImageForImageView:(UIImageView *)imageView
+{
+    [self.presentersMap removeObjectForKey:imageView];
+}
+
+- (void)downloadImageForImageView:(UIImageView *)imageView
+                         imageURL:(NSURL *)imageURL
+                 placeholderImage:(UIImage *)placeholderImage
+                             size:(CGSize)size
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+                    animationType:(LRImageViewAnimationType)animationType
+                  completionBlock:(LRNetImageBlock)completionBlock
+{
+    LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithImageView:imageView
+                                                                     imageURL:imageURL
+                                                             placeholderImage:placeholderImage
+                                                                         size:size
+                                                                   imageCache:self.imageCache
+                                                          cacheStorageOptions:cacheStorageOptions
+                                                                animationType:animationType];
+    
+    presenter.imageManager = self;
+ 
+    // Previous presenter for this imageView will deallocate and cancel itself
+    [self.presentersMap setObject:presenter forKey:imageView];
+
+    [presenter startPresentingWithCompletionBlock:completionBlock];
 }
 
 @end

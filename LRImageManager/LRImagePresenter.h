@@ -22,16 +22,22 @@
 
 #import "UIImageView+LRNetworking.h"
 
+@class LRImageManager;
+
+/**
+ This class is not meant to be used directly. Use LRImageManager instead.
+ */
 @interface LRImagePresenter : NSObject
+
+@property (nonatomic, weak) LRImageManager *imageManager;
 
 - (instancetype)initWithImageView:(UIImageView *)imageView
                          imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
                              size:(CGSize)size
+                       imageCache:(LRImageCache *)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
-
-- (void)startPresenting;
 
 - (void)startPresentingWithCompletionBlock:(LRNetImageBlock)completionBlock;
 

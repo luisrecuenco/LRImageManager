@@ -20,11 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "LRImageOperation.h"
+#import "LRImageCache.h"
+
+typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
+{
+    LRImageViewAnimationTypeNone,
+    LRImageViewAnimationTypeFade,
+};
+
+typedef NSURL * (^LRImageURLModifierBlock)(NSURL *url, CGSize size);
+typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
+typedef void (^LRNetImageBlock)(UIImage *image, BOOL cancelled);
 
 @interface LRImageManager : NSObject
 
-@property (nonatomic, copy) LRImageOperationURLModifierBlock imageURLModifier;
+@property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 
 @property (nonatomic, assign) BOOL showNetworkActivityIndicator;
 
@@ -44,5 +54,20 @@
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size;
 
 - (void)cancelAllRequests;
+
+@end
+
+@interface LRImageManager (UIImageView)
+
+- (void)downloadImageForImageView:(UIImageView *)imageView
+                         imageURL:(NSURL *)imageURL
+                 placeholderImage:(UIImage *)placeholderImage
+                             size:(CGSize)size
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+                    animationType:(LRImageViewAnimationType)animationType
+                  completionBlock:(LRNetImageBlock)completionBlock;
+
+
+- (void)cancelDownloadImageForImageView:(UIImageView *)imageView;
 
 @end

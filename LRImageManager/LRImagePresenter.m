@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 #import "LRImagePresenter.h"
-#import "LRImageManager.h"
 #import "LRImageManager+Private.h"
 
 static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
@@ -32,6 +31,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign) LRImageViewAnimationType animationType;
 @property (nonatomic, copy) LRNetImageBlock completionBlock;
@@ -46,6 +46,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                          imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
                              size:(CGSize)size
+                       imageCache:(LRImageCache *)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 {
@@ -57,6 +58,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         _imageURL = imageURL;
         _imageSize = size;
         _placeholderImage = placeholderImage;
+        _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
         _animationType = animationType;
     }
@@ -68,7 +70,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 {
     self.completionBlock = completionBlock;
     
-    if ([self.imageURL.absoluteString length] == 0)
+    if ([[self.imageURL absoluteString] length] == 0)
     {
         self.imageView.image = self.placeholderImage;
         
@@ -77,8 +79,8 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         return;
     }
     
-    UIImage *memCachedImage = [[LRImageCache sharedImageCache] memCachedImageForURL:self.imageURL
-                                                                               size:self.imageSize];
+    UIImage *memCachedImage = [self.imageCache memCachedImageForURL:self.imageURL size:self.imageSize];
+    
     if (memCachedImage)
     {
         self.imageView.image = memCachedImage;
@@ -117,26 +119,21 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
             });
         };
         
-        [[LRImageManager sharedManager] imageFromURL:self.imageURL
-                                                size:self.imageSize
-                                 cacheStorageOptions:self.cacheStorageOptions
-                                             context:self.imageView
-                                   completionHandler:completionHandler];
+        [self.imageManager imageFromURL:self.imageURL
+                                   size:self.imageSize
+                    cacheStorageOptions:self.cacheStorageOptions
+                                context:self.imageView
+                      completionHandler:completionHandler];
     }
-}
-
-- (void)startPresenting
-{
-    [self startPresentingWithCompletionBlock:NULL];
 }
 
 - (void)cancelPresenting
 {
     _cancelled = YES;
     
-    [[LRImageManager sharedManager] cancelImageRequestFromURL:_imageURL
-                                                         size:_imageSize
-                                                      context:_imageView];
+    [self.imageManager cancelImageRequestFromURL:_imageURL
+                                            size:_imageSize
+                                         context:_imageView];
 }
 
 - (void)dealloc

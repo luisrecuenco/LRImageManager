@@ -21,17 +21,13 @@
 // THE SOFTWARE.
 
 #import "UIImageView+LRNetworking.h"
-#import "LRImagePresenter.h"
 #import <objc/runtime.h>
 
 static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
 
-static const void * kLRImagePresenterObjectKey;
 static const void * kLRCompletionBlockObjectKey;
 
 @interface UIImageView (LRImageViewAdditons)
-
-@property (nonatomic, strong) LRImagePresenter *imagePresenter;
 
 @property (nonatomic, copy) LRNetImageBlock completionBlock;
 
@@ -39,7 +35,6 @@ static const void * kLRCompletionBlockObjectKey;
 
 @implementation UIImageView (LRImageViewAdditons)
 
-@dynamic imagePresenter;
 @dynamic completionBlock;
 
 @end
@@ -106,21 +101,18 @@ static const void * kLRCompletionBlockObjectKey;
        cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
              animationType:(LRImageViewAnimationType)animationType
 {
-    [self cancelImageOperation];
-    
-    self.imagePresenter = [[LRImagePresenter alloc] initWithImageView:self
-                                                             imageURL:url
-                                                     placeholderImage:placeholderImage
-                                                                 size:size
-                                                  cacheStorageOptions:cacheStorageOptions
-                                                        animationType:animationType];
-    
-    [self.imagePresenter startPresentingWithCompletionBlock:self.completionBlock];
+    [[LRImageManager sharedManager] downloadImageForImageView:self
+                                                     imageURL:url
+                                             placeholderImage:placeholderImage
+                                                         size:size
+                                          cacheStorageOptions:cacheStorageOptions
+                                                animationType:animationType
+                                              completionBlock:self.completionBlock];
 }
 
 - (void)cancelImageOperation;
 {
-    [self.imagePresenter cancelPresenting];
+    [[LRImageManager sharedManager] cancelDownloadImageForImageView:self];
 }
 
 #pragma mark - Completion Block
@@ -133,18 +125,6 @@ static const void * kLRCompletionBlockObjectKey;
 - (LRNetImageBlock)completionBlock
 {
     return (LRNetImageBlock)objc_getAssociatedObject(self, &kLRCompletionBlockObjectKey);
-}
-
-#pragma mark - UIImageView presenter
-
-- (LRImagePresenter *)imagePresenter
-{
-    return (LRImagePresenter *)objc_getAssociatedObject(self, &kLRImagePresenterObjectKey);
-}
-
-- (void)setImagePresenter:(LRImagePresenter *)imagePresenter
-{
-    objc_setAssociatedObject(self, &kLRImagePresenterObjectKey, imagePresenter, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

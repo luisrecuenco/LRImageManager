@@ -20,15 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "LRImageCache.h"
-
-typedef void (^LRNetImageBlock)(UIImage *image, BOOL cancelled);
-
-typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
-{
-    LRImageViewAnimationTypeNone,
-    LRImageViewAnimationTypeFade,
-};
+#import "LRImageManager.h"
 
 @interface UIImageView (LRNetworking)
 

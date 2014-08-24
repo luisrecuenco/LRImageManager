@@ -20,20 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "LRImageCache.h"
+#import "LRImageManager.h"
 
 extern NSString *const LRImageOperationErrorDomain;
 
-typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
-typedef NSURL * (^LRImageOperationURLModifierBlock)(NSURL *url, CGSize size);
-
+/**
+ This class is not meant to be used directly. Use LRImageManager instead.
+ */
 @interface LRImageOperation : NSOperation
 
 @property (nonatomic, assign) BOOL autoRetry;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
-           imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
+           imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
         cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
           completionHandler:(LRImageCompletionHandler)completionHandler;

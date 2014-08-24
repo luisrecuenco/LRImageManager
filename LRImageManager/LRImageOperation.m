@@ -40,7 +40,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
-@property (nonatomic, copy) LRImageOperationURLModifierBlock imageURLModifier;
+@property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
@@ -69,7 +69,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
-           imageURLModifier:(LRImageOperationURLModifierBlock)imageURLModifier
+           imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
                  imageCache:(LRImageCache *)imageCache
         cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
           completionHandler:(LRImageCompletionHandler)completionHandler

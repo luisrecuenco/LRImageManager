@@ -60,7 +60,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     return imageCache;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     
@@ -101,7 +101,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size
 {
-    if ([url.absoluteString length] == 0) return nil;
+    if ([[url absoluteString] length] == 0) return nil;
     
     NSString *imageCacheKey = LRMemCacheKey(url, size);
     
@@ -131,7 +131,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
 {
-    if ([url.absoluteString length] == 0) return nil;
+    if ([[url absoluteString] length] == 0) return nil;
     
     NSString *imageCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
     
@@ -156,7 +156,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                          size:(CGSize)size
               completionBlock:(void (^)(UIImage *image))completionBlock
 {
-    if ([url.absoluteString length] == 0)
+    if ([[url absoluteString] length] == 0)
     {
         completionBlock(nil);
         return;
