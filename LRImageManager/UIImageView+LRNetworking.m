@@ -77,14 +77,14 @@ static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
 {
     [[LRImageManager sharedManager] downloadImageForImageView:self
                                              placeholderImage:placeholderImage
-                                            activityIndicator:self.activityIndicator
+                                            activityIndicator:self.lr_activityIndicator
                                                      imageURL:url
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
-                                            completionHandler:self.completionHandler];
+                                            completionHandler:self.lr_completionHandler];
 }
 
-- (void)cancelImageOperation;
+- (void)lr_cancelImageOperation;
 {
     [[LRImageManager sharedManager] cancelDownloadImageForImageView:self];
 }
@@ -96,39 +96,38 @@ static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
 
 #pragma mark - Completion Block
 
-- (void)setCompletionHandler:(LRImageCompletionHandler)completionHandler
+- (void)lr_setCompletionHandler:(LRImageCompletionHandler)completionHandler
 {
     objc_setAssociatedObject(self, kLRCompletionHandlerObjectKey, completionHandler, OBJC_ASSOCIATION_COPY);
 }
 
-- (LRImageCompletionHandler)completionHandler
+- (LRImageCompletionHandler)lr_completionHandler
 {
     return objc_getAssociatedObject(self, kLRCompletionHandlerObjectKey);
 }
 
 #pragma mark - Activity Indicator
 
-- (void)setActivityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+- (void)lr_setActivityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
 {
-    [self.activityIndicator removeFromSuperview];
+    [self.lr_activityIndicator removeFromSuperview];
     
     objc_setAssociatedObject(self, kLRActivityIndicatorObjectKey, activityIndicator, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (UIView<LRActivityIndicator> *)activityIndicator
+- (UIView<LRActivityIndicator> *)lr_activityIndicator
 {
     return objc_getAssociatedObject(self, kLRActivityIndicatorObjectKey);
 }
 
 #pragma mark - Animation Type
 
-- (void)setAnimationType:(LRImageViewAnimationType)animationType
+- (void)lr_setAnimationType:(LRImageViewAnimationType)animationType
 {
     objc_setAssociatedObject(self, kLRAnimationType, @(animationType), OBJC_ASSOCIATION_RETAIN);
 }
 
-
-- (LRImageViewAnimationType)animationType
+- (LRImageViewAnimationType)lr_animationType
 {
     NSNumber *animationTypeNumber = objc_getAssociatedObject(self, kLRAnimationType);
     return animationTypeNumber ? [animationTypeNumber unsignedIntegerValue] : kDefaultImageViewAnimationType;
@@ -136,12 +135,12 @@ static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
 
 #pragma mark - Animation Time
 
-- (void)setFadeAnimationTime:(NSTimeInterval)fadeAnimationTme
+- (void)lr_setFadeAnimationTime:(NSTimeInterval)fadeAnimationTme
 {
     objc_setAssociatedObject(self, kLRFadeAnimationTime, @(fadeAnimationTme), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (NSTimeInterval)fadeAnimationTime
+- (NSTimeInterval)lr_fadeAnimationTime
 {
     NSNumber *fadeAnimationTimeNumber = objc_getAssociatedObject(self, kLRFadeAnimationTime);
     return fadeAnimationTimeNumber ? [fadeAnimationTimeNumber doubleValue] : kDefaultImageViewFadeAnimationTime;

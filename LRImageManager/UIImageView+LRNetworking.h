@@ -36,12 +36,12 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 
 @interface UIImageView (LRNetworking)
 
-@property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
+@property (nonatomic, strong, setter = lr_setActivityIndicator:) UIView<LRActivityIndicator> *lr_activityIndicator;
 
-@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
+@property (nonatomic, copy, setter = lr_setCompletionHandler:) LRImageCompletionHandler lr_completionHandler;
 
-@property (nonatomic) LRImageViewAnimationType animationType;
-@property (nonatomic) NSTimeInterval fadeAnimationTime;
+@property (nonatomic, setter = lr_setAnimationType:) LRImageViewAnimationType lr_animationType;
+@property (nonatomic, setter = lr_setFadeAnimationTime:) NSTimeInterval lr_fadeAnimationTime;
 
 - (void)lr_setImageWithURL:(NSURL *)url;
 
@@ -67,6 +67,6 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
                       size:(CGSize)size
        cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType;
 
-- (void)cancelImageOperation;
+- (void)lr_cancelImageOperation;
 
 @end
