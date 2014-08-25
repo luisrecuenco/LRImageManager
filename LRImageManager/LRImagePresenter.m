@@ -106,20 +106,13 @@
                 [sself.activityIndicator removeFromSuperview];
 
                 if (!image || error) return;
-                
-                if (sself.imageView.animationType == LRImageViewAnimationTypeFade)
-                {
-                    [UIView transitionWithView:sself.imageView
-                                      duration:sself.imageView.fadeAnimationTime
-                                       options:UIViewAnimationOptionTransitionCrossDissolve
-                                    animations:^{
-                                        sself.imageView.image = image;
-                                    } completion:NULL];
-                }
-                else
-                {
-                    sself.imageView.image = image;
-                }
+                    
+                [UIView transitionWithView:sself.imageView
+                                  duration:sself.imageView.fadeAnimationTime
+                                   options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.animationType)
+                                animations:^{
+                                    sself.imageView.image = image;
+                                } completion:NULL];
             });
         };
         
@@ -142,6 +135,31 @@
 - (void)dealloc
 {
     [self cancelPresenting];
+}
+
+NS_INLINE UIViewAnimationOptions LRImageViewAnimationTypeToAnimationOptionTransition(LRImageViewAnimationType animationType)
+{
+    switch (animationType)
+    {
+        case LRImageViewAnimationTypeNone:
+            return UIViewAnimationOptionTransitionNone;
+        case LRImageViewAnimationTypeCrossDissolve:
+            return UIViewAnimationOptionTransitionCrossDissolve;
+        case LRImageViewAnimationTypeFlipFromLeft:
+            return UIViewAnimationOptionTransitionFlipFromLeft;
+        case LRImageViewAnimationTypeFlipFromBottom:
+            return UIViewAnimationOptionTransitionFlipFromBottom;
+        case LRImageViewAnimationTypeFlipFromRight:
+            return UIViewAnimationOptionTransitionFlipFromRight;
+        case LRImageViewAnimationTypeFlipFromTop:
+            return UIViewAnimationOptionTransitionFlipFromTop;
+        case LRImageViewAnimationTypeCurlUp:
+            return UIViewAnimationOptionTransitionCurlUp;
+        case LRImageViewAnimationTypeCurlDown:
+            return UIViewAnimationOptionTransitionCurlDown;
+        default:
+            return UIViewAnimationOptionTransitionNone;
+    }
 }
 
 @end

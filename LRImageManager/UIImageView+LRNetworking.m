@@ -23,7 +23,7 @@
 #import "UIImageView+LRNetworking.h"
 #import <objc/runtime.h>
 
-static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
+static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeCrossDissolve;
 static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
 
 @implementation UIImageView (LRNetworking)

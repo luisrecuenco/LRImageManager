@@ -25,7 +25,13 @@
 typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 {
     LRImageViewAnimationTypeNone,
-    LRImageViewAnimationTypeFade,
+    LRImageViewAnimationTypeCrossDissolve,
+    LRImageViewAnimationTypeFlipFromLeft,
+    LRImageViewAnimationTypeFlipFromRight,
+    LRImageViewAnimationTypeFlipFromTop,
+    LRImageViewAnimationTypeFlipFromBottom,
+    LRImageViewAnimationTypeCurlUp,
+    LRImageViewAnimationTypeCurlDown,
 };
 
 @interface UIImageView (LRNetworking)
