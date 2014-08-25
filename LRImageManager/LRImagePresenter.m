@@ -96,23 +96,23 @@
         
         LRImageCompletionHandler completionHandler = ^(UIImage *image, NSError *error) {
             
-            if (wself.completionHandler) wself.completionHandler(image, error);
-
             __strong LRImagePresenter *sself = wself;
-                        
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-
+                
                 [sself.activityIndicator stopAnimating];
                 [sself.activityIndicator removeFromSuperview];
-
+                
                 if (!image || error) return;
-                    
+                
                 [UIView transitionWithView:sself.imageView
                                   duration:sself.imageView.fadeAnimationTime
                                    options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.animationType)
                                 animations:^{
                                     sself.imageView.image = image;
-                                } completion:NULL];
+                                } completion:^(BOOL finished) {
+                                    if (sself.completionHandler) sself.completionHandler(image, error);
+                                }];
             });
         };
         
