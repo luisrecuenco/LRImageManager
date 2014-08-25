@@ -154,7 +154,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                 [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
                                                                     object:self
                                                                   userInfo:userInfo];
-
+                
                 [self.ongoingOperations removeObjectForKey:key];
                 
                 if (self.showNetworkActivityIndicator && [self.ongoingOperations count] == 0)
@@ -182,8 +182,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 - (NSDictionary *)userInfoDictionaryForURL:(NSURL *)url size:(CGSize)size
 {
     return @{ LRImageManagerURLUserInfoKey : url,
-              LRImageManagerSizeUserInfoKey : [NSValue valueWithCGSize:size]
-            };
+              LRImageManagerSizeUserInfoKey : [NSValue valueWithCGSize:size] };
 }
 
 - (void)cancelImageRequestFromURL:(NSURL *)url
@@ -240,26 +239,28 @@ NSString *LROngoingOperationKey(NSURL *url, CGSize size)
 }
 
 - (void)downloadImageForImageView:(UIImageView *)imageView
-                         imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType
                 completionHandler:(LRImageCompletionHandler)completionHandler
 {
     LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithImageView:imageView
-                                                                     imageURL:imageURL
                                                              placeholderImage:placeholderImage
+                                                            activityIndicator:activityIndicator
+                                                                     imageURL:imageURL
                                                                          size:size
                                                                    imageCache:self.imageCache
                                                           cacheStorageOptions:cacheStorageOptions
                                                                 animationType:animationType];
     
     presenter.imageManager = self;
- 
+    
     // Previous presenter for this imageView will deallocate and cancel itself
     [self.presentersMap setObject:presenter forKey:imageView];
-
+    
     [presenter startPresentingWithCompletionHandler:completionHandler];
 }
 

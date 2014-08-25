@@ -28,8 +28,9 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @interface LRImagePresenter ()
 
 @property (nonatomic, weak) UIImageView *imageView;
-@property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) UIImage *placeholderImage;
+@property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
+@property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
@@ -41,8 +42,9 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @implementation LRImagePresenter
 
 - (instancetype)initWithImageView:(UIImageView *)imageView
-                         imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
                              size:(CGSize)size
                        imageCache:(LRImageCache *)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
@@ -53,9 +55,10 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     if (self)
     {
         _imageView = imageView;
+        _placeholderImage = placeholderImage;
+        _activityIndicator = activityIndicator;
         _imageURL = imageURL;
         _imageSize = size;
-        _placeholderImage = placeholderImage;
         _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
         _animationType = animationType;
@@ -89,16 +92,24 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
     {
         self.imageView.image = self.placeholderImage;
         
+        self.activityIndicator.center = self.imageView.center;
+        self.activityIndicator.hidden = NO;
+        [self.activityIndicator startAnimating];
+        [self.imageView addSubview:self.activityIndicator];
+        
         __weak LRImagePresenter *wself = self;
         
         LRImageCompletionHandler completionHandler = ^(UIImage *image, NSError *error) {
             
             if (wself.completionHandler) wself.completionHandler(image, error);
-            
+
             __strong LRImagePresenter *sself = wself;
                         
             dispatch_async(dispatch_get_main_queue(), ^{
-                
+
+                [sself.activityIndicator stopAnimating];
+                [sself.activityIndicator removeFromSuperview];
+
                 if (!image || error) return;
                 
                 if (sself.animationType == LRImageViewAnimationTypeFade)

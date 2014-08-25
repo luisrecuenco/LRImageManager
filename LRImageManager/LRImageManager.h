@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 typedef NSURL * (^LRImageURLModifierBlock)(NSURL *url, CGSize size);
 typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
+#pragma mark - LRImageManager
+
 @interface LRImageManager : NSObject
 
 @property (nonatomic, strong, readonly) LRImageCache *imageCache;
@@ -63,11 +65,16 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 @end
 
+#pragma mark - LRImageManager (UIImageView)
+
+@protocol LRActivityIndicator;
+
 @interface LRImageManager (UIImageView)
 
 - (void)downloadImageForImageView:(UIImageView *)imageView
-                         imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType
@@ -75,5 +82,14 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView;
+
+@end
+
+#pragma mark - LRActivityIndicator
+
+@protocol LRActivityIndicator <NSObject>
+
+- (void)startAnimating;
+- (void)stopAnimating;
 
 @end

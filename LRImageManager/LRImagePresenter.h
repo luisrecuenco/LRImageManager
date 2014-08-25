@@ -32,8 +32,9 @@
 @property (nonatomic, weak) LRImageManager *imageManager;
 
 - (instancetype)initWithImageView:(UIImageView *)imageView
-                         imageURL:(NSURL *)imageURL
                  placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
                              size:(CGSize)size
                        imageCache:(LRImageCache *)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions

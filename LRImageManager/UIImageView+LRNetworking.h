@@ -24,6 +24,9 @@
 
 @interface UIImageView (LRNetworking)
 
+@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
+@property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
+
 - (void)lr_setImageWithURL:(NSURL *)url;
 
 - (void)lr_setImageWithURL:(NSURL *)url
@@ -53,8 +56,6 @@
                       size:(CGSize)size
        cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType
              animationType:(LRImageViewAnimationType)animationType;
-
-- (void)setCompletionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageOperation;
 

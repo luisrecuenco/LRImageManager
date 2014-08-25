@@ -25,20 +25,6 @@
 
 static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
 
-static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectKey;
-
-@interface UIImageView (LRImageViewAdditons)
-
-@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
-
-@end
-
-@implementation UIImageView (LRImageViewAdditons)
-
-@dynamic completionHandler;
-
-@end
-
 @implementation UIImageView (LRNetworking)
 
 - (void)lr_setImageWithURL:(NSURL *)url
@@ -102,8 +88,9 @@ static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectK
              animationType:(LRImageViewAnimationType)animationType
 {
     [[LRImageManager sharedManager] downloadImageForImageView:self
-                                                     imageURL:url
                                              placeholderImage:placeholderImage
+                                            activityIndicator:self.activityIndicator
+                                                     imageURL:url
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
                                                 animationType:animationType
@@ -115,6 +102,9 @@ static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectK
     [[LRImageManager sharedManager] cancelDownloadImageForImageView:self];
 }
 
+static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectKey;
+static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectKey;
+
 #pragma mark - Completion Block
 
 - (void)setCompletionHandler:(LRImageCompletionHandler)completionHandler
@@ -124,7 +114,21 @@ static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectK
 
 - (LRImageCompletionHandler)completionHandler
 {
-    return (LRImageCompletionHandler)objc_getAssociatedObject(self, kLRCompletionHandlerObjectKey);
+    return objc_getAssociatedObject(self, kLRCompletionHandlerObjectKey);
+}
+
+#pragma mark - Activity Indicator
+
+- (void)setActivityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+{
+    [self.activityIndicator removeFromSuperview];
+    
+    objc_setAssociatedObject(self, kLRActivityIndicatorObjectKey, activityIndicator, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIView<LRActivityIndicator> *)activityIndicator
+{
+    return objc_getAssociatedObject(self, kLRActivityIndicatorObjectKey);
 }
 
 @end
