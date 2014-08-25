@@ -24,28 +24,11 @@
 
 @implementation UIImage (LRImageManagerAdditions)
 
-- (instancetype)lr_croppedImage:(CGRect)bounds
-{
-    CGRect croppingRect = CGRectIntegral(CGRectMake(bounds.origin.x * self.scale,
-                                                    bounds.origin.y * self.scale,
-                                                    bounds.size.width * self.scale,
-                                                    bounds.size.height * self.scale));
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect(self.CGImage, croppingRect);
-    
-    UIImage *croppedImage = [UIImage imageWithCGImage:imageRef
-                                                scale:self.scale
-                                          orientation:self.imageOrientation];
-    CGImageRelease(imageRef);
-    
-    return croppedImage;
-}
-
 - (instancetype)lr_resizedImageWithContentMode:(UIViewContentMode)contentMode bounds:(CGSize)bounds
 {
     CGFloat horizontalRatio = bounds.width / self.size.width;
     CGFloat verticalRatio = bounds.height / self.size.height;
-    CGFloat ratio = 0;
+    CGFloat ratio = 1.0f;
     
     if (contentMode == UIViewContentModeScaleAspectFill)
     {
@@ -54,10 +37,6 @@
     else if (contentMode == UIViewContentModeScaleAspectFit)
     {
         ratio = MIN(horizontalRatio, verticalRatio);
-    }
-    else
-    {
-        NSAssert(NO, @"Unsupported content mode");
     }
     
     CGSize newSize = {self.size.width * ratio, self.size.height * ratio};

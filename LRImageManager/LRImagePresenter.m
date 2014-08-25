@@ -23,7 +23,7 @@
 #import "LRImagePresenter.h"
 #import "LRImageManager+Private.h"
 
-static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
+static NSTimeInterval const kImageFadeAnimationTime = 0.25;
 
 @interface LRImagePresenter ()
 
@@ -131,6 +131,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
         [self.imageManager imageFromURL:self.imageURL
                                    size:self.imageSize
                     cacheStorageOptions:self.cacheStorageOptions
+                            contentMode:self.imageView.contentMode
                                 context:self.imageView
                       completionHandler:completionHandler];
     }

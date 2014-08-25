@@ -27,6 +27,7 @@
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+         contentMode:(UIViewContentMode)contentMode
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler;
 

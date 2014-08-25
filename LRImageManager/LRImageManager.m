@@ -91,6 +91,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     [self imageFromURL:url
                   size:size
    cacheStorageOptions:cacheStorageOptions
+           contentMode:UIViewContentModeScaleAspectFill
                context:NULL
      completionHandler:completionHandler];
 }
@@ -98,6 +99,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+         contentMode:(UIViewContentMode)contentMode
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -139,6 +141,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                                                                     imageURLModifier:self.imageURLModifier
                                                                           imageCache:self.imageCache
                                                                  cacheStorageOptions:cacheStorageOptions
+                                                                         contentMode:contentMode
                                                                    completionHandler:completionHandler];
             
             [imageOperation addContext:context];

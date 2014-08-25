@@ -26,9 +26,9 @@
 
 NSString *const LRImageOperationErrorDomain = @"LRImageOperationErrorDomain";
 
-static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 15.0f;
-static NSTimeInterval const kImageRequestDefaultWWANTimeout = 60.0f;
-static NSTimeInterval const kImageRetryDelay = 2.5f;
+static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 15.0;
+static NSTimeInterval const kImageRequestDefaultWWANTimeout = 60.0;
+static NSTimeInterval const kImageRetryDelay = 2.5;
 
 @interface LRImageOperation ()
 
@@ -43,6 +43,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
 @property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 @property (nonatomic, strong) id<LRImageCache> imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
+@property (nonatomic, assign) UIViewContentMode contentMode;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
 // Outputs
@@ -72,6 +73,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
            imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
                  imageCache:(id<LRImageCache>)imageCache
         cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+                contentMode:(UIViewContentMode)contentMode
           completionHandler:(LRImageCompletionHandler)completionHandler
 {
     self = [super init];
@@ -83,6 +85,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         _imageURLModifier = [imageURLModifier copy];
         _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
+        _contentMode = contentMode;
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnectionWithURL:_url size:_size];
         _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
@@ -217,7 +220,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         if (self.downloadedData == nil)
         {
             self.downloadedData = [[NSMutableData alloc] initWithCapacity:
-                                   MAX(0, self.response.expectedContentLength)];
+                                   (NSUInteger)MAX(0, self.response.expectedContentLength)];
         }
         
         [self.downloadedData appendData:data];
@@ -288,8 +291,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5f;
         
         if (shouldResize)
         {
-            self.image = [self.image lr_resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:self.size];
-            self.image = [self.image lr_croppedImage:(CGRect){.origin = CGPointZero, .size = self.size}];
+            self.image = [self.image lr_resizedImageWithContentMode:self.contentMode bounds:self.size];
         }
         
         self.image = [self.image lr_decompressImage];

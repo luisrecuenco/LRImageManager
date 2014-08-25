@@ -24,7 +24,6 @@
 
 @interface UIImage (LRImageManagerAdditions)
 
-- (instancetype)lr_croppedImage:(CGRect)bounds;
 - (instancetype)lr_resizedImageWithContentMode:(UIViewContentMode)contentMode bounds:(CGSize)bounds;
 - (instancetype)lr_decompressImage;
 - (BOOL)lr_hasAlpha;

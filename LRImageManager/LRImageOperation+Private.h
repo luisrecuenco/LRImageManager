@@ -30,6 +30,7 @@
 @property (nonatomic, copy, readonly) LRImageURLModifierBlock imageURLModifier;
 @property (nonatomic, strong, readonly) id<LRImageCache> imageCache;
 @property (nonatomic, assign, readonly) LRCacheStorageOptions cacheStorageOptions;
+@property (nonatomic, assign, readonly) UIViewContentMode contentMode;
 @property (nonatomic, strong, readonly) NSMutableArray *completionHandlers;
 
 // Outputs
