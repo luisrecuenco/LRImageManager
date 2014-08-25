@@ -40,7 +40,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 @interface LRImageManager : NSObject
 
-@property (nonatomic, strong, readonly) LRImageCache *imageCache;
+@property (nonatomic, strong) id<LRImageCache> imageCache;
 
 @property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 

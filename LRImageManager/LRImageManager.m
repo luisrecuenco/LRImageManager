@@ -39,7 +39,6 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 
 @interface LRImageManager ()
 
-@property (nonatomic, strong) LRImageCache *imageCache;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *ongoingOperations;
 @property (nonatomic, strong) NSMapTable *presentersMap;
@@ -64,7 +63,6 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     
     if (self)
     {
-        _imageCache = [[LRImageCache alloc] init];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
@@ -185,15 +183,12 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
               LRImageManagerSizeUserInfoKey : [NSValue valueWithCGSize:size] };
 }
 
-- (void)cancelImageRequestFromURL:(NSURL *)url
-                             size:(CGSize)size
+- (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size
 {
     [self cancelImageRequestFromURL:url size:size context:NULL];
 }
 
-- (void)cancelImageRequestFromURL:(NSURL *)url
-                             size:(CGSize)size
-                          context:(id)context
+- (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size context:(id)context
 {
     if ([[url absoluteString] length] == 0) return;
     
@@ -221,22 +216,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     }
 }
 
-NSString *LROngoingOperationKey(NSURL *url, CGSize size)
-{
-    NSString *ongoingOperationKey = nil;
-    
-    if (url)
-    {
-        ongoingOperationKey = [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
-    }
-    
-    return ongoingOperationKey;
-}
-
-- (void)cancelDownloadImageForImageView:(UIImageView *)imageView
-{
-    [self.presentersMap removeObjectForKey:imageView];
-}
+#pragma mark - UIImageView specifics
 
 - (void)downloadImageForImageView:(UIImageView *)imageView
                  placeholderImage:(UIImage *)placeholderImage
@@ -262,6 +242,32 @@ NSString *LROngoingOperationKey(NSURL *url, CGSize size)
     [self.presentersMap setObject:presenter forKey:imageView];
     
     [presenter startPresentingWithCompletionHandler:completionHandler];
+}
+
+- (void)cancelDownloadImageForImageView:(UIImageView *)imageView
+{
+    [self.presentersMap removeObjectForKey:imageView];
+}
+
+#pragma mark - Ongoing Operation Key
+
+NS_INLINE NSString *LROngoingOperationKey(NSURL *url, CGSize size)
+{
+    NSString *ongoingOperationKey = nil;
+    
+    if (url)
+    {
+        ongoingOperationKey = [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
+    }
+    
+    return ongoingOperationKey;
+}
+
+#pragma mark - Image Cache
+
+- (id<LRImageCache>)imageCache
+{
+    return _imageCache ?: (_imageCache = [[LRImageCache alloc] init]);
 }
 
 @end

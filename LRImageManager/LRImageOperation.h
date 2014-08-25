@@ -34,7 +34,7 @@ extern NSString *const LRImageOperationErrorDomain;
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
            imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
-                 imageCache:(LRImageCache *)imageCache
+                 imageCache:(id<LRImageCache>)imageCache
         cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
           completionHandler:(LRImageCompletionHandler)completionHandler;
 

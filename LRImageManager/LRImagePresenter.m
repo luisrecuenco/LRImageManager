@@ -32,7 +32,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
 @property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, assign) CGSize imageSize;
-@property (nonatomic, strong) LRImageCache *imageCache;
+@property (nonatomic, strong) id<LRImageCache> imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign) LRImageViewAnimationType animationType;
 @property (nonatomic, copy) LRImageCompletionHandler completionHandler;
@@ -46,7 +46,7 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25f;
                 activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
-                       imageCache:(LRImageCache *)imageCache
+                       imageCache:(id<LRImageCache>)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 {

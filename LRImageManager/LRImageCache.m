@@ -51,6 +51,10 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 @implementation LRImageCache
 
+@synthesize maxTimeInCache = _maxTimeInCache;
+@synthesize maxDirectorySize = _maxDirectorySize;
+@synthesize cacheStorageOptions = _cacheStorageOptions;
+
 - (instancetype)initWithName:(NSString *)name
 {
     self = [super init];

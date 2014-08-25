@@ -30,7 +30,6 @@
              context:(id)context
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
-- (void)cancelImageRequestFromURL:(NSURL *)url
-                             size:(CGSize)size
-                          context:(id)context;
+- (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size context:(id)context;
+
 @end

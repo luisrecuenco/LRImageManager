@@ -36,7 +36,7 @@
                 activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
-                       imageCache:(LRImageCache *)imageCache
+                       imageCache:(id<LRImageCache>)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                     animationType:(LRImageViewAnimationType)animationType;
 

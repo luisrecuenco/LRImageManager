@@ -30,7 +30,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
     LRCacheStorageOptionsDiskCache    = 1 << 2,
 };
 
-@interface LRImageCache : NSObject
+#pragma mark - LRImageCache
+
+@protocol LRImageCache <NSObject>
 
 /** Cache time limit. */
 @property (nonatomic, assign) NSTimeInterval maxTimeInCache;
@@ -44,8 +46,10 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 - (instancetype)initWithName:(NSString *)name;
 
 - (UIImage *)memCachedImageForKey:(NSString *)key;
+- (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
 - (UIImage *)diskCachedImageForKey:(NSString *)key;
+- (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
 /**
  Async disk cache image retrieval.
@@ -53,39 +57,32 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 - (void)diskCachedImageForKey:(NSString *)key
               completionBlock:(void (^)(UIImage *image))completionBlock;
 
+- (void)diskCachedImageForURL:(NSURL *)url
+                         size:(CGSize)size
+              completionBlock:(void (^)(UIImage *image))completionBlock;
+
 - (void)cacheImage:(UIImage *)image
        memCacheKey:(NSString *)memCacheKey
       diskCacheKey:(NSString *)diskCacheKey
 cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
-- (void)clearMemCache;
+- (void)cacheImage:(UIImage *)image
+           withURL:(NSURL *)url
+              size:(CGSize)size
+cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
+- (void)clearMemCache;
 - (void)clearMemCacheForKey:(NSString *)key;
 
 - (void)clearDiskCache;
-
 - (void)clearDiskCacheForKey:(NSString *)key;
 
 - (void)cleanDisk;
 
 @end
 
-@interface LRImageCache (URLAndSize)
+#pragma mark - Concrete LRImageCache implementation
 
-- (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
-
-- (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size;
-
-/**
- Async disk cache image retrieval.
- */
-- (void)diskCachedImageForURL:(NSURL *)url
-                         size:(CGSize)size
-              completionBlock:(void (^)(UIImage *image))completionBlock;
-
-- (void)cacheImage:(UIImage *)image
-           withURL:(NSURL *)url
-              size:(CGSize)size
-cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
+@interface LRImageCache : NSObject <LRImageCache>
 
 @end
