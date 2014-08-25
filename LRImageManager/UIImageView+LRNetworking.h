@@ -22,10 +22,20 @@
 
 #import "LRImageManager.h"
 
+typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
+{
+    LRImageViewAnimationTypeNone,
+    LRImageViewAnimationTypeFade,
+};
+
 @interface UIImageView (LRNetworking)
 
-@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
 @property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
+
+@property (nonatomic, copy) LRImageCompletionHandler completionHandler;
+
+@property (nonatomic) LRImageViewAnimationType animationType;
+@property (nonatomic) NSTimeInterval fadeAnimationTime;
 
 - (void)lr_setImageWithURL:(NSURL *)url;
 
@@ -50,12 +60,6 @@
           placeholderImage:(UIImage *)placeholderImage
                       size:(CGSize)size
        cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType;
-
-- (void)lr_setImageWithURL:(NSURL *)url
-          placeholderImage:(UIImage *)placeholderImage
-                      size:(CGSize)size
-       cacheStorageOptions:(LRCacheStorageOptions)memCacheStorageType
-             animationType:(LRImageViewAnimationType)animationType;
 
 - (void)cancelImageOperation;
 

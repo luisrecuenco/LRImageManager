@@ -24,6 +24,7 @@
 #import <objc/runtime.h>
 
 static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeFade;
+static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
 
 @implementation UIImageView (LRNetworking)
 
@@ -74,26 +75,12 @@ static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageVi
                       size:(CGSize)size
        cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
-    [self lr_setImageWithURL:url
-            placeholderImage:placeholderImage
-                        size:size
-         cacheStorageOptions:cacheStorageOptions
-               animationType:kDefaultImageViewAnimationType];
-}
-
-- (void)lr_setImageWithURL:(NSURL *)url
-          placeholderImage:(UIImage *)placeholderImage
-                      size:(CGSize)size
-       cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-             animationType:(LRImageViewAnimationType)animationType
-{
     [[LRImageManager sharedManager] downloadImageForImageView:self
                                              placeholderImage:placeholderImage
                                             activityIndicator:self.activityIndicator
                                                      imageURL:url
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
-                                                animationType:animationType
                                             completionHandler:self.completionHandler];
 }
 
@@ -104,6 +91,8 @@ static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageVi
 
 static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectKey;
 static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectKey;
+static const void * kLRAnimationType = &kLRAnimationType;
+static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
 
 #pragma mark - Completion Block
 
@@ -129,6 +118,33 @@ static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectK
 - (UIView<LRActivityIndicator> *)activityIndicator
 {
     return objc_getAssociatedObject(self, kLRActivityIndicatorObjectKey);
+}
+
+#pragma mark - Animation Type
+
+- (void)setAnimationType:(LRImageViewAnimationType)animationType
+{
+    objc_setAssociatedObject(self, kLRAnimationType, @(animationType), OBJC_ASSOCIATION_RETAIN);
+}
+
+
+- (LRImageViewAnimationType)animationType
+{
+    NSNumber *animationTypeNumber = objc_getAssociatedObject(self, kLRAnimationType);
+    return animationTypeNumber ? [animationTypeNumber unsignedIntegerValue] : kDefaultImageViewAnimationType;
+}
+
+#pragma mark - Animation Time
+
+- (void)setFadeAnimationTime:(NSTimeInterval)fadeAnimationTme
+{
+    objc_setAssociatedObject(self, kLRFadeAnimationTime, @(fadeAnimationTme), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSTimeInterval)fadeAnimationTime
+{
+    NSNumber *fadeAnimationTimeNumber = objc_getAssociatedObject(self, kLRFadeAnimationTime);
+    return fadeAnimationTimeNumber ? [fadeAnimationTimeNumber doubleValue] : kDefaultImageViewFadeAnimationTime;
 }
 
 @end

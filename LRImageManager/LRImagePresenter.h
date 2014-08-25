@@ -37,8 +37,7 @@
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
                        imageCache:(id<LRImageCache>)imageCache
-              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-                    animationType:(LRImageViewAnimationType)animationType;
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
 - (void)startPresentingWithCompletionHandler:(LRImageCompletionHandler)completionHandler;
 

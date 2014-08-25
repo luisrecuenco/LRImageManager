@@ -23,8 +23,6 @@
 #import "LRImagePresenter.h"
 #import "LRImageManager+Private.h"
 
-static NSTimeInterval const kImageFadeAnimationTime = 0.25;
-
 @interface LRImagePresenter ()
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -34,7 +32,6 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25;
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, strong) id<LRImageCache> imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
-@property (nonatomic, assign) LRImageViewAnimationType animationType;
 @property (nonatomic, copy) LRImageCompletionHandler completionHandler;
 
 @end
@@ -48,7 +45,6 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25;
                              size:(CGSize)size
                        imageCache:(id<LRImageCache>)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-                    animationType:(LRImageViewAnimationType)animationType;
 {
     self = [super init];
     
@@ -61,7 +57,6 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25;
         _imageSize = size;
         _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
-        _animationType = animationType;
     }
     
     return self;
@@ -112,10 +107,10 @@ static NSTimeInterval const kImageFadeAnimationTime = 0.25;
 
                 if (!image || error) return;
                 
-                if (sself.animationType == LRImageViewAnimationTypeFade)
+                if (sself.imageView.animationType == LRImageViewAnimationTypeFade)
                 {
                     [UIView transitionWithView:sself.imageView
-                                      duration:kImageFadeAnimationTime
+                                      duration:sself.imageView.fadeAnimationTime
                                        options:UIViewAnimationOptionTransitionCrossDissolve
                                     animations:^{
                                         sself.imageView.image = image;

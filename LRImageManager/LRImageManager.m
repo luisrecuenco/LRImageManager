@@ -227,7 +227,6 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-                    animationType:(LRImageViewAnimationType)animationType
                 completionHandler:(LRImageCompletionHandler)completionHandler
 {
     LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithImageView:imageView
@@ -236,8 +235,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                                                                      imageURL:imageURL
                                                                          size:size
                                                                    imageCache:self.imageCache
-                                                          cacheStorageOptions:cacheStorageOptions
-                                                                animationType:animationType];
+                                                          cacheStorageOptions:cacheStorageOptions];
     
     presenter.imageManager = self;
     

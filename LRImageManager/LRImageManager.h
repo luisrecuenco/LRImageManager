@@ -27,12 +27,6 @@ extern NSString * LRImageManagerDidStopLoadingImageNotification;
 extern NSString * LRImageManagerURLUserInfoKey;
 extern NSString * LRImageManagerSizeUserInfoKey;
 
-typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
-{
-    LRImageViewAnimationTypeNone,
-    LRImageViewAnimationTypeFade,
-};
-
 typedef NSURL * (^LRImageURLModifierBlock)(NSURL *url, CGSize size);
 typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
@@ -77,7 +71,6 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-                    animationType:(LRImageViewAnimationType)animationType
                 completionHandler:(LRImageCompletionHandler)completionHandler;
 
 
