@@ -1,5 +1,10 @@
 ## LRImageManager
 
+[![Build Status](http://img.shields.io/travis/luisrecuenco/LRImageManager/master.svg?style=flat)](https://travis-ci.org/luisrecuenco/LRImageManager)
+[![Pod Version](http://img.shields.io/cocoapods/v/LRImageManager.svg?style=flat)](http://cocoadocs.org/docsets/LRImageManager/)
+[![Pod Platform](http://img.shields.io/cocoapods/p/LRImageManager.svg?style=flat)](http://cocoadocs.org/docsets/LRImageManager/)
+[![Pod License](http://img.shields.io/cocoapods/l/LRImageManager.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
 LRImageManager is a full-featured Objective-C image library. 
 
 It supports: 
