@@ -258,7 +258,7 @@ NS_INLINE NSString *LROngoingOperationKey(NSURL *url, CGSize size)
     
     if (url)
     {
-        ongoingOperationKey = [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
+        ongoingOperationKey = [NSString stringWithFormat:@"%@-%lu-%lu", [url absoluteString], (unsigned long)size.width, (unsigned long)size.height];
     }
     
     return ongoingOperationKey;

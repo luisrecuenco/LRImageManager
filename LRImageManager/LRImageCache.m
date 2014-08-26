@@ -411,7 +411,7 @@ NS_INLINE NSString *LRMemCacheKey(NSURL *url, CGSize size)
 {
     if (!url) return nil;
     
-    return [NSString stringWithFormat:@"%@-%d-%d", [url absoluteString], (NSUInteger)size.width, (NSUInteger)size.height];
+    return [NSString stringWithFormat:@"%@-%lu-%lu", [url absoluteString], (unsigned long)size.width, (unsigned long)size.height];
 }
 
 NS_INLINE NSString *LRDiskCacheKey(NSURL *url, CGSize size, NSMutableDictionary *cacheKeysMap)
