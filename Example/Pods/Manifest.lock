@@ -1,17 +1,17 @@
 PODS:
-  - LRImageManager (0.3):
+  - LRImageManager (1.0):
     - Reachability
   - Reachability (3.1.1)
 
 DEPENDENCIES:
-  - LRImageManager (from `../`)
+  - LRImageManager (from `../.`)
 
 EXTERNAL SOURCES:
   LRImageManager:
-    :path: ../
+    :path: ../.
 
 SPEC CHECKSUMS:
-  LRImageManager: 75e23266d06a53618d46d9e77433d4c383490a2c
+  LRImageManager: e2ee4fbf1fed61af403b59435fc4f45e71ddb89d
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
 
 COCOAPODS: 0.33.1

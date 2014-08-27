@@ -8,8 +8,8 @@
 
 // LRImageManager
 #define COCOAPODS_POD_AVAILABLE_LRImageManager
-#define COCOAPODS_VERSION_MAJOR_LRImageManager 0
-#define COCOAPODS_VERSION_MINOR_LRImageManager 3
+#define COCOAPODS_VERSION_MAJOR_LRImageManager 1
+#define COCOAPODS_VERSION_MINOR_LRImageManager 0
 #define COCOAPODS_VERSION_PATCH_LRImageManager 0
 
 // Reachability

@@ -1,1 +1,1 @@
-pod 'LRImageManager', :path => "../"
+pod 'LRImageManager', :path => "../."
