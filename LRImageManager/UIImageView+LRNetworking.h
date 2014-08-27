@@ -38,6 +38,8 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 
 @property (nonatomic, strong, setter = lr_setActivityIndicator:) UIView<LRActivityIndicator> *lr_activityIndicator;
 
+@property (nonatomic, copy, setter = lr_setPostProcessingBlock:) LRImagePostProcessingBlock lr_postProcessingBlock;
+
 @property (nonatomic, copy, setter = lr_setCompletionHandler:) LRImageCompletionHandler lr_completionHandler;
 
 @property (nonatomic, setter = lr_setAnimationType:) LRImageViewAnimationType lr_animationType;

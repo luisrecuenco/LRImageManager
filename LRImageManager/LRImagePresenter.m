@@ -32,6 +32,7 @@
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, strong) id<LRImageCache> imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
+@property (nonatomic, copy) LRImagePostProcessingBlock postProcessingBlock;
 @property (nonatomic, copy) LRImageCompletionHandler completionHandler;
 
 @end
@@ -45,6 +46,7 @@
                              size:(CGSize)size
                        imageCache:(id<LRImageCache>)imageCache
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+              postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
 {
     self = [super init];
     
@@ -57,6 +59,7 @@
         _imageSize = size;
         _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
+        _postProcessingBlock = [postProcessingBlock copy];
     }
     
     return self;
@@ -121,6 +124,7 @@
                     cacheStorageOptions:self.cacheStorageOptions
                             contentMode:self.imageView.contentMode
                                 context:self.imageView
+                    postProcessingBlock:self.postProcessingBlock
                       completionHandler:completionHandler];
     }
 }

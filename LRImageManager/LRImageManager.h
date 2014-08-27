@@ -28,6 +28,7 @@ extern NSString * LRImageManagerURLUserInfoKey;
 extern NSString * LRImageManagerSizeUserInfoKey;
 
 typedef NSURL * (^LRImageURLModifierBlock)(NSURL *url, CGSize size);
+typedef UIImage * (^LRImagePostProcessingBlock)(UIImage *image);
 typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 #pragma mark - LRImageManager
@@ -50,7 +51,18 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler;
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+   completionHandler:(LRImageCompletionHandler)completionHandler;
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size;
@@ -71,6 +83,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+              postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
                 completionHandler:(LRImageCompletionHandler)completionHandler;
 
 

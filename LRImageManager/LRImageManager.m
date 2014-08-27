@@ -79,7 +79,19 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 {
     [self imageFromURL:url
                   size:size
+   postProcessingBlock:NULL
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
    cacheStorageOptions:self.imageCache.cacheStorageOptions
+   postProcessingBlock:postProcessingBlock
      completionHandler:completionHandler];
 }
 
@@ -91,8 +103,22 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     [self imageFromURL:url
                   size:size
    cacheStorageOptions:cacheStorageOptions
+   postProcessingBlock:NULL
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+   cacheStorageOptions:cacheStorageOptions
            contentMode:UIViewContentModeScaleAspectFill
                context:NULL
+   postProcessingBlock:postProcessingBlock
      completionHandler:completionHandler];
 }
 
@@ -101,6 +127,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
          contentMode:(UIViewContentMode)contentMode
              context:(id)context
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
     if ([[url absoluteString] length] == 0)
@@ -138,10 +165,11 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
         {
             LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
                                                                                 size:size
-                                                                    imageURLModifier:self.imageURLModifier
                                                                           imageCache:self.imageCache
                                                                  cacheStorageOptions:cacheStorageOptions
                                                                          contentMode:contentMode
+                                                                    imageURLModifier:self.imageURLModifier
+                                                                 postProcessingBlock:postProcessingBlock
                                                                    completionHandler:completionHandler];
             
             [imageOperation addContext:context];
@@ -227,6 +255,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+              postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
                 completionHandler:(LRImageCompletionHandler)completionHandler
 {
     LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithImageView:imageView
@@ -235,7 +264,8 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                                                                      imageURL:imageURL
                                                                          size:size
                                                                    imageCache:self.imageCache
-                                                          cacheStorageOptions:cacheStorageOptions];
+                                                          cacheStorageOptions:cacheStorageOptions
+                                                          postProcessingBlock:postProcessingBlock];
     
     presenter.imageManager = self;
     

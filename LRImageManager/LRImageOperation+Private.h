@@ -28,6 +28,7 @@
 @property (nonatomic, strong, readonly) NSURL *url;
 @property (nonatomic, assign, readonly) CGSize size;
 @property (nonatomic, copy, readonly) LRImageURLModifierBlock imageURLModifier;
+@property (nonatomic, copy, readonly) LRImagePostProcessingBlock postProcessingBlock;
 @property (nonatomic, strong, readonly) id<LRImageCache> imageCache;
 @property (nonatomic, assign, readonly) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign, readonly) UIViewContentMode contentMode;

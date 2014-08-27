@@ -81,6 +81,7 @@ static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
                                                      imageURL:url
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
+                                          postProcessingBlock:self.lr_postProcessingBlock
                                             completionHandler:self.lr_completionHandler];
 }
 
@@ -93,6 +94,7 @@ static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectK
 static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectKey;
 static const void * kLRAnimationType = &kLRAnimationType;
 static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
+static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
 
 #pragma mark - Completion Block
 
@@ -144,6 +146,18 @@ static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
 {
     NSNumber *fadeAnimationTimeNumber = objc_getAssociatedObject(self, kLRFadeAnimationTime);
     return fadeAnimationTimeNumber ? [fadeAnimationTimeNumber doubleValue] : kDefaultImageViewFadeAnimationTime;
+}
+
+#pragma mark - Post Processing block
+
+- (void)lr_setPostProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+{
+    objc_setAssociatedObject(self, kLRPostProcessingBlock, postProcessingBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (LRImagePostProcessingBlock)lr_postProcessingBlock
+{
+    return objc_getAssociatedObject(self, kLRPostProcessingBlock);
 }
 
 @end

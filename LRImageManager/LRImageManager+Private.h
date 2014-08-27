@@ -29,6 +29,7 @@
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
          contentMode:(UIViewContentMode)contentMode
              context:(id)context
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size context:(id)context;

@@ -40,10 +40,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 // Inputs
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) CGSize size;
-@property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
 @property (nonatomic, strong) id<LRImageCache> imageCache;
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, assign) UIViewContentMode contentMode;
+@property (nonatomic, copy) LRImageURLModifierBlock imageURLModifier;
+@property (nonatomic, copy) LRImagePostProcessingBlock postProcessingBlock;
 @property (nonatomic, strong) NSMutableArray *completionHandlers;
 
 // Outputs
@@ -70,10 +71,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
-           imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
                  imageCache:(id<LRImageCache>)imageCache
         cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                 contentMode:(UIViewContentMode)contentMode
+           imageURLModifier:(LRImageURLModifierBlock)imageURLModifier
+        postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
           completionHandler:(LRImageCompletionHandler)completionHandler
 {
     self = [super init];
@@ -82,10 +84,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     {
         _url = url;
         _size = size;
-        _imageURLModifier = [imageURLModifier copy];
         _imageCache = imageCache;
         _cacheStorageOptions = cacheStorageOptions;
         _contentMode = contentMode;
+        _imageURLModifier = [imageURLModifier copy];
+        _postProcessingBlock = [postProcessingBlock copy];
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnectionWithURL:_url size:_size];
         _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
@@ -285,6 +288,11 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
             self.image = [UIImage imageWithCGImage:imageFromData.CGImage
                                              scale:[[UIScreen mainScreen] scale]
                                        orientation:UIImageOrientationUp];
+        }
+        
+        if (self.postProcessingBlock)
+        {
+            self.image = self.postProcessingBlock(self.image);
         }
         
         BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
