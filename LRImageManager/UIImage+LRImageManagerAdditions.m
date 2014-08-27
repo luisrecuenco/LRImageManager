@@ -94,8 +94,8 @@
     CGContextRelease(context);
     
     UIImage *decompressedImage = [UIImage imageWithCGImage:decompressedImageRef
-                                                     scale:self.scale
-                                               orientation:self.imageOrientation];
+                                                     scale:[[UIScreen mainScreen] scale]
+                                               orientation:UIImageOrientationUp];
     CGImageRelease(decompressedImageRef);
     
     return decompressedImage;
