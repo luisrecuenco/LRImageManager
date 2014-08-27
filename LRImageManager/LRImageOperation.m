@@ -160,9 +160,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
             self.cancelled = YES;
             [self.connection cancel];
             
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"Operation was cancelled"};
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain
                                                  code:NSURLErrorCancelled
-                                             userInfo:nil];
+                                             userInfo:userInfo];
             
             [self connection:self.connection didFailWithError:error];
         }
@@ -259,10 +260,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
                                  @"Error code %lu when downloading image with URL: %@ and size: %@",
                                  (long)statusCode, self.url, NSStringFromCGSize(self.size)];
             
-            NSDictionary *infoDict = @{NSLocalizedDescriptionKey : message};
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : message};
             self.error = [NSError errorWithDomain:LRImageOperationErrorDomain
                                              code:statusCode
-                                         userInfo:infoDict];
+                                         userInfo:userInfo];
             
             [self finish];
         }

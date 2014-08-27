@@ -92,7 +92,6 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     if ([key length] == 0) return nil;
     
     __block UIImage *memCachedImage = nil;
-    
     dispatch_sync(self.syncQueue, ^{
         memCachedImage = self.imagesDictionary[key] ?: [self.imagesCache objectForKey:key];
     });
@@ -131,9 +130,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 {
     if ([[url absoluteString] length] == 0) return nil;
     
-    NSString *imageCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
+    __block NSString *diskCacheKey = nil;
+    dispatch_sync(self.syncQueue, ^{
+       diskCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
+    });
     
-    return [self diskCachedImageForKey:imageCacheKey];
+    return [self diskCachedImageForKey:diskCacheKey];
 }
 
 - (void)diskCachedImageForKey:(NSString *)key
@@ -158,8 +160,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
         return;
     };
     
-    [self diskCachedImageForKey:LRDiskCacheKey(url, size, self.diskCacheKeysDictionary)
-                completionBlock:completionBlock];
+    __block NSString *diskCacheKey = nil;
+    dispatch_sync(self.syncQueue, ^{
+        diskCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
+    });
+    
+    [self diskCachedImageForKey:diskCacheKey completionBlock:completionBlock];
 }
 
 - (void)cacheImage:(UIImage *)image
@@ -182,9 +188,14 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 {
     if (!image || !url) return;
     
+    __block NSString *diskCacheKey = nil;
+    dispatch_sync(self.syncQueue, ^{
+        diskCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
+    });
+    
     [self cacheImage:image
          memCacheKey:LRMemCacheKey(url, size)
-        diskCacheKey:LRDiskCacheKey(url, size, self.diskCacheKeysDictionary)
+        diskCacheKey:diskCacheKey
  cacheStorageOptions:cacheStorageOptions];
 }
 
