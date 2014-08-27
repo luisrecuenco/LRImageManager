@@ -131,7 +131,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
                 [self.imageCache cacheImage:self.image
                                     withURL:self.url
                                        size:self.size
-                        cacheStorageOptions:self.cacheStorageOptions];
+                        cacheStorageOptions:self.cacheStorageOptions &~ LRCacheStorageOptionsDiskCache];
                 
                 [self finish];
             }
