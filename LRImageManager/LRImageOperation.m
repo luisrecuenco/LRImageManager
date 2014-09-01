@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 #import "LRImageOperation.h"
+#import "NSData+LRImageManagerAdditions.h"
 #import "UIImage+LRImageManagerAdditions.h"
 #import "Reachability.h"
 
@@ -281,14 +282,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 {
     dispatch_async(self.syncQueue, ^{
         
-        __attribute__((objc_precise_lifetime)) UIImage *imageFromData = [UIImage imageWithData:self.downloadedData];
-        
-        if (imageFromData)
-        {
-            self.image = [UIImage imageWithCGImage:imageFromData.CGImage
-                                             scale:[[UIScreen mainScreen] scale]
-                                       orientation:UIImageOrientationUp];
-        }
+        self.image = [self imageFromData:self.downloadedData];
         
         if (self.postProcessingBlock)
         {
@@ -312,6 +306,19 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
         
         [self finish];
     });
+}
+
+- (UIImage *)imageFromData:(NSData *)data
+{
+    __attribute__((objc_precise_lifetime)) UIImage *image = [UIImage imageWithData:data];
+    
+    UIImageOrientation orientation = [data lr_imageOrientation];
+    if (orientation != UIImageOrientationUp)
+    {
+        image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:orientation];
+    }
+    
+    return image;
 }
 
 #pragma mark - Autoretry Error Codes

@@ -26,28 +26,29 @@
 
 - (instancetype)lr_resizedImageWithContentMode:(UIViewContentMode)contentMode bounds:(CGSize)bounds
 {
-    CGFloat horizontalRatio = bounds.width / self.size.width;
-    CGFloat verticalRatio = bounds.height / self.size.height;
+    CGFloat scaleRatio = [[UIScreen mainScreen] scale] / self.scale;
+    CGFloat horizontalRatio = bounds.width * scaleRatio / self.size.width;
+    CGFloat verticalRatio = bounds.height * scaleRatio / self.size.height;
     CGFloat ratio = 1.0f;
     
-    if (contentMode == UIViewContentModeScaleAspectFill)
-    {
-        ratio = MAX(horizontalRatio, verticalRatio);
-    }
-    else if (contentMode == UIViewContentModeScaleAspectFit)
+    if (contentMode == UIViewContentModeScaleAspectFit)
     {
         ratio = MIN(horizontalRatio, verticalRatio);
     }
+    else
+    {
+        ratio = MAX(horizontalRatio, verticalRatio);
+    }
     
-    CGSize newSize = {self.size.width * ratio, self.size.height * ratio};
+    if (ratio == 1) return self;
     
-    return [self lr_resizedImage:newSize];
+    return [self lr_resizedImage:(CGSize){self.size.width * ratio, self.size.height * ratio}];
 }
 
 - (instancetype)lr_resizedImage:(CGSize)newSize
 {
-    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
-    UIGraphicsBeginImageContextWithOptions(newRect.size, ![self lr_hasAlpha], 0.0f);
+    CGRect newRect = CGRectIntegral((CGRect){.origin = CGPointZero, .size = newSize});
+    UIGraphicsBeginImageContextWithOptions(newRect.size, ![self lr_hasAlpha], self.scale);
     [self drawInRect:newRect];
     UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -61,24 +62,21 @@
     CGRect imageRect = (CGRect){.origin = CGPointZero, .size = imageSize};
     
     CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(imageRef);
-    CGColorSpaceRef colorSpace = CGImageGetColorSpace(imageRef);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
-    // CGBitmapContextCreate doesn't support kCGImageAlphaNone with RGB.
-    // https://developer.apple.com/library/mac/#qa/qa1037/_index.html
-    if ((bitmapInfo & kCGBitmapAlphaInfoMask) == kCGImageAlphaNone &&
-        CGColorSpaceGetNumberOfComponents(colorSpace) == 3)
+    uint32_t alpha = (bitmapInfo & kCGBitmapAlphaInfoMask);
+    if (alpha == kCGImageAlphaNone)
     {
         bitmapInfo &= ~kCGBitmapAlphaInfoMask;
         bitmapInfo |= kCGImageAlphaNoneSkipFirst;
     }
+    else if (alpha != kCGImageAlphaNoneSkipFirst & alpha != kCGImageAlphaNoneSkipLast)
+    {
+        bitmapInfo &= ~kCGBitmapAlphaInfoMask;
+        bitmapInfo |= kCGImageAlphaPremultipliedFirst;
+    }
     
-    CGContextRef context = CGBitmapContextCreate(NULL,
-                                                 lroundf(imageSize.width),
-                                                 lroundf(imageSize.height),
-                                                 CGImageGetBitsPerComponent(imageRef),
-                                                 0,
-                                                 colorSpace,
-                                                 bitmapInfo);
+    CGContextRef context = CGBitmapContextCreate(NULL, imageSize.width, imageSize.height, CGImageGetBitsPerComponent(imageRef), 0, colorSpace, bitmapInfo);
     
     CGColorSpaceRelease(colorSpace);
     
@@ -94,8 +92,9 @@
     CGContextRelease(context);
     
     UIImage *decompressedImage = [UIImage imageWithCGImage:decompressedImageRef
-                                                     scale:[[UIScreen mainScreen] scale]
-                                               orientation:UIImageOrientationUp];
+                                                     scale:[UIScreen mainScreen].scale
+                                               orientation:self.imageOrientation];
+    
     CGImageRelease(decompressedImageRef);
     
     return decompressedImage;
