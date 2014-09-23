@@ -24,7 +24,7 @@
 #import <objc/runtime.h>
 
 static const LRImageViewAnimationType kDefaultImageViewAnimationType = LRImageViewAnimationTypeCrossDissolve;
-static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
+static NSTimeInterval const kDefaultImageViewAnimationTime = 0.25;
 
 @implementation UIImageView (LRNetworking)
 
@@ -93,7 +93,7 @@ static NSTimeInterval const kDefaultImageViewFadeAnimationTime = 0.25;
 static const void * kLRCompletionHandlerObjectKey = &kLRCompletionHandlerObjectKey;
 static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectKey;
 static const void * kLRAnimationType = &kLRAnimationType;
-static const void * kLRFadeAnimationTime = &kLRFadeAnimationTime;
+static const void * kLRAnimationTime = &kLRAnimationTime;
 static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
 
 #pragma mark - Completion Block
@@ -137,15 +137,15 @@ static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
 
 #pragma mark - Animation Time
 
-- (void)lr_setFadeAnimationTime:(NSTimeInterval)fadeAnimationTme
+- (void)lr_setAnimationTime:(NSTimeInterval)animationTme
 {
-    objc_setAssociatedObject(self, kLRFadeAnimationTime, @(fadeAnimationTme), OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, kLRAnimationTime, @(animationTme), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (NSTimeInterval)lr_fadeAnimationTime
+- (NSTimeInterval)lr_animationTime
 {
-    NSNumber *fadeAnimationTimeNumber = objc_getAssociatedObject(self, kLRFadeAnimationTime);
-    return fadeAnimationTimeNumber ? [fadeAnimationTimeNumber doubleValue] : kDefaultImageViewFadeAnimationTime;
+    NSNumber *animationTimeNumber = objc_getAssociatedObject(self, kLRAnimationTime);
+    return animationTimeNumber ? [animationTimeNumber doubleValue] : kDefaultImageViewAnimationTime;
 }
 
 #pragma mark - Post Processing block

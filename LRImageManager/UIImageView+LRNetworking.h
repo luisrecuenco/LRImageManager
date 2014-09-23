@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 @property (nonatomic, copy, setter = lr_setCompletionHandler:) LRImageCompletionHandler lr_completionHandler;
 
 @property (nonatomic, setter = lr_setAnimationType:) LRImageViewAnimationType lr_animationType;
-@property (nonatomic, setter = lr_setFadeAnimationTime:) NSTimeInterval lr_fadeAnimationTime;
+@property (nonatomic, setter = lr_setAnimationTime:) NSTimeInterval lr_animationTime;
 
 - (void)lr_setImageWithURL:(NSURL *)url;
 

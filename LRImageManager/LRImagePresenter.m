@@ -109,7 +109,7 @@
                 if (!image || error) return;
                 
                 [UIView transitionWithView:sself.imageView
-                                  duration:sself.imageView.lr_fadeAnimationTime
+                                  duration:sself.imageView.lr_animationTime
                                    options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType)
                                 animations:^{
                                     sself.imageView.image = image;
