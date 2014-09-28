@@ -71,6 +71,8 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
               size:(CGSize)size
 cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 
+- (NSUInteger)diskByteCount;
+
 - (void)clearMemCache;
 - (void)clearMemCacheForKey:(NSString *)key;
 

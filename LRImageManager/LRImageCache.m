@@ -271,6 +271,27 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     });
 }
 
+- (NSUInteger)diskByteCount {
+    NSUInteger diskSize = 0;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:LRPathToImageCacheDirectory(self.cacheName) error:&error];
+    if (!contents)
+    {
+        NSLog(@"Failed to list directory with error %@", error);
+        return diskSize;
+    }
+    for (NSString *pathComponent in contents)
+    {
+        NSString *path = [LRPathToImageCacheDirectory(self.cacheName) stringByAppendingPathComponent:pathComponent];
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:path error:&error];
+        if (!attributes) continue;
+        
+        diskSize += attributes.fileSize;
+    }
+    return diskSize;
+}
+
 - (void)clearMemCache
 {
     dispatch_sync(self.syncQueue, ^{
