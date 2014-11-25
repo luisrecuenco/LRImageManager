@@ -92,7 +92,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
         _postProcessingBlock = [postProcessingBlock copy];
         _completionHandlers = [NSMutableArray array];
         _connection = [self imageURLConnectionWithURL:_url size:_size];
-        _syncQueue = dispatch_queue_create("com.LRImageOperation.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
+        _syncQueue = dispatch_queue_create("com.LRImageManager.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
         
         [self addCompletionHandler:completionHandler];
     }

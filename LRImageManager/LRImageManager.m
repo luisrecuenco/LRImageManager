@@ -42,6 +42,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *ongoingOperations;
 @property (nonatomic, strong) NSMapTable *presentersMap;
+@property (nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -66,6 +67,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
+        _syncQueue = dispatch_queue_create("com.LRImageManager.LRImageManagerQueue", DISPATCH_QUEUE_SERIAL);
         _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory
                                                valueOptions:NSPointerFunctionsStrongMemory];
     }
@@ -150,39 +152,39 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
         return;
     };
     
-    @synchronized(self.ongoingOperations)
+    NSString *key = LROngoingOperationKey(url, size);
+    
+    LRImageOperation *ongoingOperation = self.ongoingOperations[key];
+    
+    if (ongoingOperation && ![ongoingOperation isCancelled])
     {
-        NSString *key = LROngoingOperationKey(url, size);
+        [ongoingOperation addCompletionHandler:completionHandler];
+        [ongoingOperation addContext:context];
+    }
+    else
+    {
+        LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
+                                                                            size:size
+                                                                      imageCache:self.imageCache
+                                                             cacheStorageOptions:cacheStorageOptions
+                                                                     contentMode:contentMode
+                                                                imageURLModifier:self.imageURLModifier
+                                                             postProcessingBlock:postProcessingBlock
+                                                               completionHandler:completionHandler];
         
-        LRImageOperation *ongoingOperation = self.ongoingOperations[key];
+        [imageOperation addContext:context];
         
-        if (ongoingOperation && ![ongoingOperation isCancelled])
-        {
-            [ongoingOperation addCompletionHandler:completionHandler];
-            [ongoingOperation addContext:context];
-        }
-        else
-        {
-            LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
-                                                                                size:size
-                                                                          imageCache:self.imageCache
-                                                                 cacheStorageOptions:cacheStorageOptions
-                                                                         contentMode:contentMode
-                                                                    imageURLModifier:self.imageURLModifier
-                                                                 postProcessingBlock:postProcessingBlock
-                                                                   completionHandler:completionHandler];
+        imageOperation.autoRetry = self.autoRetry;
+        
+        NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
+        
+        [imageOperation setCompletionBlock:^{
             
-            [imageOperation addContext:context];
+            [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
+                                                                object:self
+                                                              userInfo:userInfo];
             
-            imageOperation.autoRetry = self.autoRetry;
-            
-            NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
-            
-            [imageOperation setCompletionBlock:^{
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
-                                                                    object:self
-                                                                  userInfo:userInfo];
+            dispatch_sync(self.syncQueue, ^{
                 
                 [self.ongoingOperations removeObjectForKey:key];
                 
@@ -190,20 +192,20 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                 {
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
-            }];
-            
-            self.ongoingOperations[key] = imageOperation;
-            
-            [self.operationQueue addOperation:imageOperation];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStartLoadingImageNotification
-                                                                object:self
-                                                              userInfo:userInfo];
-            
-            if (self.showNetworkActivityIndicator)
-            {
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-            }
+            });
+        }];
+        
+        self.ongoingOperations[key] = imageOperation;
+        
+        [self.operationQueue addOperation:imageOperation];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStartLoadingImageNotification
+                                                            object:self
+                                                          userInfo:userInfo];
+        
+        if (self.showNetworkActivityIndicator)
+        {
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         }
     }
 }
@@ -225,26 +227,20 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     
     NSString *key = LROngoingOperationKey(url, size);
     
-    @synchronized(self.ongoingOperations)
+    LRImageOperation *imageOperation = self.ongoingOperations[key];
+    
+    [imageOperation removeContext:context];
+    
+    if ([imageOperation numberOfContexts] == 0)
     {
-        LRImageOperation *imageOperation = self.ongoingOperations[key];
-        
-        [imageOperation removeContext:context];
-        
-        if ([imageOperation numberOfContexts] == 0)
-        {
-            [imageOperation cancel];
-        }
+        [imageOperation cancel];
     }
 }
 
 - (void)cancelAllRequests
 {
-    @synchronized(self.ongoingOperations)
-    {
-        NSArray *ongoingOperations = [[self.ongoingOperations allValues] copy];
-        [ongoingOperations makeObjectsPerformSelector:@selector(cancel)];
-    }
+    NSArray *ongoingOperations = [[self.ongoingOperations allValues] copy];
+    [ongoingOperations makeObjectsPerformSelector:@selector(cancel)];
 }
 
 #pragma mark - UIImageView specifics
