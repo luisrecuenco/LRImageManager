@@ -40,23 +40,23 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
 @interface LRImageCache ()
 
-@property (nonatomic, copy) NSString *cacheName;
-@property (nonatomic, strong) NSMutableDictionary *imagesDictionary;
-@property (nonatomic, strong) NSCache *imagesCache;
-@property (nonatomic, strong) dispatch_queue_t ioQueue;
-@property (nonatomic, strong) dispatch_queue_t syncQueue;
-@property (nonatomic, strong) NSMutableDictionary *diskCacheKeysDictionary;
-
-@property (readonly) NSString *pathToImageCacheDirectory;
-@property (readonly) unsigned long long cacheDirectorySize;
+@property (nonatomic, readonly) NSCache *imagesCache;
+@property (nonatomic, readonly) NSMutableDictionary *diskCacheKeysDictionary;
+@property (nonatomic, readonly) NSMutableDictionary *imagesDictionary;
+@property (nonatomic, readonly) NSString *cacheName;
+@property (nonatomic, readonly) NSString *pathToImageCacheDirectory;
+@property (nonatomic, readonly) dispatch_queue_t ioQueue;
+@property (nonatomic, readonly) dispatch_queue_t syncQueue;
+@property (nonatomic, readonly) unsigned long long cacheDirectorySize;
 
 @end
 
 @implementation LRImageCache
 
-@synthesize maxTimeInCache = _maxTimeInCache;
-@synthesize maxDirectorySize = _maxDirectorySize;
 @synthesize cacheStorageOptions = _cacheStorageOptions;
+@synthesize maxDirectorySize = _maxDirectorySize;
+@synthesize maxTimeInCache = _maxTimeInCache;
+@synthesize pathToImageCacheDirectory = _pathToImageCacheDirectory;
 
 - (instancetype)initWithName:(NSString *)name
 {
@@ -135,7 +135,7 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     
     __block NSString *diskCacheKey = nil;
     dispatch_sync(self.syncQueue, ^{
-       diskCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
+        diskCacheKey = LRDiskCacheKey(url, size, self.diskCacheKeysDictionary);
     });
     
     return [self diskCachedImageForKey:diskCacheKey];
@@ -299,7 +299,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     dispatch_async(self.ioQueue, ^{
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
-
+        
         NSError *error = nil;
         
         if (![fileManager removeItemAtPath:self.pathToImageCacheDirectory error:&error])
@@ -375,14 +375,10 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 
 - (NSString *)pathToImageCacheDirectory
 {
-    static NSString *pathToImageCache = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSArray *cachesDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        pathToImageCache = [[cachesDirectories firstObject] stringByAppendingPathComponent:self.cacheName];
-    });
+    if (_pathToImageCacheDirectory) return _pathToImageCacheDirectory;
     
-    return pathToImageCache;
+    NSArray *cachesDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    return _pathToImageCacheDirectory = [[cachesDirectories firstObject] stringByAppendingPathComponent:self.cacheName];
 }
 
 - (NSString *)filePathForCacheKey:(NSString *)cacheKey
