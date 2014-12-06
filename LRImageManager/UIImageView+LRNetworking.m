@@ -81,6 +81,7 @@ static NSTimeInterval const kDefaultImageViewAnimationTime = 0.25;
                                                      imageURL:url
                                                          size:size
                                           cacheStorageOptions:cacheStorageOptions
+                               allowUntrustedHTTPSConnections:self.lr_allowUntrustedHTTPSConnections
                                           postProcessingBlock:self.lr_postProcessingBlock
                                             completionHandler:self.lr_completionHandler];
 }
@@ -95,6 +96,7 @@ static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectK
 static const void * kLRAnimationType = &kLRAnimationType;
 static const void * kLRAnimationTime = &kLRAnimationTime;
 static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
+static const void * kLRAllowUntrustedHTTPSConnections = &kLRAllowUntrustedHTTPSConnections;
 
 #pragma mark - Completion Block
 
@@ -159,5 +161,19 @@ static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
 {
     return objc_getAssociatedObject(self, kLRPostProcessingBlock);
 }
+
+#pragma mark - HTTPS
+
+- (BOOL)lr_allowUntrustedHTTPSConnections
+{
+    NSNumber *allowUntrustedHTTPSConnections = objc_getAssociatedObject(self, kLRAllowUntrustedHTTPSConnections);
+    return allowUntrustedHTTPSConnections ? [allowUntrustedHTTPSConnections boolValue] : NO;
+}
+
+- (void)lr_setAllowUntrustedHTTPSConnections:(BOOL)value
+{
+    objc_setAssociatedObject(self, kLRAllowUntrustedHTTPSConnections, @(value), OBJC_ASSOCIATION_RETAIN);
+}
+
 
 @end

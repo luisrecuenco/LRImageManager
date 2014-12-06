@@ -83,6 +83,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+   allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
                 completionHandler:(LRImageCompletionHandler)completionHandler;
 

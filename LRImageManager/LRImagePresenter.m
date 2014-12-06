@@ -34,6 +34,7 @@
 @property (nonatomic, assign) LRCacheStorageOptions cacheStorageOptions;
 @property (nonatomic, copy) LRImagePostProcessingBlock postProcessingBlock;
 @property (nonatomic, copy) LRImageCompletionHandler completionHandler;
+@property (nonatomic, assign) BOOL allowUntrustedHTTPSConnections;
 
 @end
 
@@ -45,6 +46,7 @@
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
                        imageCache:(id<LRImageCache>)imageCache
+   allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
 {
@@ -58,6 +60,7 @@
         _imageURL = imageURL;
         _imageSize = size;
         _imageCache = imageCache;
+        _allowUntrustedHTTPSConnections = allowUntrustedHTTPSConnections;
         _cacheStorageOptions = cacheStorageOptions;
         _postProcessingBlock = [postProcessingBlock copy];
     }
@@ -124,6 +127,7 @@
                     cacheStorageOptions:self.cacheStorageOptions
                             contentMode:self.imageView.contentMode
                                 context:self.imageView
+         allowUntrustedHTTPSConnections:self.allowUntrustedHTTPSConnections
                     postProcessingBlock:self.postProcessingBlock
                       completionHandler:completionHandler];
     }

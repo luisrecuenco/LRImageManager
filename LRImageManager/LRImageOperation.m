@@ -428,7 +428,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
         OSStatus ossTrust = SecTrustEvaluate(challenge.protectionSpace.serverTrust, &trustEvalResult);
         
         if (ossTrust != errSecSuccess) {
-            NSLog(@"Trust evaluation failed for domain %@. Rejecting cert.", hostname);
+            NSLog(@"Trust evaluation failed for. Rejecting cert.");
             return NO;
         }
         
