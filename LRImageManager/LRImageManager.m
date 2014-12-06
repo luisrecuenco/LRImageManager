@@ -127,6 +127,23 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+   cacheStorageOptions:cacheStorageOptions
+           contentMode:UIViewContentModeScaleAspectFill
+               context:NULL
+allowUntrustedHTTPSConnections:allowUntrustedHTTPSConnections
+   postProcessingBlock:postProcessingBlock
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
          contentMode:(UIViewContentMode)contentMode
              context:(id)context
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
