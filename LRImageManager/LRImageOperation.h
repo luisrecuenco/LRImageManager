@@ -30,6 +30,7 @@ extern NSString *const LRImageOperationErrorDomain;
 @interface LRImageOperation : NSOperation
 
 @property (nonatomic, assign) BOOL autoRetry;
+@property (nonatomic, assign) BOOL allowUntrustedHTTPSConnections;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size
