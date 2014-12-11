@@ -42,6 +42,7 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 @property (nonatomic, assign) BOOL showNetworkActivityIndicator;
 
 @property (nonatomic, assign) BOOL autoRetry;
+@property (nonatomic, assign) BOOL allowUntrustedHTTPSConnections;
 
 + (instancetype)sharedManager;
 
@@ -68,7 +69,6 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
@@ -90,7 +90,6 @@ allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
-   allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
                 completionHandler:(LRImageCompletionHandler)completionHandler;
 

@@ -419,23 +419,15 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 
 - (BOOL)shouldTrustAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (self.allowUntrustedHTTPSConnections) {
-        return YES;
-		
-    } else {
-		// If we do not trust everything we evaluate the system trust chain
-        SecTrustResultType trustEvalResult = kSecTrustResultInvalid;
-        OSStatus ossTrust = SecTrustEvaluate(challenge.protectionSpace.serverTrust, &trustEvalResult);
-        
-        if (ossTrust != errSecSuccess) {
-            NSLog(@"Trust evaluation failed for. Rejecting cert.");
-            return NO;
-        }
-        
-        if (trustEvalResult == kSecTrustResultProceed || trustEvalResult == kSecTrustResultUnspecified) {
-            return YES;
-        }
-    }
+    if (self.allowUntrustedHTTPSConnections) return YES;
+
+    // If we do not trust everything we evaluate the system trust chain
+    SecTrustResultType trustEvalResult = kSecTrustResultInvalid;
+    OSStatus ossTrust = SecTrustEvaluate(challenge.protectionSpace.serverTrust, &trustEvalResult);
+    
+    if (ossTrust != errSecSuccess) return NO;
+    
+    if (trustEvalResult == kSecTrustResultProceed || trustEvalResult == kSecTrustResultUnspecified) return YES;
     
     return NO;
 }

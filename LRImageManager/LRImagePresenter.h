@@ -37,7 +37,6 @@
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
                        imageCache:(id<LRImageCache>)imageCache
-   allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock;
 

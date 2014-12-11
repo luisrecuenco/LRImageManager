@@ -42,8 +42,6 @@ typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
 
 @property (nonatomic, copy, setter = lr_setCompletionHandler:) LRImageCompletionHandler lr_completionHandler;
 
-@property (nonatomic, assign, setter = lr_setAllowUntrustedHTTPSConnections:) BOOL lr_allowUntrustedHTTPSConnections;
-
 @property (nonatomic, setter = lr_setAnimationType:) LRImageViewAnimationType lr_animationType;
 @property (nonatomic, setter = lr_setAnimationTime:) NSTimeInterval lr_animationTime;
 
