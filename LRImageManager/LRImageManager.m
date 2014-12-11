@@ -127,8 +127,44 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 - (void)imageFromURL:(NSURL *)url
                 size:(CGSize)size
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+   cacheStorageOptions:cacheStorageOptions
+           contentMode:UIViewContentModeScaleAspectFill
+               context:NULL
+allowUntrustedHTTPSConnections:allowUntrustedHTTPSConnections
+   postProcessingBlock:postProcessingBlock
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
          contentMode:(UIViewContentMode)contentMode
              context:(id)context
+ postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+   completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    [self imageFromURL:url
+                  size:size
+   cacheStorageOptions:cacheStorageOptions
+           contentMode:contentMode
+               context:context
+allowUntrustedHTTPSConnections:NO
+   postProcessingBlock:postProcessingBlock
+     completionHandler:completionHandler];
+}
+
+- (void)imageFromURL:(NSURL *)url
+                size:(CGSize)size
+ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+         contentMode:(UIViewContentMode)contentMode
+             context:(id)context
+allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -174,6 +210,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
         
         [imageOperation addContext:context];
         
+        imageOperation.allowUntrustedHTTPSConnections = allowUntrustedHTTPSConnections;
         imageOperation.autoRetry = self.autoRetry;
         
         NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
@@ -251,6 +288,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                          imageURL:(NSURL *)imageURL
                              size:(CGSize)size
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+   allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
                 completionHandler:(LRImageCompletionHandler)completionHandler
 {
@@ -260,6 +298,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
                                                                      imageURL:imageURL
                                                                          size:size
                                                                    imageCache:self.imageCache
+                                               allowUntrustedHTTPSConnections:allowUntrustedHTTPSConnections
                                                           cacheStorageOptions:cacheStorageOptions
                                                           postProcessingBlock:postProcessingBlock];
     

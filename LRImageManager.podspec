@@ -10,4 +10,5 @@ Pod::Spec.new do |s|
   s.source_files = 'LRImageManager'
   s.requires_arc = true
   s.dependency 'Reachability'
+  s.frameworks = 'Security'
 end

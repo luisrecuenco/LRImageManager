@@ -29,6 +29,7 @@
  cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
          contentMode:(UIViewContentMode)contentMode
              context:(id)context
+allowUntrustedHTTPSConnections:(BOOL)allowUntrustedHTTPSConnections
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 

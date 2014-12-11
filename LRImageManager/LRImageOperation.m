@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#import <Security/Security.h>
+
 #import "LRImageOperation.h"
 #import "NSData+LRImageManagerAdditions.h"
 #import "UIImage+LRImageManagerAdditions.h"
@@ -232,6 +234,22 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     });
 }
 
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+	// If the server certificate is invalid we (optionally) allow this to be ignored
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        if ([self shouldTrustAuthenticationChallenge:challenge]) {
+            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]
+                 forAuthenticationChallenge:challenge];
+        } else {
+            [challenge.sender cancelAuthenticationChallenge:challenge];
+        }
+    } else {
+        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+    }
+}
+
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     self.response = response;
@@ -395,6 +413,31 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     {
         return kImageRequestDefaultWWANTimeout;
     }
+}
+
+#pragma mark - HTTPS handling 
+
+- (BOOL)shouldTrustAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    if (self.allowUntrustedHTTPSConnections) {
+        return YES;
+		
+    } else {
+		// If we do not trust everything we evaluate the system trust chain
+        SecTrustResultType trustEvalResult = kSecTrustResultInvalid;
+        OSStatus ossTrust = SecTrustEvaluate(challenge.protectionSpace.serverTrust, &trustEvalResult);
+        
+        if (ossTrust != errSecSuccess) {
+            NSLog(@"Trust evaluation failed for. Rejecting cert.");
+            return NO;
+        }
+        
+        if (trustEvalResult == kSecTrustResultProceed || trustEvalResult == kSecTrustResultUnspecified) {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end
