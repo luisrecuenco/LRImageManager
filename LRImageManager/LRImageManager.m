@@ -269,7 +269,12 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     // Previous presenter for this imageView will deallocate and cancel itself
     [self.presentersMap setObject:presenter forKey:imageView];
     
-    [presenter startPresentingWithCompletionHandler:completionHandler];
+    __weak typeof(imageView) wImageView = imageView;
+    [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
+        __weak typeof(wImageView) sImageView = wImageView;
+        [self.presentersMap removeObjectForKey:sImageView];
+        if (completionHandler) completionHandler(image, error);
+    }];
 }
 
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView
