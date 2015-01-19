@@ -29,7 +29,7 @@
 
 NSString *const LRImageOperationErrorDomain = @"LRImageOperationErrorDomain";
 
-static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 15.0;
+static NSTimeInterval const kImageRequestDefaultWiFiTimeout = 30.0;
 static NSTimeInterval const kImageRequestDefaultWWANTimeout = 60.0;
 static NSTimeInterval const kImageRetryDelay = 2.5;
 
