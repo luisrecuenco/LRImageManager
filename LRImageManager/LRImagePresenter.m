@@ -106,8 +106,12 @@
                 [sself.activityIndicator stopAnimating];
                 [sself.activityIndicator removeFromSuperview];
                 
-                if (!image || error) return;
-                
+                if (!image || error)
+                {
+                    if (sself.completionHandler) sself.completionHandler(image, error);
+                    return ;
+                }
+
                 [UIView transitionWithView:sself.imageView
                                   duration:sself.imageView.lr_animationTime
                                    options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType)
