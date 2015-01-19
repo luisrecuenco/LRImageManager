@@ -111,7 +111,7 @@
                     if (sself.completionHandler) sself.completionHandler(image, error);
                     return ;
                 }
-
+                
                 [UIView transitionWithView:sself.imageView
                                   duration:sself.imageView.lr_animationTime
                                    options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType)
@@ -135,9 +135,9 @@
 
 - (void)cancelPresenting
 {
-    [self.imageManager cancelImageRequestFromURL:_imageURL
-                                            size:_imageSize
-                                         context:_imageView];
+    [_imageManager cancelImageRequestFromURL:_imageURL
+                                        size:_imageSize
+                                     context:_imageView];
 }
 
 - (void)dealloc
