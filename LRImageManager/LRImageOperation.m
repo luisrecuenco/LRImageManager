@@ -153,6 +153,7 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 {
     if ([self isCancelled]) return;
     
+    self.error = nil;
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [self.connection start];
 }
