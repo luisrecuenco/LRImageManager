@@ -237,19 +237,24 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-	// If the server certificate is invalid we (optionally) allow this to be ignored
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        if ([self shouldTrustAuthenticationChallenge:challenge]) {
+    // If the server certificate is invalid we (optionally) allow this to be ignored
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    {
+        if ([self shouldTrustAuthenticationChallenge:challenge])
+        {
             [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]
                  forAuthenticationChallenge:challenge];
-        } else {
+        }
+        else
+        {
             [challenge.sender cancelAuthenticationChallenge:challenge];
         }
-    } else {
+    }
+    else
+    {
         [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
     }
 }
-
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
@@ -416,12 +421,12 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     }
 }
 
-#pragma mark - HTTPS handling 
+#pragma mark - HTTPS handling
 
 - (BOOL)shouldTrustAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if (self.allowUntrustedHTTPSConnections) return YES;
-
+    
     // If we do not trust everything we evaluate the system trust chain
     SecTrustResultType trustEvalResult = kSecTrustResultInvalid;
     OSStatus ossTrust = SecTrustEvaluate(challenge.protectionSpace.serverTrust, &trustEvalResult);

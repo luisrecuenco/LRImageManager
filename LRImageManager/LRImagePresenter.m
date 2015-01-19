@@ -109,7 +109,7 @@
                 if (!image || error)
                 {
                     if (sself.completionHandler) sself.completionHandler(image, error);
-                    return ;
+                    return;
                 }
                 
                 [UIView transitionWithView:sself.imageView
