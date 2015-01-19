@@ -24,10 +24,10 @@
 #import "LRImageOperation+Private.h"
 #import "LRImagePresenter.h"
 
-NSString * LRImageManagerDidStartLoadingImageNotification = @"LRImageManagerDidStartLoadingImageNotification";
-NSString * LRImageManagerDidStopLoadingImageNotification = @"LRImageManagerDidStopLoadingImageNotification";
-NSString * LRImageManagerURLUserInfoKey = @"LRImageManagerURLUserInfoKey";
-NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
+NSString *const LRImageManagerDidStartLoadingImageNotification = @"LRImageManagerDidStartLoadingImageNotification";
+NSString *const LRImageManagerDidStopLoadingImageNotification = @"LRImageManagerDidStopLoadingImageNotification";
+NSString *const LRImageManagerURLUserInfoKey = @"LRImageManagerURLUserInfoKey";
+NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 
 #if !__has_feature(objc_arc)
 #error "LRImageManager requires ARC support."
@@ -42,7 +42,6 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) NSMutableDictionary *ongoingOperations;
 @property (nonatomic, strong) NSMapTable *presentersMap;
-@property (nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
@@ -65,9 +64,7 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
     if (self)
     {
         _operationQueue = [[NSOperationQueue alloc] init];
-        _operationQueue.maxConcurrentOperationCount = 2;
         _ongoingOperations = [NSMutableDictionary dictionary];
-        _syncQueue = dispatch_queue_create("com.LRImageManager.LRImageManagerQueue", DISPATCH_QUEUE_SERIAL);
         _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory
                                                valueOptions:NSPointerFunctionsStrongMemory];
     }
@@ -181,11 +178,11 @@ NSString * LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey";
         
         [imageOperation setCompletionBlock:^{
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
-                                                                object:self
-                                                              userInfo:userInfo];
-            
-            dispatch_sync(self.syncQueue, ^{
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
+                                                                    object:self
+                                                                  userInfo:userInfo];
                 
                 [self.ongoingOperations removeObjectForKey:key];
                 

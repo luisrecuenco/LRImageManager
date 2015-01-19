@@ -22,10 +22,10 @@
 
 #import "LRImageCache.h"
 
-extern NSString * LRImageManagerDidStartLoadingImageNotification;
-extern NSString * LRImageManagerDidStopLoadingImageNotification;
-extern NSString * LRImageManagerURLUserInfoKey;
-extern NSString * LRImageManagerSizeUserInfoKey;
+extern NSString *const LRImageManagerDidStartLoadingImageNotification;
+extern NSString *const LRImageManagerDidStopLoadingImageNotification;
+extern NSString *const LRImageManagerURLUserInfoKey;
+extern NSString *const LRImageManagerSizeUserInfoKey;
 
 typedef NSURL * (^LRImageURLModifierBlock)(NSURL *url, CGSize size);
 typedef UIImage * (^LRImagePostProcessingBlock)(UIImage *image);

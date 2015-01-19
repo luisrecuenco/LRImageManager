@@ -290,7 +290,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         [self.imagesDictionary removeObjectForKey:key];
     });
     
-    // Not necessary, SO should've done the work.
+    // Not necessary, OS should've done the work.
     [self.imagesCache removeObjectForKey:key];
 }
 
