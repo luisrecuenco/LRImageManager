@@ -315,8 +315,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
             self.image = self.postProcessingBlock(self.image);
         }
         
-        BOOL shouldResize = !CGSizeEqualToSize(self.size, self.image.size) &&
-                            !CGSizeEqualToSize(self.size, CGSizeZero);
+        CGFloat scale = [UIScreen mainScreen].scale;
+        CGSize imageSize = (CGSize){CGImageGetWidth(self.image.CGImage) / scale, CGImageGetHeight(self.image.CGImage) / scale};
+        
+        BOOL shouldResize = !CGSizeEqualToSize(self.size, CGSizeZero) && !CGSizeEqualToSize(self.size, imageSize);
         
         if (shouldResize)
         {

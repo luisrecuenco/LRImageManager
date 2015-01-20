@@ -138,7 +138,9 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         return;
     }
     
-    UIImage *memCachedImage = [self.imageCache memCachedImageForURL:url size:size];
+    CGSize integralSize = LRIntegralSize(size);
+    
+    UIImage *memCachedImage = [self.imageCache memCachedImageForURL:url size:integralSize];
     
     if (memCachedImage)
     {
@@ -149,7 +151,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         return;
     };
     
-    NSString *key = LROngoingOperationKey(url, size);
+    NSString *key = LROngoingOperationKey(url, integralSize);
     
     LRImageOperation *ongoingOperation = self.ongoingOperations[key];
     
@@ -161,7 +163,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
     else
     {
         LRImageOperation *imageOperation = [[LRImageOperation alloc] initWithURL:url
-                                                                            size:size
+                                                                            size:integralSize
                                                                       imageCache:self.imageCache
                                                              cacheStorageOptions:cacheStorageOptions
                                                                      contentMode:contentMode
@@ -177,7 +179,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         imageOperation.wifiTimeout = self.wifiTimeout;
         imageOperation.wwanTimeout = self.wwanTimeout;
         
-        NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
+        NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:integralSize];
         
         [imageOperation setCompletionBlock:^{
             
@@ -226,7 +228,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
 {
     if ([[url absoluteString] length] == 0) return;
     
-    NSString *key = LROngoingOperationKey(url, size);
+    NSString *key = LROngoingOperationKey(url, LRIntegralSize(size));
     
     LRImageOperation *imageOperation = self.ongoingOperations[key];
     
@@ -259,7 +261,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
                                                              placeholderImage:placeholderImage
                                                             activityIndicator:activityIndicator
                                                                      imageURL:imageURL
-                                                                         size:size
+                                                                         size:LRIntegralSize(size)
                                                                    imageCache:self.imageCache
                                                           cacheStorageOptions:cacheStorageOptions
                                                           postProcessingBlock:postProcessingBlock];
@@ -280,6 +282,13 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView
 {
     [self.presentersMap removeObjectForKey:imageView];
+}
+
+#pragma mark - Integral size
+
+NS_INLINE CGSize LRIntegralSize(CGSize size)
+{
+    return (CGSize){ceilf(size.width), ceilf(size.height)};
 }
 
 #pragma mark - Ongoing Operation Key
