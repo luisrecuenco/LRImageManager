@@ -43,6 +43,9 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 @property (nonatomic, assign) BOOL autoRetry;
 @property (nonatomic, assign) BOOL allowUntrustedHTTPSConnections;
+@property (nonatomic, assign) NSURLRequestCachePolicy cachePolicy;
+@property (nonatomic, assign) NSTimeInterval wifiTimeout;
+@property (nonatomic, assign) NSTimeInterval wwanTimeout;
 
 + (instancetype)sharedManager;
 

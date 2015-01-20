@@ -31,6 +31,9 @@ extern NSString *const LRImageOperationErrorDomain;
 
 @property (nonatomic, assign) BOOL autoRetry;
 @property (nonatomic, assign) BOOL allowUntrustedHTTPSConnections;
+@property (nonatomic, assign) NSURLRequestCachePolicy cachePolicy;
+@property (nonatomic, assign) NSTimeInterval wifiTimeout;
+@property (nonatomic, assign) NSTimeInterval wwanTimeout;
 
 - (instancetype)initWithURL:(NSURL *)url
                        size:(CGSize)size

@@ -81,35 +81,34 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
         postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
           completionHandler:(LRImageCompletionHandler)completionHandler
 {
-    self = [super init];
+    if (!(self = [super init])) return nil;
     
-    if (self)
-    {
-        _url = url;
-        _size = size;
-        _imageCache = imageCache;
-        _cacheStorageOptions = cacheStorageOptions;
-        _contentMode = contentMode;
-        _imageURLModifier = [imageURLModifier copy];
-        _postProcessingBlock = [postProcessingBlock copy];
-        _completionHandlers = [NSMutableArray array];
-        _connection = [self imageURLConnectionWithURL:_url size:_size];
-        _syncQueue = dispatch_queue_create("com.LRImageManager.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
-        
-        [self addCompletionHandler:completionHandler];
-    }
+    _url = url;
+    _size = size;
+    _imageCache = imageCache;
+    _cacheStorageOptions = cacheStorageOptions;
+    _contentMode = contentMode;
+    _imageURLModifier = [imageURLModifier copy];
+    _postProcessingBlock = [postProcessingBlock copy];
+    _completionHandlers = [NSMutableArray array];
+    _syncQueue = dispatch_queue_create("com.LRImageManager.LRImageOperationQueue", DISPATCH_QUEUE_SERIAL);
+    
+    [self addCompletionHandler:completionHandler];
     
     return self;
 }
 
-- (NSURLConnection *)imageURLConnectionWithURL:(NSURL *)url size:(CGSize)size
+- (NSURLConnection *)connection
 {
-    NSURL *imageURL = self.imageURLModifier ? self.imageURLModifier(url, size) : url;
+    if (_connection) return _connection;
+    
+    NSURL *imageURL = self.imageURLModifier ? self.imageURLModifier(self.url, self.size) : self.url;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL];
+    request.cachePolicy = self.cachePolicy;
     request.timeoutInterval = [self imageRequestTimeout];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
-    return [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    return _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 }
 
 - (BOOL)isConcurrent
@@ -154,6 +153,10 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     if ([self isCancelled]) return;
     
     self.error = nil;
+    self.image = nil;
+    self.downloadedData = nil;
+    self.connection = nil;
+    
     [self.connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [self.connection start];
 }
@@ -267,7 +270,6 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
     
     if (self.autoRetry && [self.autoRetryErrorCodes containsObject:@(error.code)])
     {
-        self.connection = [self imageURLConnectionWithURL:self.url size:self.size];
         [self performSelector:@selector(startConnection) withObject:nil afterDelay:kImageRetryDelay];
     }
     else
@@ -410,15 +412,17 @@ static NSTimeInterval const kImageRetryDelay = 2.5;
 - (NSTimeInterval)imageRequestTimeout
 {
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
-    
-    if ([reachability isReachableViaWiFi])
-    {
-        return kImageRequestDefaultWiFiTimeout;
-    }
-    else
-    {
-        return kImageRequestDefaultWWANTimeout;
-    }
+    return [reachability isReachableViaWiFi] ? self.wifiTimeout : self.wwanTimeout;
+}
+
+- (NSTimeInterval)wifiTimeout
+{
+    return _wifiTimeout ?: kImageRequestDefaultWiFiTimeout;
+}
+
+- (NSTimeInterval)wwanTimeout
+{
+    return _wwanTimeout ?: kImageRequestDefaultWWANTimeout;
 }
 
 #pragma mark - HTTPS handling

@@ -171,8 +171,11 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         
         [imageOperation addContext:context];
         
-        imageOperation.allowUntrustedHTTPSConnections = self.allowUntrustedHTTPSConnections;
         imageOperation.autoRetry = self.autoRetry;
+        imageOperation.allowUntrustedHTTPSConnections = self.allowUntrustedHTTPSConnections;
+        imageOperation.cachePolicy = self.cachePolicy;
+        imageOperation.wifiTimeout = self.wifiTimeout;
+        imageOperation.wwanTimeout = self.wwanTimeout;
         
         NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:size];
         
