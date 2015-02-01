@@ -114,7 +114,7 @@
                 
                 [UIView transitionWithView:sself.imageView
                                   duration:sself.imageView.lr_animationTime
-                                   options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType)
+                                   options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType) | UIViewAnimationOptionAllowUserInteraction
                                 animations:^{
                                     sself.imageView.image = image;
                                 } completion:^(BOOL finished) {
