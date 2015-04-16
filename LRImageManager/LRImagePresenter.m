@@ -90,7 +90,11 @@
     {
         self.imageView.image = self.placeholderImage;
         
-        self.activityIndicator.center = self.imageView.center;
+        CGRect activityIndicatorFrame = (CGRect){.origin = CGPointZero, .size = self.activityIndicator.frame.size};
+        activityIndicatorFrame.origin.x = (self.imageView.frame.size.width - self.activityIndicator.frame.size.width) / 2;
+        activityIndicatorFrame.origin.y = (self.imageView.frame.size.height - self.activityIndicator.frame.size.height) / 2;
+        self.activityIndicator.frame = activityIndicatorFrame;
+
         self.activityIndicator.hidden = NO;
         [self.activityIndicator startAnimating];
         [self.imageView addSubview:self.activityIndicator];
