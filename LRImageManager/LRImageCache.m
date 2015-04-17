@@ -111,6 +111,17 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     return [self memCachedImageForKey:imageCacheKey];
 }
 
+- (BOOL)hasDiskCachedImageForKey:(NSString *)key
+{
+    BOOL fileExists = NO;
+    if ([key length])
+    {
+        NSString *filePath = [self filePathForCacheKey:key];
+        fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    }
+    return fileExists;
+}
+
 - (UIImage *)diskCachedImageForKey:(NSString *)key
 {
     if ([key length] == 0) return nil;
@@ -118,17 +129,25 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     NSString *filePath = [self filePathForCacheKey:key];
     
     UIImage *image = nil;
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+
+    BOOL fileExists = [self hasDiskCachedImageForKey:key];
+    if (fileExists)
     {
         __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
         
-        image = [imageFromFile lr_decompressImage];
+        if ([NSThread isMainThread] == NO)
+        {
+            image = [imageFromFile lr_decompressImage];
+        }
+        else
+        {
+            image = imageFromFile;
+        }
     }
-    
+
     return image;
 }
-
+    
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
 {
     if ([[url absoluteString] length] == 0) return nil;
