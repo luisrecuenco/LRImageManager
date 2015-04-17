@@ -339,10 +339,9 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     
     dispatch_async(self.ioQueue, ^{
         
-        NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:self.pathToImageCacheDirectory];
-        
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        
+        NSDirectoryEnumerator *fileEnumerator = [fileManager enumeratorAtPath:self.pathToImageCacheDirectory];
+
         NSDate *now = [NSDate date];
         
         for (NSString *fileName in fileEnumerator)
@@ -364,13 +363,60 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
                 }
             }
         }
-        
-        // Still bigger? let's clear it all (TODO: LRU or similar, not so harsh)
+
+        // Still bigger? prune via LRU
+        while (self.cacheDirectorySize > self.maxDirectorySize)
+        {
+            NSString *filePath = [self oldestFilePath];
+            NSError *error;
+            if (![fileManager removeItemAtPath:[self oldestFilePath] error:&error])
+            {
+                LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
+            }
+            else
+            {
+                LRImageManagerLog(@"File item removed successfully at path: %@", filePath);
+            }
+        }
+
+        // Still bigger? let's clear it all
         if (self.cacheDirectorySize > self.maxDirectorySize)
         {
             [self clearDiskCache];
         }
     });
+}
+
+- (NSString *)oldestFilePath
+{
+    NSString *oldestFilePath;
+    NSDictionary *oldestFileAttributes;
+
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *fileEnumerator = [fileManager enumeratorAtPath:self.pathToImageCacheDirectory];
+
+    for (NSString *eachFileName in fileEnumerator)
+    {
+        NSString *eachFilePath = [self.pathToImageCacheDirectory stringByAppendingPathComponent:eachFileName];
+        NSDictionary *eachFileAttributes = [fileManager attributesOfItemAtPath:eachFilePath error:nil];
+
+        if (!oldestFileAttributes)
+        {
+            oldestFileAttributes = eachFileAttributes;
+            oldestFilePath = eachFilePath;
+        }
+        else
+        {
+            if ([[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] == NSOrderedAscending ||
+                [[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] == NSOrderedSame)
+            {
+                oldestFileAttributes = eachFileAttributes;
+                oldestFilePath = eachFilePath;
+            }
+        }
+    }
+
+    return oldestFilePath;
 }
 
 - (NSString *)pathToImageCacheDirectory
