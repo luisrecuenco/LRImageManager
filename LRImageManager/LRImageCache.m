@@ -122,20 +122,20 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     return fileExists;
 }
 
-- (UIImage *)diskCachedImageForKey:(NSString *)key
+- (UIImage *)diskCachedImageForKey:(NSString *)key shouldDecompress:(BOOL)decompress
 {
     if ([key length] == 0) return nil;
-    
+
     NSString *filePath = [self filePathForCacheKey:key];
-    
+
     UIImage *image = nil;
 
     BOOL fileExists = [self hasDiskCachedImageForKey:key];
     if (fileExists)
     {
         __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
-        
-        if ([NSThread isMainThread] == NO)
+
+        if (decompress)
         {
             image = [imageFromFile lr_decompressImage];
         }
@@ -147,7 +147,13 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 
     return image;
 }
-    
+
+- (UIImage *)diskCachedImageForKey:(NSString *)key
+{
+    UIImage *image = [self diskCachedImageForKey:key shouldDecompress:YES];
+    return image;
+}
+
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size
 {
     if ([[url absoluteString] length] == 0) return nil;
@@ -426,8 +432,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         }
         else
         {
-            if ([[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] == NSOrderedAscending ||
-                [[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] == NSOrderedSame)
+            if ([[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] <= NSOrderedSame)
             {
                 oldestFileAttributes = eachFileAttributes;
                 oldestFilePath = eachFilePath;
