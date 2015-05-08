@@ -390,19 +390,19 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         }
 
         // Still bigger? prune via LRU
-        while (self.cacheDirectorySize > self.maxDirectorySize)
-        {
-            NSString *filePath = [self oldestFilePath];
-            NSError *error;
-            if (![fileManager removeItemAtPath:[self oldestFilePath] error:&error])
-            {
-                LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
-            }
-            else
-            {
-                LRImageManagerLog(@"File item removed successfully at path: %@", filePath);
-            }
-        }
+//        while (self.cacheDirectorySize > self.maxDirectorySize)
+//        {
+//            NSString *filePath = [self oldestFilePath];
+//            NSError *error;
+//            if (![fileManager removeItemAtPath:[self oldestFilePath] error:&error])
+//            {
+//                LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
+//            }
+//            else
+//            {
+//                LRImageManagerLog(@"File item removed successfully at path: %@", filePath);
+//            }
+//        }
 
         // Still bigger? let's clear it all
         if (self.cacheDirectorySize > self.maxDirectorySize)
