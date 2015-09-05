@@ -60,7 +60,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
 - (instancetype)init
 {
     self = [super init];
-    
+
     if (self)
     {
         _operationQueue = [[NSOperationQueue alloc] init];
@@ -68,7 +68,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         _presentersMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory
                                                valueOptions:NSPointerFunctionsStrongMemory];
     }
-    
+
     return self;
 }
 
@@ -137,11 +137,11 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         }
         return;
     }
-    
+
     CGSize integralSize = LRIntegralSize(size);
-    
+
     UIImage *memCachedImage = [self.imageCache memCachedImageForURL:url size:integralSize];
-    
+
     if (memCachedImage)
     {
         if (completionHandler)
@@ -150,11 +150,11 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
         }
         return;
     };
-    
+
     NSString *key = LROngoingOperationKey(url, integralSize);
-    
+
     LRImageOperation *ongoingOperation = self.ongoingOperations[key];
-    
+
     if (ongoingOperation && ![ongoingOperation isCancelled])
     {
         [ongoingOperation addCompletionHandler:completionHandler];
@@ -170,42 +170,42 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
                                                                 imageURLModifier:self.imageURLModifier
                                                              postProcessingBlock:postProcessingBlock
                                                                completionHandler:completionHandler];
-        
+
         [imageOperation addContext:context];
-        
+
         imageOperation.autoRetry = self.autoRetry;
         imageOperation.allowUntrustedHTTPSConnections = self.allowUntrustedHTTPSConnections;
         imageOperation.cachePolicy = self.cachePolicy;
         imageOperation.wifiTimeout = self.wifiTimeout;
         imageOperation.wwanTimeout = self.wwanTimeout;
-        
+
         NSDictionary *userInfo = [self userInfoDictionaryForURL:url size:integralSize];
-        
+
         [imageOperation setCompletionBlock:^{
-            
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStopLoadingImageNotification
                                                                     object:self
                                                                   userInfo:userInfo];
-                
+
                 [self.ongoingOperations removeObjectForKey:key];
-                
+
                 if (self.showNetworkActivityIndicator && [self.ongoingOperations count] == 0)
                 {
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                 }
             });
         }];
-        
+
         self.ongoingOperations[key] = imageOperation;
-        
+
         [self.operationQueue addOperation:imageOperation];
-        
+
         [[NSNotificationCenter defaultCenter] postNotificationName:LRImageManagerDidStartLoadingImageNotification
                                                             object:self
                                                           userInfo:userInfo];
-        
+
         if (self.showNetworkActivityIndicator)
         {
             [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -227,13 +227,13 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size context:(id)context
 {
     if ([[url absoluteString] length] == 0) return;
-    
+
     NSString *key = LROngoingOperationKey(url, LRIntegralSize(size));
-    
+
     LRImageOperation *imageOperation = self.ongoingOperations[key];
-    
+
     [imageOperation removeContext:context];
-    
+
     if ([imageOperation numberOfContexts] == 0)
     {
         [imageOperation cancel];
@@ -265,12 +265,12 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
                                                                    imageCache:self.imageCache
                                                           cacheStorageOptions:cacheStorageOptions
                                                           postProcessingBlock:postProcessingBlock];
-    
+
     presenter.imageManager = self;
-    
+
     // Previous presenter for this imageView will deallocate and cancel itself
     [self.presentersMap setObject:presenter forKey:imageView];
-    
+
     __weak typeof(imageView) wImageView = imageView;
     [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
         __weak typeof(wImageView) sImageView = wImageView;
@@ -296,12 +296,12 @@ NS_INLINE CGSize LRIntegralSize(CGSize size)
 NS_INLINE NSString *LROngoingOperationKey(NSURL *url, CGSize size)
 {
     NSString *ongoingOperationKey = nil;
-    
+
     if (url)
     {
         ongoingOperationKey = [NSString stringWithFormat:@"%@-%lu-%lu", [url absoluteString], (unsigned long)size.width, (unsigned long)size.height];
     }
-    
+
     return ongoingOperationKey;
 }
 
