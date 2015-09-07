@@ -24,7 +24,7 @@
 #import "UIImage+LRImageManagerAdditions.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-#if DEBUG
+#if DEBUG && 1
 #define LRImageManagerLog(s,...) NSLog( @"\n\n------------------------------------- DEBUG -------------------------------------\n\t<%p %@:(%d)>\n\n\t%@\n---------------------------------------------------------------------------------\n\n", self, \
 [[NSString stringWithUTF8String:__FUNCTION__] lastPathComponent], __LINE__, \
 [NSString stringWithFormat:(s), ##__VA_ARGS__] )
@@ -47,7 +47,6 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
 @property (nonatomic, readonly) NSString *pathToImageCacheDirectory;
 @property (nonatomic, readonly) dispatch_queue_t ioQueue;
 @property (nonatomic, readonly) dispatch_queue_t syncQueue;
-@property (nonatomic, readonly) unsigned long long cacheDirectorySize;
 
 @end
 
@@ -111,21 +110,46 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
     return [self memCachedImageForKey:imageCacheKey];
 }
 
-- (UIImage *)diskCachedImageForKey:(NSString *)key
+- (BOOL)hasDiskCachedImageForKey:(NSString *)key
+{
+    BOOL fileExists = NO;
+    if ([key length])
+    {
+        NSString *filePath = [self filePathForCacheKey:key];
+        fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    }
+    return fileExists;
+}
+
+- (UIImage *)diskCachedImageForKey:(NSString *)key shouldDecompress:(BOOL)decompress
 {
     if ([key length] == 0) return nil;
-    
+
     NSString *filePath = [self filePathForCacheKey:key];
-    
+
     UIImage *image = nil;
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+
+    BOOL fileExists = [self hasDiskCachedImageForKey:key];
+    if (fileExists)
     {
         __attribute__((objc_precise_lifetime)) UIImage *imageFromFile = [UIImage imageWithContentsOfFile:filePath];
-        
-        image = [imageFromFile lr_decompressImage];
+
+        if (decompress)
+        {
+            image = [imageFromFile lr_decompressImage];
+        }
+        else
+        {
+            image = imageFromFile;
+        }
     }
-    
+
+    return image;
+}
+
+- (UIImage *)diskCachedImageForKey:(NSString *)key
+{
+    UIImage *image = [self diskCachedImageForKey:key shouldDecompress:YES];
     return image;
 }
 
@@ -269,6 +293,8 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
             else
             {
                 LRImageManagerLog(@"Image successfully cached at path: %@", filePath);
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+                [[self cacheDirectoryFileDict] setValue:fileAttributes forKey:filePath];
             }
         }
     });
@@ -297,7 +323,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
 - (void)clearDiskCache
 {
     dispatch_async(self.ioQueue, ^{
-        
+
         NSFileManager *fileManager = [NSFileManager defaultManager];
         
         NSError *error = nil;
@@ -309,6 +335,8 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         else
         {
             LRImageManagerLog(@"Cache directory removed successfully");
+            NSMutableDictionary *cacheDirectoryDict = [self cacheDirectoryFileDict];
+            [cacheDirectoryDict removeAllObjects];
         }
     });
 }
@@ -329,48 +357,103 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         else
         {
             LRImageManagerLog(@"Cache file removed successfully at path: %@", filePath);
+            NSMutableDictionary *cacheDirectoryDict = [self cacheDirectoryFileDict];
+            [cacheDirectoryDict removeAllObjects];
         }
     });
 }
 
 - (void)cleanDisk
 {
-    if (self.cacheDirectorySize <= self.maxDirectorySize) return;
-    
     dispatch_async(self.ioQueue, ^{
-        
-        NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:self.pathToImageCacheDirectory];
-        
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-        NSDate *now = [NSDate date];
-        
-        for (NSString *fileName in fileEnumerator)
+        NSMutableDictionary *cacheDirectoryDict = [self cacheDirectoryFileDict];
+
+        // expire/delete files older than self.maxTimeInCache
+        if ([LRImageCache sizeForCacheDirectoryFileAttributesDict:cacheDirectoryDict] >= self.maxDirectorySize)
         {
-            NSString *filePath = [self.pathToImageCacheDirectory stringByAppendingPathComponent:fileName];
-            NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:filePath error:nil];
-            
-            if ([now timeIntervalSinceDate:[fileAttributes fileModificationDate]] > self.maxTimeInCache)
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSMutableArray *keysToRemove = [NSMutableArray new];
+            NSDate *rightNow = [NSDate date];
+
+            for (NSString *eachFilePath in cacheDirectoryDict.allKeys)
             {
-                NSError *error = nil;
-                
-                if (![fileManager removeItemAtPath:filePath error:&error])
+                NSDictionary *eachFileAttributes = [cacheDirectoryDict objectForKey:eachFilePath];
+
+                if ([rightNow timeIntervalSinceDate:[eachFileAttributes fileModificationDate]] > self.maxTimeInCache)
                 {
-                    LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", filePath, [error localizedDescription]);
+                    NSError *error = nil;
+
+                    if (![fileManager removeItemAtPath:eachFilePath error:&error])
+                    {
+                        LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", eachFilePath, [error localizedDescription]);
+                    }
+                    else
+                    {
+                        LRImageManagerLog(@"File item removed successfully at path: %@", eachFilePath);
+                        [keysToRemove addObject:eachFilePath];
+                    }
+                }
+            }
+            if (keysToRemove.count)
+            {
+//                NSLog(@"Removing %d files from image cache of size: %d", keysToRemove.count, cacheDirectoryDict.allKeys.count);
+                [cacheDirectoryDict removeObjectsForKeys:keysToRemove];
+                [keysToRemove removeAllObjects];
+            }
+
+
+            // Still bigger than self.maxDirectorySize? prune via LRU
+            while ( [LRImageCache sizeForCacheDirectoryFileAttributesDict:cacheDirectoryDict] >= self.maxDirectorySize )
+            {
+                NSString *oldestFilePath = [LRImageCache oldestFilePathFromCacheDirectoryFileAttributesDict:cacheDirectoryDict];
+                NSError *error;
+                if (![fileManager removeItemAtPath:oldestFilePath error:&error])
+                {
+                    LRImageManagerLog(@"Error deleting file item at path: %@ | error: %@", oldestFilePath, [error localizedDescription]);
                 }
                 else
                 {
-                    LRImageManagerLog(@"File item removed successfully at path: %@", filePath);
+                    LRImageManagerLog(@"File item removed successfully at path: %@", oldestFilePath);
+//                    NSLog(@"Removing %d file from image cache of size: %d", 1, cacheDirectoryDict.allKeys.count);
+                    [cacheDirectoryDict removeObjectForKey:oldestFilePath];
                 }
             }
-        }
-        
-        // Still bigger? let's clear it all (TODO: LRU or similar, not so harsh)
-        if (self.cacheDirectorySize > self.maxDirectorySize)
-        {
-            [self clearDiskCache];
+
+
+            // Still bigger? let's clear it all
+            if ( [LRImageCache sizeForCacheDirectoryFileAttributesDict:cacheDirectoryDict] > self.maxDirectorySize )
+            {
+                [self clearDiskCache];
+            }
         }
     });
+}
+
++ (NSString *)oldestFilePathFromCacheDirectoryFileAttributesDict:(NSDictionary *)fileAttributesDict
+{
+    NSString *oldestFilePath;
+    NSDictionary *oldestFileAttributes;
+
+    for (NSString *eachFilePath in fileAttributesDict.allKeys)
+    {
+        NSDictionary *eachFileAttributes = [fileAttributesDict objectForKey:eachFilePath];
+
+        if (!oldestFileAttributes)
+        {
+            oldestFileAttributes = eachFileAttributes;
+            oldestFilePath = eachFilePath;
+        }
+        else
+        {
+            if ([[eachFileAttributes fileModificationDate] compare:[oldestFileAttributes fileModificationDate]] <= NSOrderedSame)
+            {
+                oldestFileAttributes = eachFileAttributes;
+                oldestFilePath = eachFilePath;
+            }
+        }
+    }
+
+    return oldestFilePath;
 }
 
 - (NSString *)pathToImageCacheDirectory
@@ -400,21 +483,42 @@ NS_INLINE NSString *LRMD5(NSString *str)
             ];
 }
 
-- (unsigned long long)cacheDirectorySize
++ (unsigned long long)sizeForCacheDirectoryFileAttributesDict:(NSDictionary *)fileDict
 {
     unsigned long long size = 0;
-    
-    NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:self.pathToImageCacheDirectory];
-    
-    for (NSString *fileName in fileEnumerator)
+
+    for (NSDictionary *eachFileAttributes in fileDict.allValues)
     {
-        NSString *filePath = [self.pathToImageCacheDirectory stringByAppendingPathComponent:fileName];
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-        size += [fileAttributes fileSize];
+        size += [eachFileAttributes fileSize];
     }
-    
+
     return size;
 }
+
+- (NSMutableDictionary *)cacheDirectoryFileDict
+{
+    static NSMutableDictionary *cacheDirectoryFileDictM;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:self.pathToImageCacheDirectory];
+        for (NSString *fileName in fileEnumerator)
+        {
+            if ( ! cacheDirectoryFileDictM )
+            {
+                cacheDirectoryFileDictM = [NSMutableDictionary new];
+            }
+
+            NSString *filePath = [self.pathToImageCacheDirectory stringByAppendingPathComponent:fileName];
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+
+            [cacheDirectoryFileDictM setObject:fileAttributes forKey:filePath];
+        }
+    });
+
+    return cacheDirectoryFileDictM;
+}
+
 
 NS_INLINE NSString *LRMemCacheKey(NSURL *url, CGSize size)
 {

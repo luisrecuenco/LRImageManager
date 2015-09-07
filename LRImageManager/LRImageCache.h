@@ -49,7 +49,9 @@ typedef NS_OPTIONS(NSUInteger, LRCacheStorageOptions)
 - (UIImage *)memCachedImageForKey:(NSString *)key;
 - (UIImage *)memCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
+- (BOOL)hasDiskCachedImageForKey:(NSString *)key;
 - (UIImage *)diskCachedImageForKey:(NSString *)key;
+- (UIImage *)diskCachedImageForKey:(NSString *)key shouldDecompress:(BOOL)decompress;
 - (UIImage *)diskCachedImageForURL:(NSURL *)url size:(CGSize)size;
 
 /**
