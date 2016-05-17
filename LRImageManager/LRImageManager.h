@@ -101,6 +101,22 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 @end
 
+@interface LRImageManager (UIButton)
+
+- (void)downloadImageForButton:(UIButton *)button
+                         state:(UIControlState)buttonState
+              placeholderImage:(UIImage *)placeholderImage
+             activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                      imageURL:(NSURL *)imageURL
+                          size:(CGSize)size
+           cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+           postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+             completionHandler:(LRImageCompletionHandler)completionHandler;
+
+- (void)cancelDownloadImageForButton:(UIButton *)button;
+
+@end
+
 #pragma mark - LRActivityIndicator
 
 @protocol LRActivityIndicator <NSObject>

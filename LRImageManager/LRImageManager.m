@@ -279,9 +279,47 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
     }];
 }
 
+- (void)downloadImageForButton:(UIButton *)button
+                         state:(UIControlState)buttonState
+                 placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
+                             size:(CGSize)size
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+              postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+                completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithButton:button
+                                                                     state:buttonState
+                                                          placeholderImage:placeholderImage
+                                                         activityIndicator:activityIndicator
+                                                                  imageURL:imageURL
+                                                                      size:LRIntegralSize(size)
+                                                                imageCache:self.imageCache
+                                                       cacheStorageOptions:cacheStorageOptions
+                                                       postProcessingBlock:postProcessingBlock];
+    
+    presenter.imageManager = self;
+    
+    // Previous presenter for this imageView will deallocate and cancel itself
+    [self.presentersMap setObject:presenter forKey:button];
+    
+    __weak typeof(button) wButton = button;
+    [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
+        __weak typeof(wButton) sButton = wButton;
+        [self.presentersMap removeObjectForKey:sButton];
+        if (completionHandler) completionHandler(image, error);
+    }];
+}
+
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView
 {
     [self.presentersMap removeObjectForKey:imageView];
+}
+
+- (void)cancelDownloadImageForButton:(UIButton *)button
+{
+    [self.presentersMap removeObjectForKey:button];
 }
 
 #pragma mark - Integral size

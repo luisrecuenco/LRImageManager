@@ -26,6 +26,9 @@
 @interface LRImagePresenter ()
 
 @property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) UIButton *button;
+@property (nonatomic, weak) UIView *targetView;
+@property (nonatomic, assign) UIControlState buttonState;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, strong) UIView<LRActivityIndicator> *activityIndicator;
 @property (nonatomic, strong) NSURL *imageURL;
@@ -38,6 +41,30 @@
 @end
 
 @implementation LRImagePresenter
+
+- (instancetype)initWithButton:(UIButton *)button
+                         state:(UIControlState)state
+              placeholderImage:(UIImage *)placeholderImage
+             activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                      imageURL:(NSURL *)imageURL size:(CGSize)size
+                    imageCache:(id<LRImageCache>)imageCache
+           cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+           postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock {
+    self = [super init];
+    if (self) {
+        _button = button;
+        _targetView = button;
+        _buttonState = state;
+        _placeholderImage = placeholderImage;
+        _activityIndicator = activityIndicator;
+        _imageURL = imageURL;
+        _imageSize = size;
+        _imageCache = imageCache;
+        _cacheStorageOptions = cacheStorageOptions;
+        _postProcessingBlock = [postProcessingBlock copy];
+    }
+    return self;
+}
 
 - (instancetype)initWithImageView:(UIImageView *)imageView
                  placeholderImage:(UIImage *)placeholderImage
@@ -53,6 +80,7 @@
     if (self)
     {
         _imageView = imageView;
+        _targetView = imageView;
         _placeholderImage = placeholderImage;
         _activityIndicator = activityIndicator;
         _imageURL = imageURL;
@@ -71,7 +99,7 @@
     
     if ([[self.imageURL absoluteString] length] == 0)
     {
-        self.imageView.image = self.placeholderImage;
+        [self setPlaceholderToTarget:self.placeholderImage];
         
         if (self.completionHandler) self.completionHandler(nil, nil);
         
@@ -82,13 +110,12 @@
     
     if (memCachedImage)
     {
-        self.imageView.image = memCachedImage;
-        
+        [self setImageToTarget:memCachedImage];
         if (self.completionHandler) self.completionHandler(memCachedImage, nil);
     }
     else
     {
-        self.imageView.image = self.placeholderImage;
+        [self setPlaceholderToTarget:self.placeholderImage];
         
         CGRect activityIndicatorFrame = (CGRect){.origin = CGPointZero, .size = self.activityIndicator.frame.size};
         activityIndicatorFrame.origin.x = (self.imageView.frame.size.width - self.activityIndicator.frame.size.width) / 2;
@@ -97,7 +124,7 @@
 
         self.activityIndicator.hidden = NO;
         [self.activityIndicator startAnimating];
-        [self.imageView addSubview:self.activityIndicator];
+        [self.targetView addSubview:self.activityIndicator];
         
         __weak LRImagePresenter *wself = self;
         
@@ -116,11 +143,11 @@
                     return;
                 }
                 
-                [UIView transitionWithView:sself.imageView
-                                  duration:sself.imageView.lr_animationTime
-                                   options:LRImageViewAnimationTypeToAnimationOptionTransition(sself.imageView.lr_animationType) | UIViewAnimationOptionAllowUserInteraction
+                [UIView transitionWithView:sself.targetView
+                                  duration:sself.targetView.lr_animationTime
+                                   options:LRAnimationTypeToAnimationOptionTransition(sself.targetView.lr_animationType) | UIViewAnimationOptionAllowUserInteraction
                                 animations:^{
-                                    sself.imageView.image = image;
+                                    [self setImageToTarget:image];
                                 } completion:^(BOOL finished) {
                                     if (sself.completionHandler) sself.completionHandler(image, error);
                                 }];
@@ -130,10 +157,30 @@
         [self.imageManager imageFromURL:self.imageURL
                                    size:self.imageSize
                     cacheStorageOptions:self.cacheStorageOptions
-                            contentMode:self.imageView.contentMode
-                                context:self.imageView
+                            contentMode:self.targetView.contentMode
+                                context:self.targetView
                     postProcessingBlock:self.postProcessingBlock
                       completionHandler:completionHandler];
+    }
+}
+
+- (NSTimeInterval)animationTime {
+    return 0.25f;
+}
+
+- (void)setImageToTarget:(UIImage *)image {
+    if (self.imageView) {
+        self.imageView.image = image;
+    } else if (self.button) {
+        [self.button setImage:image forState:self.buttonState];
+    }
+}
+
+- (void)setPlaceholderToTarget:(UIImage *)placeholder {
+    if (self.imageView) {
+        self.imageView.image = placeholder;
+    } else if (self.button) {
+        [self.button setBackgroundImage:placeholder forState:self.buttonState];
     }
 }
 
@@ -149,25 +196,25 @@
     [self cancelPresenting];
 }
 
-NS_INLINE UIViewAnimationOptions LRImageViewAnimationTypeToAnimationOptionTransition(LRImageViewAnimationType animationType)
+NS_INLINE UIViewAnimationOptions LRAnimationTypeToAnimationOptionTransition(LRAnimationType animationType)
 {
     switch (animationType)
     {
-        case LRImageViewAnimationTypeNone:
+        case LRAnimationTypeNone:
             return UIViewAnimationOptionTransitionNone;
-        case LRImageViewAnimationTypeCrossDissolve:
+        case LRAnimationTypeCrossDissolve:
             return UIViewAnimationOptionTransitionCrossDissolve;
-        case LRImageViewAnimationTypeFlipFromLeft:
+        case LRAnimationTypeFlipFromLeft:
             return UIViewAnimationOptionTransitionFlipFromLeft;
-        case LRImageViewAnimationTypeFlipFromBottom:
+        case LRAnimationTypeFlipFromBottom:
             return UIViewAnimationOptionTransitionFlipFromBottom;
-        case LRImageViewAnimationTypeFlipFromRight:
+        case LRAnimationTypeFlipFromRight:
             return UIViewAnimationOptionTransitionFlipFromRight;
-        case LRImageViewAnimationTypeFlipFromTop:
+        case LRAnimationTypeFlipFromTop:
             return UIViewAnimationOptionTransitionFlipFromTop;
-        case LRImageViewAnimationTypeCurlUp:
+        case LRAnimationTypeCurlUp:
             return UIViewAnimationOptionTransitionCurlUp;
-        case LRImageViewAnimationTypeCurlDown:
+        case LRAnimationTypeCurlDown:
             return UIViewAnimationOptionTransitionCurlDown;
         default:
             return UIViewAnimationOptionTransitionNone;
