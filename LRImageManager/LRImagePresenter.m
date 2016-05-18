@@ -99,6 +99,7 @@
     
     if ([[self.imageURL absoluteString] length] == 0)
     {
+        self.targetView.lr_imageURL = nil;
         [self setPlaceholderToTarget:self.placeholderImage];
         
         if (self.completionHandler) self.completionHandler(nil, nil);
@@ -107,7 +108,7 @@
     }
     
     UIImage *memCachedImage = [self.imageCache memCachedImageForURL:self.imageURL size:self.imageSize];
-    
+    self.targetView.lr_imageURL = self.imageURL;
     if (memCachedImage)
     {
         [self setImageToTarget:memCachedImage];
@@ -118,8 +119,8 @@
         [self setPlaceholderToTarget:self.placeholderImage];
         
         CGRect activityIndicatorFrame = (CGRect){.origin = CGPointZero, .size = self.activityIndicator.frame.size};
-        activityIndicatorFrame.origin.x = (self.imageView.frame.size.width - self.activityIndicator.frame.size.width) / 2;
-        activityIndicatorFrame.origin.y = (self.imageView.frame.size.height - self.activityIndicator.frame.size.height) / 2;
+        activityIndicatorFrame.origin.x = (self.targetView.frame.size.width - self.activityIndicator.frame.size.width) / 2;
+        activityIndicatorFrame.origin.y = (self.targetView.frame.size.height - self.activityIndicator.frame.size.height) / 2;
         self.activityIndicator.frame = activityIndicatorFrame;
 
         self.activityIndicator.hidden = NO;
@@ -140,6 +141,7 @@
                 if (!image || error)
                 {
                     if (sself.completionHandler) sself.completionHandler(image, error);
+                    self.targetView.lr_imageURL = nil;
                     return;
                 }
                 
@@ -188,7 +190,7 @@
 {
     [_imageManager cancelImageRequestFromURL:_imageURL
                                         size:_imageSize
-                                     context:_imageView];
+                                     context:_targetView];
 }
 
 - (void)dealloc

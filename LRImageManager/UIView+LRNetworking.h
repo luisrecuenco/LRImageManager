@@ -31,5 +31,6 @@ typedef NS_ENUM(NSUInteger, LRAnimationType)
 
 @property (nonatomic, setter = lr_setAnimationType:) LRAnimationType lr_animationType;
 @property (nonatomic, setter = lr_setAnimationTime:) NSTimeInterval lr_animationTime;
+@property (nonatomic, setter = lr_setImageURL:) NSURL *lr_imageURL;
 
 @end

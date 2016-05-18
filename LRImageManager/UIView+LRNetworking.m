@@ -19,6 +19,7 @@ static const void * kLRActivityIndicatorObjectKey = &kLRActivityIndicatorObjectK
 static const void * kLRAnimationType = &kLRAnimationType;
 static const void * kLRAnimationTime = &kLRAnimationTime;
 static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
+static const void * kImageURL = &kImageURL;
 
 #pragma mark - Completion Block
 
@@ -82,6 +83,16 @@ static const void * kLRPostProcessingBlock = &kLRPostProcessingBlock;
 - (LRImagePostProcessingBlock)lr_postProcessingBlock
 {
     return objc_getAssociatedObject(self, kLRPostProcessingBlock);
+}
+
+#pragma mark - Image Url
+
+- (void) lr_setImageURL:(NSURL *)imageURL {
+    objc_setAssociatedObject(self, kImageURL, imageURL, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSURL *)lr_imageURL {
+    return objc_getAssociatedObject(self, kImageURL);
 }
 
 @end
