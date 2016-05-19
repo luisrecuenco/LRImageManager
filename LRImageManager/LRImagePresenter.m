@@ -149,7 +149,7 @@
                                   duration:sself.targetView.lr_animationTime
                                    options:LRAnimationTypeToAnimationOptionTransition(sself.targetView.lr_animationType) | UIViewAnimationOptionAllowUserInteraction
                                 animations:^{
-                                    [self setImageToTarget:image];
+                                    [sself setImageToTarget:image];
                                 } completion:^(BOOL finished) {
                                     if (sself.completionHandler) sself.completionHandler(image, error);
                                 }];
