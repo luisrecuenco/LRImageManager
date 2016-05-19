@@ -141,7 +141,7 @@
                 if (!image || error)
                 {
                     if (sself.completionHandler) sself.completionHandler(image, error);
-                    self.targetView.lr_imageURL = nil;
+                    sself.targetView.lr_imageURL = nil;
                     return;
                 }
                 
