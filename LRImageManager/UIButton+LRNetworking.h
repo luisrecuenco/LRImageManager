@@ -15,4 +15,7 @@
                      state:(UIControlState)state
           placeholderImage:(UIImage *)placeholderImage;
 
+
+- (void)lr_removePlaceholder;
+
 @end

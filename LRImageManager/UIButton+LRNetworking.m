@@ -22,4 +22,12 @@
                                        postProcessingBlock:self.lr_postProcessingBlock
                                          completionHandler:self.lr_completionHandler];
 }
+
+- (void)lr_removePlaceholder {
+    [self setBackgroundImage:nil forState:UIControlStateNormal];
+    [self setBackgroundImage:nil forState:UIControlStateDisabled];
+    [self setBackgroundImage:nil forState:UIControlStateSelected];
+    [self setBackgroundImage:nil forState:UIControlStateHighlighted];
+}
+
 @end
