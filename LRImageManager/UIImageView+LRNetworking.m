@@ -85,6 +85,7 @@
 - (void)lr_cancelImageOperation;
 {
     [[LRImageManager sharedManager] cancelDownloadImageForImageView:self];
+    self.image = nil;
 }
 
 

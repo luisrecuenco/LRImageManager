@@ -69,12 +69,6 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
- cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
- postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size;
 
 - (void)cancelAllRequests;
