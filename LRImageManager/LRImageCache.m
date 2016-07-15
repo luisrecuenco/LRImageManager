@@ -80,6 +80,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                                  selector:@selector(cleanDisk)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(cleanDisk)
+                                                     name:UIApplicationWillTerminateNotification
+                                                   object:nil];
+        
     }
     
     return self;
