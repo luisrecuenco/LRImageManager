@@ -274,7 +274,7 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
     __weak typeof(imageView) wImageView = imageView;
     [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
         __weak typeof(wImageView) sImageView = wImageView;
-        [self.presentersMap removeObjectForKey:sImageView];
+        [self cancelDownloadImageForImageView:sImageView];
         if (completionHandler) completionHandler(image, error);
     }];
 }
@@ -307,20 +307,25 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
     __weak typeof(button) wButton = button;
     [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
         __weak typeof(wButton) sButton = wButton;
-        [self.presentersMap removeObjectForKey:sButton];
+        [self cancelDownloadImageForButton:sButton];
         if (completionHandler) completionHandler(image, error);
     }];
 }
 
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView
 {
+    LRImagePresenter *presenter = [self.presentersMap objectForKey:imageView];
+    [presenter cancelPresenting];
     [self.presentersMap removeObjectForKey:imageView];
 }
 
 - (void)cancelDownloadImageForButton:(UIButton *)button
 {
+    LRImagePresenter *presenter = [self.presentersMap objectForKey:button];
+    [presenter cancelPresenting];
     [self.presentersMap removeObjectForKey:button];
 }
+
 
 #pragma mark - Integral size
 
