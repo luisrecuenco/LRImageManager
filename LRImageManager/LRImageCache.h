@@ -79,6 +79,7 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions;
 - (void)clearDiskCacheForKey:(NSString *)key;
 
 - (void)cleanDisk;
+- (void)cleanDiskAsync:(BOOL)isAsync;
 
 @end
 
