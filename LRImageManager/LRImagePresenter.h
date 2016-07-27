@@ -40,6 +40,15 @@
               cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
               postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock;
 
+- (instancetype)initWithButton:(UIButton *)button
+                         state:(UIControlState)state
+              placeholderImage:(UIImage *)placeholderImage
+             activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                      imageURL:(NSURL *)imageURL size:(CGSize)size
+                    imageCache:(id<LRImageCache>)imageCache
+           cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+           postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock;
+
 - (void)startPresentingWithCompletionHandler:(LRImageCompletionHandler)completionHandler;
 
 - (void)cancelPresenting;

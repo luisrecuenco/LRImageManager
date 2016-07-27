@@ -21,29 +21,9 @@
 // THE SOFTWARE.
 
 #import "LRImageManager.h"
-
-typedef NS_ENUM(NSUInteger, LRImageViewAnimationType)
-{
-    LRImageViewAnimationTypeNone,
-    LRImageViewAnimationTypeCrossDissolve,
-    LRImageViewAnimationTypeFlipFromLeft,
-    LRImageViewAnimationTypeFlipFromRight,
-    LRImageViewAnimationTypeFlipFromTop,
-    LRImageViewAnimationTypeFlipFromBottom,
-    LRImageViewAnimationTypeCurlUp,
-    LRImageViewAnimationTypeCurlDown,
-};
+#import "UIView+LRNetworking.h"
 
 @interface UIImageView (LRNetworking)
-
-@property (nonatomic, strong, setter = lr_setActivityIndicator:) UIView<LRActivityIndicator> *lr_activityIndicator;
-
-@property (nonatomic, copy, setter = lr_setPostProcessingBlock:) LRImagePostProcessingBlock lr_postProcessingBlock;
-
-@property (nonatomic, copy, setter = lr_setCompletionHandler:) LRImageCompletionHandler lr_completionHandler;
-
-@property (nonatomic, setter = lr_setAnimationType:) LRImageViewAnimationType lr_animationType;
-@property (nonatomic, setter = lr_setAnimationTime:) NSTimeInterval lr_animationTime;
 
 - (void)lr_setImageWithURL:(NSURL *)url;
 

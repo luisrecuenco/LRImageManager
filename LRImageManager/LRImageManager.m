@@ -274,15 +274,58 @@ NSString *const LRImageManagerSizeUserInfoKey = @"LRImageManagerSizeUserInfoKey"
     __weak typeof(imageView) wImageView = imageView;
     [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
         __weak typeof(wImageView) sImageView = wImageView;
-        [self.presentersMap removeObjectForKey:sImageView];
+        [self cancelDownloadImageForImageView:sImageView];
+        if (completionHandler) completionHandler(image, error);
+    }];
+}
+
+- (void)downloadImageForButton:(UIButton *)button
+                         state:(UIControlState)buttonState
+                 placeholderImage:(UIImage *)placeholderImage
+                activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                         imageURL:(NSURL *)imageURL
+                             size:(CGSize)size
+              cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+              postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+                completionHandler:(LRImageCompletionHandler)completionHandler
+{
+    LRImagePresenter *presenter = [[LRImagePresenter alloc] initWithButton:button
+                                                                     state:buttonState
+                                                          placeholderImage:placeholderImage
+                                                         activityIndicator:activityIndicator
+                                                                  imageURL:imageURL
+                                                                      size:LRIntegralSize(size)
+                                                                imageCache:self.imageCache
+                                                       cacheStorageOptions:cacheStorageOptions
+                                                       postProcessingBlock:postProcessingBlock];
+    
+    presenter.imageManager = self;
+    
+    // Previous presenter for this imageView will deallocate and cancel itself
+    [self.presentersMap setObject:presenter forKey:button];
+    
+    __weak typeof(button) wButton = button;
+    [presenter startPresentingWithCompletionHandler:^(UIImage *image, NSError *error) {
+        __weak typeof(wButton) sButton = wButton;
+        [self cancelDownloadImageForButton:sButton];
         if (completionHandler) completionHandler(image, error);
     }];
 }
 
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView
 {
+    LRImagePresenter *presenter = [self.presentersMap objectForKey:imageView];
+    [presenter cancelPresenting];
     [self.presentersMap removeObjectForKey:imageView];
 }
+
+- (void)cancelDownloadImageForButton:(UIButton *)button
+{
+    LRImagePresenter *presenter = [self.presentersMap objectForKey:button];
+    [presenter cancelPresenting];
+    [self.presentersMap removeObjectForKey:button];
+}
+
 
 #pragma mark - Integral size
 

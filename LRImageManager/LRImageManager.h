@@ -69,12 +69,6 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
  postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
    completionHandler:(LRImageCompletionHandler)completionHandler;
 
-- (void)imageFromURL:(NSURL *)url
-                size:(CGSize)size
- cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
- postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
-   completionHandler:(LRImageCompletionHandler)completionHandler;
-
 - (void)cancelImageRequestFromURL:(NSURL *)url size:(CGSize)size;
 
 - (void)cancelAllRequests;
@@ -98,6 +92,22 @@ typedef void (^LRImageCompletionHandler)(UIImage *image, NSError *error);
 
 
 - (void)cancelDownloadImageForImageView:(UIImageView *)imageView;
+
+@end
+
+@interface LRImageManager (UIButton)
+
+- (void)downloadImageForButton:(UIButton *)button
+                         state:(UIControlState)buttonState
+              placeholderImage:(UIImage *)placeholderImage
+             activityIndicator:(UIView<LRActivityIndicator> *)activityIndicator
+                      imageURL:(NSURL *)imageURL
+                          size:(CGSize)size
+           cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
+           postProcessingBlock:(LRImagePostProcessingBlock)postProcessingBlock
+             completionHandler:(LRImageCompletionHandler)completionHandler;
+
+- (void)cancelDownloadImageForButton:(UIButton *)button;
 
 @end
 

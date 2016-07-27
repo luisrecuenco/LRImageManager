@@ -75,11 +75,12 @@ static NSString *const kImageCacheDirectoryName = @"LRImageCache";
                                                  selector:@selector(clearMemCache)
                                                      name:UIApplicationDidReceiveMemoryWarningNotification
                                                    object:nil];
+        [self cleanDisk];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(didEnterBackgroundHandle)
+//                                                     name:UIApplicationDidEnterBackgroundNotification
+//                                                   object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cleanDisk)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
     }
     
     return self;
@@ -294,9 +295,9 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     [self.imagesCache removeObjectForKey:key];
 }
 
-- (void)clearDiskCache
+- (void)clearDiskCacheAsync:(BOOL)isAsync
 {
-    dispatch_async(self.ioQueue, ^{
+    void (^clearBlock)() = ^void() {
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
         
@@ -310,7 +311,19 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         {
             LRImageManagerLog(@"Cache directory removed successfully");
         }
-    });
+    };
+    if (isAsync) {
+        dispatch_async(self.ioQueue, ^{
+            clearBlock();
+        });
+    } else {
+        clearBlock();
+    }
+
+}
+
+- (void)clearDiskCache {
+    [self cleanDiskAsync:YES];
 }
 
 - (void)clearDiskCacheForKey:(NSString *)key
@@ -333,11 +346,11 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
     });
 }
 
-- (void)cleanDisk
+- (void)cleanDiskAsync:(BOOL)isAsync
 {
     if (self.cacheDirectorySize <= self.maxDirectorySize) return;
     
-    dispatch_async(self.ioQueue, ^{
+    void (^cleanBlock)() = ^void() {
         
         NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:self.pathToImageCacheDirectory];
         
@@ -368,9 +381,26 @@ cacheStorageOptions:(LRCacheStorageOptions)cacheStorageOptions
         // Still bigger? let's clear it all (TODO: LRU or similar, not so harsh)
         if (self.cacheDirectorySize > self.maxDirectorySize)
         {
-            [self clearDiskCache];
+            [self clearDiskCacheAsync:isAsync];
         }
-    });
+        
+    };
+    if (isAsync) {
+        dispatch_async(self.ioQueue, ^{
+            cleanBlock();
+        });
+    } else {
+        cleanBlock();
+    }
+    
+}
+
+- (void)cleanDisk {
+    [self cleanDiskAsync:YES];
+}
+
+- (void)didEnterBackgroundHandle {
+    [self cleanDisk];
 }
 
 - (NSString *)pathToImageCacheDirectory
